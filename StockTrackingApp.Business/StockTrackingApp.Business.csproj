@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="EPPlus" Version="7.5.2" />
+    <PackageReference Include="Hangfire" Version="1.8.17" />
+    <PackageReference Include="MailKit" Version="4.9.0" />
+    <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="MimeKit" Version="4.9.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StockTrackingApp.DataAccess.Interfaces\StockTrackingApp.DataAccess.Interfaces.csproj" />
+    <ProjectReference Include="..\StockTrackingApp.Dtos\StockTrackingApp.Dtos.csproj" />
+  </ItemGroup>
+
+</Project>
