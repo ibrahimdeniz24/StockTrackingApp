@@ -12,5 +12,7 @@ namespace StockTrackingApp.Business.Interfaces.Services
         Task<IDataResult<ProductDto>> AddAsync(ProductCreateDto productCreateDto);
 
         Task<IDataResult<ProductDto>> UpdateAsync(ProductUpdateDto productUpdateDto);
+
+        Task<IResult> DeleteAsync(Guid id);
     }
 }

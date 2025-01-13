@@ -1,12 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StockTrackingApp.Business.Interfaces.Services;
 using StockTrackingApp.Business.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace StockTrackingApp.Business.Extantions
 {
@@ -17,6 +13,13 @@ namespace StockTrackingApp.Business.Extantions
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             services.AddScoped<IAdminService,AdminService>();
+            services.AddScoped<IAccountService,AccountService>();
+            services.AddScoped<IEmailService,EmailService>();
+            services.AddScoped<ICategoryService,CategoryService>();
+            services.AddScoped<ICustomerService,CustomerService>();
+            services.AddScoped<IProductService,ProductService>();
+            services.AddScoped<IOrderDetailService,OrderDetailService>();
+            services.AddScoped<IOrderService,OrderService>();
 
             return services;
         }

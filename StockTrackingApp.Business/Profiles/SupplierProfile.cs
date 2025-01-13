@@ -8,9 +8,10 @@ namespace StockTrackingApp.Business.Profiles
         public SupplierProfile()
         {
             CreateMap<Supplier,SupplierCreateDto>();
-            CreateMap<Supplier,SupplierDetailDto>();
+            CreateMap<Supplier,SupplierDetailsDto>();
             CreateMap<Supplier,SupplierDto>();
             CreateMap<Supplier,SupplierListDto>();
+            CreateMap<Supplier,SupplierUpdateDto>();
 
         }
     }

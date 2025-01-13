@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StockTrackingApp.Dtos.Suppliers
 {
-    public class SupplierDetailDto
+    public class SupplierDetailsDto
     {
         public string CompanyName { get; set; } // Tedarikçi Adı
 

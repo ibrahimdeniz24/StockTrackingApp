@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StockTrackingApp.Dtos.Warehouses
 {
-    public class WarehouseDetailDto
+    public class WarehouseDetailsDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; } // Depo Adı
