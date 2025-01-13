@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockTrackingApp.Dtos", "St
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockTrackingApp.Business", "StockTrackingApp.Business\StockTrackingApp.Business.csproj", "{111C29AD-4486-4F4C-AC44-D4DD00A69747}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockTrackingApp.UI", "StockTrackingApp.UI\StockTrackingApp.UI.csproj", "{4100E24E-481C-40A4-9317-EB35F3364E46}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{111C29AD-4486-4F4C-AC44-D4DD00A69747}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{111C29AD-4486-4F4C-AC44-D4DD00A69747}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{111C29AD-4486-4F4C-AC44-D4DD00A69747}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4100E24E-481C-40A4-9317-EB35F3364E46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4100E24E-481C-40A4-9317-EB35F3364E46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4100E24E-481C-40A4-9317-EB35F3364E46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4100E24E-481C-40A4-9317-EB35F3364E46}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

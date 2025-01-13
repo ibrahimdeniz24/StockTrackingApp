@@ -17,6 +17,6 @@ namespace StockTrackingApp.Dtos.PurchaseOrders
 
         public Guid SupplierId { get; set; }
 
-        public IEnumerable<PurchaseOrderDetailDto> PurchaseOrderDetails { get; set; }
+        public IEnumerable<PurchaseOrderDetailsDto> PurchaseOrderDetails { get; set; }
     }
 }

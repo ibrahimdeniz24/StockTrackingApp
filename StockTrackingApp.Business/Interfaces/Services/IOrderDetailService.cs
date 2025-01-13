@@ -16,6 +16,6 @@ namespace StockTrackingApp.Business.Interfaces.Services
         Task<IDataResult<List<OrderDetailDto>>> GetAllAsync();
         Task<IDataResult<OrderDetailDto>> UpdateAsync(OrderDetailUpdateDto orderDetailUpdateDto);
         Task<IResult> DeleteAsync(Guid id);
-        Task<IDataResult<OrderDetailDto>> GetDetailsByIdAsync(Guid id);
+        Task<IDataResult<OrderDetailDetailsDto>> GetDetailsByIdAsync(Guid id);
     }
 }

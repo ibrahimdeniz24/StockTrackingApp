@@ -62,10 +62,10 @@ namespace StockTrackingApp.Business.Services
             var category = await _categoryRepository.GetByIdAsync(id);
             if (category != null)
             {
-                return new SuccessDataResult<CategoryDto>(_mapper.Map<CategoryDto>(category), Messages.ListedSuccess);
+                return new SuccessDataResult<CategoryDto>(_mapper.Map<CategoryDto>(category), Messages.FoundSuccess);
             }
 
-            return new ErrorDataResult<CategoryDto>(Messages.ListNotFound);
+            return new ErrorDataResult<CategoryDto>(Messages.FoundFail);
         }
 
         public async Task<IDataResult<CategoryDetailsDto>> GetDetailsByIdAsync(Guid id)
