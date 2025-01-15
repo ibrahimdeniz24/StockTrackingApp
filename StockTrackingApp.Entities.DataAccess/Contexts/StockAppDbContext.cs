@@ -17,12 +17,12 @@ using System.Threading.Tasks;
 
 namespace StockTrackingApp.DataAccess.Contexts
 {
-    public class StockAppDbContext :IdentityDbContext
+    public class StockAppDbContext : IdentityDbContext
     {
         public const string ConnectionName = "StockTrackingApp";
         private readonly IHttpContextAccessor? _contextAccessor;
 
-        public StockAppDbContext(DbContextOptions<StockAppDbContext> options, IHttpContextAccessor? contextAccessor) : base(options)
+        public StockAppDbContext(DbContextOptions<StockAppDbContext> options, IHttpContextAccessor? contextAccessor = null) : base(options)
         {
             _contextAccessor = contextAccessor;
         }
@@ -32,17 +32,19 @@ namespace StockTrackingApp.DataAccess.Contexts
         public virtual DbSet<ApiUser> ApiUsers { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Customer> Customers { get; set; } = null!;
+        public virtual DbSet<Email> Emails { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
-        public virtual DbSet<ProductSupplier> ProductSuppliers { get; set; } = null!;
+        public virtual DbSet<ProductSupplier> Product_Suppliers { get; set; } = null!;
         public virtual DbSet<PurchaseOrder> PurchaseOrders { get; set; } = null!;
         public virtual DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; } = null!;
+        public virtual DbSet<RegisterCode> RegisterCodes { get; set; } = null!;
+        public virtual DbSet<SentMail> SentMails { get; set; } = null!;
         public virtual DbSet<Stock> Stocks { get; set; } = null!;
         public virtual DbSet<StockTransaction> StockTransactions { get; set; } = null!;
         public virtual DbSet<Supplier> Suppliers { get; set; } = null!;
         public virtual DbSet<Warehouse> Warehouses { get; set; } = null!;
-        public virtual DbSet<Email> Emails { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder builder)
