@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EPPlus" Version="7.5.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\StockTrackingApp.DataAccess.Interfaces\StockTrackingApp.DataAccess.Interfaces.csproj" />
     <ProjectReference Include="..\StockTrackingApp.Entities.DataAccess\StockTrackingApp.DataAccess.csproj" />
   </ItemGroup>
