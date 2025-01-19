@@ -9,7 +9,7 @@ namespace StockTrackingApp.Entities.DbSets
             OrderDetails = new HashSet<OrderDetail>();
         }
         public Guid CustomerId { get; set; } // Müşteri ID (FK)
-        public Customer Customer { get; set; } // Müşteri İlişkisi
+        public virtual Customer Customer { get; set; } // Müşteri İlişkisi
         public DateTime OrderDate { get; set; } // Sipariş Tarihi
         public DateTime DeliveryDate { get; set; }
 
