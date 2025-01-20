@@ -1,6 +1,6 @@
 ﻿namespace StockTrackingApp.UI.Extantions
 {
-    public static class StringExtantions
+    public static class StringExtensions
     { /// <summary>
       /// Kelimeleri başlık tipine formatlar.
       /// </summary>

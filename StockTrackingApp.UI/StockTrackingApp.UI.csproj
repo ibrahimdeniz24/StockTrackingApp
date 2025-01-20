@@ -18,12 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\Controllers\" />
-    <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="Areas\Admin\Models\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\StockTrackingApp.BackgroundJobs\StockTrackingApp.BackgroundJobs.csproj" />
     <ProjectReference Include="..\StockTrackingApp.Business\StockTrackingApp.Business.csproj" />
     <ProjectReference Include="..\StockTrackingApp.DataAccess.EFCore\StockTrackingApp.DataAccess.EFCore.csproj" />
