@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewData["Title"] = "ErrorIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="error">
+
+
+    <div class="error-page container">
+        <div class="col-md-8 col-12 offset-md-2">
+            <img class="img-error" src="~/AdminLayout/assets/images/samples/error-500.png" alt="Not Found">
+            <div class="text-center">
+                <h1 class="error-title">@ViewBag.StatusCode</h1>
+                <p class="fs-5 text-gray-600">
+                    @ViewBag.ErrorMessage
+                </p>
+                <a onclick="history.back(-1)" class="link-button link-back-button">Geri Dön</a>
+                <a href="@Url.Action("Index", "Home")" class="link-button">Ana Sayfa</a>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
