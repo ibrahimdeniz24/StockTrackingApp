@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StockTrackingApp.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class _19012025_v01 : Migration
+    public partial class _2101_v01 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

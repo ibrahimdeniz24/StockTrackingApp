@@ -12,8 +12,8 @@ using StockTrackingApp.DataAccess.Contexts;
 namespace StockTrackingApp.DataAccess.Migrations
 {
     [DbContext(typeof(StockAppDbContext))]
-    [Migration("20250119072009_19012025_v01")]
-    partial class _19012025_v01
+    [Migration("20250121070632_2101_v01")]
+    partial class _2101_v01
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

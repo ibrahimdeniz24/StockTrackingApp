@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StockTrackingApp.DataAccess.EFCore.Repositories;
+using StockTrackingApp.DataAccess.EFCore.Seeds;
 
 
 namespace StockTrackingApp.DataAccess.EFCore.Extantions
@@ -26,7 +27,7 @@ namespace StockTrackingApp.DataAccess.EFCore.Extantions
             services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 
 
-            //AdminSeed.SeedAsync(configuration).GetAwaiter().GetResult();
+            AdminSeed.SeedAsync(configuration).GetAwaiter().GetResult();
 
             return services;
         }

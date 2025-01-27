@@ -5,7 +5,7 @@ using StockTrackingApp.Core.Enums;
 
 namespace StockTrackingApp.DataAccess.EFCore.Seeds
 {
-    internal static class AdminSeed
+    public static class AdminSeed
     {
         private const string AdminEmail = "ibrahimdeniz24@hotmail.com";
         private const string AdminPassword = "newPassword+0";
@@ -78,6 +78,7 @@ namespace StockTrackingApp.DataAccess.EFCore.Seeds
                 }
 
                 await context.Roles.AddAsync(new IdentityRole(roles[i]));
+                await context.SaveChangesAsync();
             }
         }
     }

@@ -22,5 +22,6 @@ namespace StockTrackingApp.DataAccess.Extantions
 
             return services;
         }
+
     }
 }
