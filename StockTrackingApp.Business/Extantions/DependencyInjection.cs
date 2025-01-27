@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StockTrackingApp.Business.Interfaces.Services;
+using StockTrackingApp.Business.Profiles;
 using StockTrackingApp.Business.Services;
 using System.Reflection;
 
@@ -10,7 +11,8 @@ namespace StockTrackingApp.Business.Extantions
     {
         public static IServiceCollection AddBusinessServices(this IServiceCollection services)
         {
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(typeof(CategoryProfile).Assembly);
+
 
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IAdminService,AdminService>();
@@ -28,6 +30,8 @@ namespace StockTrackingApp.Business.Extantions
             services.AddScoped<IStockTransactionService,StockTransactionService>();
             services.AddScoped<ISupplierService,SupplierService>();
             services.AddScoped<IWarehouseService,WarehouseService>();
+            services.AddScoped<IDashboardService,DashBoardService>();
+            services.AddScoped<ISendMailService,SendMailService>();
 
             return services;
         }

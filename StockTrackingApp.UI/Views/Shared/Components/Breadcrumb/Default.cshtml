@@ -1,0 +1,26 @@
+﻿@using StockTrackingApp.Dtos.BreadcrumbItem
+@model List<BreadcrumbItemDto>
+
+<div class="page-title">
+    <div class="row">
+        <div class="col-12 col-md-6 order-md-2 order-first">
+            <nav aria-label="breadcrumb" >
+                <ol class="breadcrumb">
+                    @foreach (var breadcrumb in Model)
+                    {
+                        <li class="breadcrumb-item">
+                            @if (!string.IsNullOrEmpty(breadcrumb.Url))
+                            {
+                                <a href="@breadcrumb.Url">@breadcrumb.Title</a>
+                            }
+                            else
+                            {
+                                <a>@breadcrumb.Title</a>
+                            }
+                        </li>
+                    }
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>

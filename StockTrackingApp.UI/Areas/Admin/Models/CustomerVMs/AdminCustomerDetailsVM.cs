@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace StockTrackingApp.Dtos.Customers
+﻿namespace StockTrackingApp.UI.Areas.Admin.Models.CustomerVMs
 {
-    public class CustomerCreateDto
+    public class AdminCustomerDetailsVM
     {
+        public Guid Id { get; set; }
         public string CompanyName { get; set; }
 
         public string Adress { get; set; }

@@ -1,0 +1,96 @@
+﻿@using StockTrackingApp.UI.Areas.Admin.Models.CategoryVMs
+@model IEnumerable<StockTrackingApp.UI.Areas.Admin.Models.CategoryVMs.AdminCategoryListVM>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section class="section">
+    <div class="row" id="table-hover-row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <!-- Category Create Butonu -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoryModal">
+                        Yeni Kategori Oluştur
+                    </button>
+                    <!-- Partial View Modal İçeriğini Yüklemek İçin Boş Modal Div -->
+                    <div id="modalContainer">
+                        @await Html.PartialAsync("_CategoryCreateModal", new AdminCategoryCreateVM())
+                        @await Html.PartialAsync("_CategoryUpdateModal", new AdminCategoryUpdateVM())
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+                        <!-- Table with outer spacing -->
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>@Html.DisplayNameFor(model => model.Id)</th>
+                                        <th>@Html.DisplayNameFor(model => model.CategoryName)</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Id)
+                                            </td>
+                                            <td class="text-bold-500">
+                                                @Html.DisplayFor(modelItem => item.CategoryName)
+                                            </td>
+                                            <td>
+                                                <div class="btn-group dropend me-1 mb-1">
+
+                                                    <button class="btn btn-light rounded-pill  dropdown-toggle" type="button"
+                                                            id="dropdownMenuButton" data-bs-toggle="dropdown"
+                                                            aria-haspopup="true" aria-expanded="false">
+                                                        Seçenekler
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a data-bs-toggle="modal" data-bs-target="#updateCategoryModal" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-name="@item.CategoryName" class="dropdown-item" data-kt-users-table-filter="delete_row">Düzenle</a>
+                                                        <a class="dropdown-item" href="@Url.Action("Details", "Category", new { id = item.Id })">Details</a>
+                                                        <a class="dropdown-item" href="@Url.Action("Delete", "Category", new { id = item.Id })">Delete</a>
+                                                    </div>
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="~/AdminLayout/assets/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#updateCategoryModal').on('show.bs.modal', function (event) {
+            let button = $(event.relatedTarget);
+            let itemId = button.data('item-id');
+            let itemName = button.data('item-name');
+
+            let modal = $(this);
+            modal.find('input[name="Id"]').val(itemId);
+            modal.find('input[name="CategoryName"]').val(itemName);
+        });
+    });
+</script>
+
+
+
+
+
+
+
+

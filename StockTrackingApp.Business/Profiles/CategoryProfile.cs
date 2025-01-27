@@ -8,9 +8,10 @@ namespace StockTrackingApp.Business.Profiles
         public CategoryProfile()
         {
             CreateMap<Category, CategoryCreateDto>();
+            CreateMap<CategoryCreateDto, Category>();
             CreateMap<Category, CategoryDto>();
             CreateMap<Category, CategoryDetailsDto>();
-            CreateMap<Category, CategoryUpdateDto>();
+            CreateMap<CategoryUpdateDto, Category>();
         }
     }
 }

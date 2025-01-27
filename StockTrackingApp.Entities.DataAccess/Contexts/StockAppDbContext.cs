@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,7 @@ namespace StockTrackingApp.DataAccess.Contexts
         public const string ConnectionName = "StockTrackingApp";
         private readonly IHttpContextAccessor? _contextAccessor;
 
-        public StockAppDbContext(DbContextOptions<StockAppDbContext> options, IHttpContextAccessor? contextAccessor = null) : base(options)
+        public StockAppDbContext(DbContextOptions<StockAppDbContext> options, IHttpContextAccessor contextAccessor) : base(options)
         {
             _contextAccessor = contextAccessor;
         }
@@ -69,15 +70,16 @@ namespace StockTrackingApp.DataAccess.Contexts
             var entries = ChangeTracker.Entries<BaseEntity>();
             string userId;
 
-            if (_contextAccessor.HttpContext == null)
-            {
-                userId = "NotFound-User";
-            }
-            else
-            {
-                userId = _contextAccessor?.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "NotFound-User";
-            }
+            //if (_contextAccessor.HttpContext == null)
+            //{
+            //    userId = "NotFound-User";
+            //}
+            //else
+            //{
+            //    userId = _contextAccessor?.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "NotFound-User";
+            //}
 
+                userId = _contextAccessor?.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "NotFound-User";
             foreach (var entry in entries)
             {
                 SetIfAdded(entry, userId);
