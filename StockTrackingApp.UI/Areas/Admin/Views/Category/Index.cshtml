@@ -54,7 +54,7 @@
                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                         <a data-bs-toggle="modal" data-bs-target="#updateCategoryModal" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-name="@item.CategoryName" class="dropdown-item" data-kt-users-table-filter="delete_row">Düzenle</a>
                                                         <a class="dropdown-item" href="@Url.Action("Details", "Category", new { id = item.Id })">Details</a>
-                                                        <a class="dropdown-item" href="@Url.Action("Delete", "Category", new { id = item.Id })">Delete</a>
+                                                       
                                                     </div>
 
                                                 </div>

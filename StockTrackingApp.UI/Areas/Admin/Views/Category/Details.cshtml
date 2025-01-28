@@ -1,4 +1,5 @@
-﻿@model StockTrackingApp.UI.Areas.Admin.Models.CategoryVMs.AdminCategoryDetailsVM
+﻿@using StockTrackingApp.UI.Areas.Admin.Models.CategoryVMs
+@model StockTrackingApp.UI.Areas.Admin.Models.CategoryVMs.AdminCategoryDetailsVM
 
 @{
     ViewData["Title"] = "Details";
@@ -12,9 +13,12 @@
                 <div class="card-header">
                     <h4 class="card-title">Kategori Detayı</h4>
                     <div class="col-sm-12 d-flex justify-content-end">
-                        <a href="@Url.Action("Edit", new { /* id = Model.PrimaryKey */ })" class="btn btn-primary">Edit</a>
-                        <a href="@Url.Action("Delete", new { id = Model.Id })" class="btn btn-danger">Delete</a>
+                        <a data-bs-toggle="modal" data-bs-target="#updateCategoryModal" asp-route-id="@Model.Id" data-item-id="@Model.Id" data-item-name="@Model.CategoryName" class="btn btn-primary" data-kt-users-table-filter="delete_row">Düzenle</a>
+                        <a href="javascript:void(0)" class="btn btn-danger" onclick="confirmDelete('@Url.Action("Delete", "Category", new { area = "Admin", id = Model.Id })')">Delete</a>
                         <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                    </div>
+                    <div id="modalContainer">
+                        @await Html.PartialAsync("_CategoryUpdateModal", new AdminCategoryUpdateVM())
                     </div>
                 </div>
                 <div class="card-content">
@@ -148,3 +152,67 @@
     </div>
 </section>
 <!-- Hoverable rows end -->
+
+<script src="~/AdminLayout/assets/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#updateCategoryModal').on('show.bs.modal', function (event) {
+            let button = $(event.relatedTarget);
+            let itemId = button.data('item-id');
+            let itemName = button.data('item-name');
+
+            let modal = $(this);
+            modal.find('input[name="Id"]').val(itemId);
+            modal.find('input[name="CategoryName"]').val(itemName);
+        });
+    });
+</script>
+
+<script>
+    function confirmDelete(url) {
+        Swal.fire({
+            title: 'Emin misiniz?',
+            text: "Bu işlemi geri alamazsınız!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Vazgeç'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Fetch ile silme isteği
+                fetch(url, {
+                    method: 'POST', // Eğer GET kullanıyorsanız bunu GET yapın
+                })
+                .then(response => {
+                    if (response.ok) {
+                        Swal.fire(
+                            'Silindi!',
+                            'Kategori başarıyla silindi.',
+                            'success'
+                        ).then(() => {
+                            location.reload(); // Sayfayı yenileyin veya gerekli güncellemeleri yapın
+                        });
+                    } else {
+                        Swal.fire(
+                            'Hata!',
+                            'Bir sorun oluştu, kategori silinemedi.',
+                            'error'
+                        );
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    Swal.fire(
+                        'Hata!',
+                        'Bir hata oluştu.',
+                        'error'
+                    );
+                });
+            }
+        });
+    }
+</script>

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Layout Default - Mazer Admin Dashboard</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -39,7 +40,7 @@
 
                         <li class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
-                                <i class="bi bi-collection-fill"></i>
+                                <i class="bi bi-people-fill"></i>
                                 <span>Kullanıcı İşlemleri</span>
                             </a>
                             <ul class="submenu">
@@ -68,12 +69,15 @@
 
                         <li class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
-                                <i class="bi bi-collection-fill"></i>
+                                <i class="bi bi-cart-plus"></i>
                                 <span>Sipariş İşlemleri</span>
                             </a>
                             <ul class="submenu">
                                 <li class="submenu-item ">
                                     <a asp-action="Index" asp-controller="Customer" asp-area="Admin">Müşteriler</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a asp-action="Index" asp-controller="Supplier" asp-area="Admin">Tedarikçiler</a>
                                 </li>
                             </ul>
 
@@ -109,6 +113,11 @@
         </div>
         @RenderSection("Scripts", required: false)
 
+        <!-- SweetAlert2 CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+        <!-- SweetAlert2 JS -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
        <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -121,6 +130,8 @@
         <script src="~/AdminLayout/assets/js/pages/dashboard.js"></script>
 
         <script src="~/AdminLayout/assets/js/main.js"></script>
+
+
 
     </div>
 </body>
