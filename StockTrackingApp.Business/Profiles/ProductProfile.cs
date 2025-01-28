@@ -8,9 +8,9 @@ namespace StockTrackingApp.Business.Profiles
         public ProductProfile()
         {
             CreateMap<Product,ProductDto>();
-            CreateMap<Product,ProductCreateDto>();
+            CreateMap<ProductCreateDto, Product>();
             CreateMap<Product,ProductDetailsDto>();
-            CreateMap<Product,ProductUpdateDto>();
+            CreateMap<ProductUpdateDto, Product>();
             CreateMap<Product,ProductListDto>();
         }
     }

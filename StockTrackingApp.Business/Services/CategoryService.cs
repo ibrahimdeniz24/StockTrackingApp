@@ -38,9 +38,10 @@ namespace StockTrackingApp.Business.Services
                 var category = await _categoryRepository.GetByIdAsync(id);
                 if (category == null)
                 {
-                    return new ErrorResult(Messages.DeleteFail);
+                    return new ErrorResult(Messages.FoundFail);
                 }
                 await _categoryRepository.DeleteAsync(category);
+                await _categoryRepository.SaveChangesAsync();
                 return new SuccessResult(Messages.DeleteSuccess);
             }
             catch (Exception ex)

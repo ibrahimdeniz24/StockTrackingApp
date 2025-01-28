@@ -16,6 +16,7 @@ namespace StockTrackingApp.Business.Extantions
 
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IAdminService,AdminService>();
+            services.AddScoped<IApiUserService, ApiUserService>();
             services.AddScoped<IBreadcrumbService,BreadcrumbService>();
             services.AddScoped<ICategoryService,CategoryService>();
             services.AddScoped<ICustomerService,CustomerService>();

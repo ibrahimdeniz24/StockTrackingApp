@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using StockTrackingApp.Business.Constants;
+using StockTrackingApp.Core.Utilities.Results.Concrete;
 using StockTrackingApp.Dtos.Categories;
 using StockTrackingApp.UI.Areas.Admin.Models.CategoryVMs;
 using System.Text;
@@ -74,6 +76,7 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
                 NotifyError(errorMessages.ToString());
                 return RedirectToAction(nameof(Index));
             }
+
             var categoryDto = _mapper.Map<CategoryCreateDto>(model);
 
             var addResult = await _categoryService.AddAsync(categoryDto);
