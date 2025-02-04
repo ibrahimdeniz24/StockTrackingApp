@@ -63,6 +63,9 @@
                                 <li class="submenu-item ">
                                     <a asp-action="Index" asp-controller="Category" asp-area="Admin">Kategoriler</a>
                                 </li>
+                                <li class="submenu-item ">
+                                    <a asp-action="Index" asp-controller="Product" asp-area="Admin">Ürünler</a>
+                                </li>
                             </ul>
 
                         </li>
@@ -112,7 +115,7 @@
             </div>
         </div>
         @RenderSection("Scripts", required: false)
-
+        @await Component.InvokeAsync("Notyf")
         <!-- SweetAlert2 CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 

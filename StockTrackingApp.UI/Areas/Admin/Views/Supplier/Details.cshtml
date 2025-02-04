@@ -1,5 +1,5 @@
-﻿@using StockTrackingApp.UI.Areas.Admin.Models.CustomerVMs
-@model StockTrackingApp.UI.Areas.Admin.Models.CustomerVMs.AdminCustomerDetailsVM
+﻿@using StockTrackingApp.UI.Areas.Admin.Models.SupplierVMs
+@model StockTrackingApp.UI.Areas.Admin.Models.SupplierVMs.AdminSupplierDetailsVM
 
 @{
     ViewData["Title"] = "Details";
@@ -11,14 +11,14 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Müşteri Detayı</h4>
+                    <h4 class="card-title">Tedarikçi Detayı</h4>
                     <div class="col-sm-12 d-flex justify-content-end">
-                        <a data-bs-toggle="modal" data-bs-target="#updateCustomerModal" asp-route-id="@Model.Id" data-item-id="@Model.Id" data-item-name="@Model.CompanyName" data-item-email="@Model.Email" data-item-phone="@Model.PhoneNumber" data-item-tax="@Model.TaxNo" data-item-adress="@Model.Adress" class="btn btn-primary" data-kt-users-table-filter="delete_row">Düzenle</a>
-                        <a href="javascript:void(0)" class="btn btn-danger" onclick="confirmDelete('@Url.Action("Delete", "Customer", new { area = "Admin", id = Model.Id })')">Delete</a>
+                        <a data-bs-toggle="modal" data-bs-target="#updateSupplierModal" asp-route-id="@Model.Id" data-item-id="@Model.Id" data-item-name="@Model.CompanyName" data-item-email="@Model.Email" data-item-phone="@Model.PhoneNumber" data-item-tax="@Model.TaxNo" data-item-adress="@Model.Adress" class="btn btn-primary" data-kt-users-table-filter="delete_row">Düzenle</a>
+                        <a href="javascript:void(0)" class="btn btn-danger" onclick="confirmDelete('@Url.Action("Delete", "Supplier", new { area = "Admin", id = Model.Id })')">Delete</a>
                         <a asp-action="Index" class="btn btn-secondary">Back to List</a>
                     </div>
                     <div id="modalContainer">
-                        @await Html.PartialAsync("_CustomerUpdateModal", new AdminCustomerUpdateVM())
+                        @await Html.PartialAsync("_SupplierUpdateModal", new AdminSupplierUpdateVM())
                     </div>
                 </div>
                 <div class="card-content">
@@ -41,34 +41,29 @@
                                         <label> @Html.DisplayFor(model => model.CompanyName)</label>
                                     </div>
                                     <div class="col-md-4">
-                                        <label> @Html.DisplayNameFor(model => model.Adress)</label>
+                                        <label> @Html.DisplayNameFor(model => model.TaxNo)</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <label> @Html.DisplayFor(model => model.Adress)</label>
+                                        <label> @Html.DisplayFor(model => model.TaxNo)</label>
                                     </div>
-
                                     <div class="col-md-4">
                                         <label> @Html.DisplayNameFor(model => model.PhoneNumber)</label>
                                     </div>
                                     <div class="col-md-8 form-group">
                                         <label> @Html.DisplayFor(model => model.PhoneNumber)</label>
                                     </div>
-
                                     <div class="col-md-4">
                                         <label> @Html.DisplayNameFor(model => model.Email)</label>
                                     </div>
                                     <div class="col-md-8 form-group">
                                         <label> @Html.DisplayFor(model => model.Email)</label>
                                     </div>
-
                                     <div class="col-md-4">
-                                        <label> @Html.DisplayNameFor(model => model.TaxNo)</label>
+                                        <label> @Html.DisplayNameFor(model => model.Adress)</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <label> @Html.DisplayFor(model => model.TaxNo)</label>
+                                        <label> @Html.DisplayFor(model => model.Adress)</label>
                                     </div>
-
-
 
 
                                 </div>
@@ -81,12 +76,13 @@
         </div>
     </div>
 </section>
+
 <script src="~/AdminLayout/assets/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     $(document).ready(function () {
-        $('#updateCustomerModal').on('show.bs.modal', function (event) {
+        $('#updateSupplierModal').on('show.bs.modal', function (event) {
             let button = $(event.relatedTarget);
             let itemId = button.data('item-id');
             let itemName = button.data('item-name');
@@ -127,7 +123,7 @@
                     if (response.ok) {
                         Swal.fire(
                             'Silindi!',
-                            'Müşteri başarıyla silindi.',
+                            'Tedarikçi başarıyla silindi.',
                             'success'
                         ).then(() => {
                             location.reload(); // Sayfayı yenileyin veya gerekli güncellemeleri yapın
@@ -135,7 +131,7 @@
                     } else {
                         Swal.fire(
                             'Hata!',
-                            'Bir sorun oluştu, Müşteri silinemedi.',
+                            'Bir sorun oluştu, Tedarikçi silinemedi.',
                             'error'
                         );
                     }
@@ -152,3 +148,51 @@
         });
     }
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

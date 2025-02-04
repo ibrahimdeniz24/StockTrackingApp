@@ -1,4 +1,5 @@
 ﻿using StockTrackingApp.Dtos.Categories;
+using System.Web.Mvc;
 
 namespace StockTrackingApp.Business.Interfaces.Services
 {
@@ -11,5 +12,8 @@ namespace StockTrackingApp.Business.Interfaces.Services
         Task<IDataResult<CategoryDto>> UpdateAsync(CategoryUpdateDto categoryUpdateDto);
         Task<IResult> DeleteAsync(Guid id);
         Task<IDataResult<CategoryDetailsDto>> GetDetailsByIdAsync(Guid id);
+
+
+        Task<List<SelectListItem>> GetAllCategoryAsSelectListAsync();
     }
 }

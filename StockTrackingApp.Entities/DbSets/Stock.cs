@@ -16,6 +16,5 @@ namespace StockTrackingApp.Entities.DbSets
         public virtual Product Product { get; set; }
         public Guid ProductId { get; set; }
 
-        public virtual ICollection<StockTransaction> StockTransactions { get; set; }
     }
 }

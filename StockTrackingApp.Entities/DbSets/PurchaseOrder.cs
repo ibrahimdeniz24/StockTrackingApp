@@ -8,10 +8,6 @@ namespace StockTrackingApp.Entities.DbSets
 {
     public class PurchaseOrder :AuditableEntity
     {
-        public PurchaseOrder()
-        {
-            PurchaseOrderDetails = new HashSet<PurchaseOrderDetail>();
-        }
         public DateTime OrderDate { get; set; }
 
 
@@ -27,7 +23,7 @@ namespace StockTrackingApp.Entities.DbSets
 
         public Guid SupplierId { get; set; }
 
-        public virtual ICollection<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
+        public virtual PurchaseOrderDetail PurchaseOrderDetail { get; set; }
 
     }
 }

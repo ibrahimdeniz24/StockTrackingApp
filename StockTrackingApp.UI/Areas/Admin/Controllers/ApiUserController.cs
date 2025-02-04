@@ -56,13 +56,6 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
             return searchList;
         }
 
-
-        [HttpGet]
-        public async Task<IActionResult> Create()
-        {
-            return View();
-        }
-
         [HttpPost]
         public async Task<IActionResult> Create(AdminApiUserCreateVM model)
         {
@@ -77,7 +70,7 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
             if (!result.IsSuccess)
             {
                 NotifyErrorLocalized(result.Message);
-                return View(model);
+                return RedirectToAction(nameof(Index));
             }
 
             NotifySuccess($"{model.FirstName} {model.LastName} başarıyla eklendi.");

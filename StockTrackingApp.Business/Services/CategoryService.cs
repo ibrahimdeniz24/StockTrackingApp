@@ -1,6 +1,7 @@
 ﻿
 using StockTrackingApp.Business.Interfaces.Services;
 using StockTrackingApp.Dtos.Categories;
+using System.Web.Mvc;
 
 namespace StockTrackingApp.Business.Services
 {
@@ -56,6 +57,17 @@ namespace StockTrackingApp.Business.Services
             var categories = await _categoryRepository.GetAllAsync();
 
             return new SuccessDataResult<List<CategoryListDto>>(categories.Adapt<List<CategoryListDto>>(), Messages.ListedSuccess);
+        }
+
+        public async Task<List<SelectListItem>> GetAllCategoryAsSelectListAsync()
+        {
+            var categories = await _categoryRepository.GetAllAsync();
+
+            return categories.Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = c.CategoryName
+            }).ToList();
         }
 
         public async Task<IDataResult<CategoryDto>> GetByIdAsync(Guid id)

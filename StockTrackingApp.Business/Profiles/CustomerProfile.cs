@@ -7,10 +7,11 @@ namespace StockTrackingApp.Business.Profiles
         public CustomerProfile()
         {
 
-            CreateMap<CustomerCreateDto, CustomerCreateDto>();
+            CreateMap<CustomerCreateDto, Customer>();
             CreateMap<Customer, CustomerUpdateDto>();
             CreateMap<Customer, CustomerDetailsDto>();
             CreateMap<CustomerUpdateDto, Customer>();
+            CreateMap<Customer, CustomerDto>();
         }
     }
 }

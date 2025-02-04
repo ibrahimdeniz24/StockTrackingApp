@@ -1,10 +1,4 @@
-﻿using StockTrackingApp.Dtos.ProductSuppliers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace StockTrackingApp.Dtos.Products
 {
     public  class ProductDto
@@ -13,8 +7,10 @@ namespace StockTrackingApp.Dtos.Products
         public string Name { get; set; } // Ürün Adı
         public string SKU { get; set; } // Stok Kodu
         public decimal Price { get; set; } // Fiyat
-        public Guid CategoryId { get; set; } // Kategori ID
-        public string CategoryName { get; set; } // Kategori Adı
-        public List<ProductSupplierDto> Suppliers { get; set; } // Tedarikçiler
+        public Guid CategoryId { get; set; } // Kategori ID (FK)
+        public string CategoryName { get; set; }
+        public Guid SupplierId { get; set; }
+
+        public string SupplierName { get; set; }
     }
 }

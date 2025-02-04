@@ -4,8 +4,7 @@
     {
         public override void Configure(EntityTypeBuilder<Category> builder)
         {
-
-            builder.HasMany(s=>s.Products).WithOne(s=>s.Category).HasForeignKey(s=>s.CategoryId);
+            builder.Property(c => c.CategoryName).IsRequired().HasMaxLength(100);
             base.Configure(builder);
         }
     }

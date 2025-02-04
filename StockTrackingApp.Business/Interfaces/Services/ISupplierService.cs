@@ -1,5 +1,6 @@
 ﻿
 using StockTrackingApp.Dtos.Suppliers;
+using System.Web.Mvc;
 
 namespace StockTrackingApp.Business.Interfaces.Services
 {
@@ -13,5 +14,7 @@ namespace StockTrackingApp.Business.Interfaces.Services
         Task<IDataResult<SupplierDetailsDto>> GetDetailsByIdAsync(Guid id);
 
         Task<IDataResult<SupplierDto>> UpdateAsync(SupplierUpdateDto supplierUpdateDto);
+
+        Task<List<SelectListItem>> GetAllSupplierAsSelectListAsync();
     }
 }

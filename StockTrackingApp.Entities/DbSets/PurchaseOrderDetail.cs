@@ -11,14 +11,10 @@ namespace StockTrackingApp.Entities.DbSets
 
         public Guid ProductId { get; set; }
 
-        public Guid WarehouseId { get; set; }
-
-
         public virtual PurchaseOrder PurchaseOrder { get; set; }
 
         public virtual Product Product { get; set; }
 
-        public virtual  Warehouse Warehouse { get; set; }
 
     }
 }

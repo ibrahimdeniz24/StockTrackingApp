@@ -82,7 +82,7 @@
                                                         Seçenekler
                                                     </button>
                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        <a data-bs-toggle="modal" data-bs-target="#updateCustomerModal" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-name="@item.CompanyName" class="dropdown-item" data-kt-users-table-filter="delete_row">Düzenle</a>
+                                                        <a data-bs-toggle="modal" data-bs-target="#updateCustomerModal" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-name="@item.CompanyName" data-item-email="@item.Email" data-item-phone="@item.PhoneNumber" data-item-tax="@item.TaxNo" data-item-adress="@item.Adress" class="dropdown-item" data-kt-users-table-filter="delete_row">Düzenle</a>
                                                         <a class="dropdown-item" href="@Url.Action("Details", "Customer", new { id = item.Id })">Details</a>
 
                                                     </div>
@@ -111,10 +111,18 @@
             let button = $(event.relatedTarget);
             let itemId = button.data('item-id');
             let itemName = button.data('item-name');
+            let itemTaxNo = button.data('item-tax');
+            let itemEmail = button.data('item-email');
+            let itemPhone = button.data('item-phone');
+            let itemAdress = button.data('item-adress');
 
             let modal = $(this);
             modal.find('input[name="Id"]').val(itemId);
             modal.find('input[name="CompanyName"]').val(itemName);
+            modal.find('input[name="TaxNo"]').val(itemTaxNo);
+            modal.find('input[name="Email"]').val(itemEmail);
+            modal.find('input[name="PhoneNumber"]').val(itemPhone);
+            modal.find('input[name="Adress"]').val(itemAdress);
         });
     });
 </script>

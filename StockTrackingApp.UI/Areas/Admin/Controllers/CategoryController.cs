@@ -124,7 +124,7 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(AdminCategoryUpdateVM categoryUpdateVM)
         {
-           if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values.SelectMany(x => x.Errors);
                 var errorMessages = new StringBuilder();
@@ -162,5 +162,14 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsSelectList()
+        {
+            var categories = await _categoryService.GetAllCategoryAsSelectListAsync();
+            return Json(categories);
+        }
+
     }
 }
+

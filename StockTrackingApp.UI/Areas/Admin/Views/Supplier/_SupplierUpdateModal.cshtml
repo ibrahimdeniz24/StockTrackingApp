@@ -1,18 +1,18 @@
-﻿@model StockTrackingApp.UI.Areas.Admin.Models.CustomerVMs.AdminCustomerUpdateVM
+﻿@model StockTrackingApp.UI.Areas.Admin.Models.SupplierVMs.AdminSupplierUpdateVM
 
 <!-- Modal -->
-<div class="modal fade" id="updateCustomerModal" tabindex="-1" aria-labelledby="customerModalLabel" aria-hidden="true">
+<div class="modal fade" id="updateSupplierModal" tabindex="-1" aria-labelledby="supplierModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="customerModalLabel">Müşteri Güncelle</h5>
+                <h5 class="modal-title" id="supplierModalLabel">Tedarikçi Güncelle</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
 
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <form asp-action="Create" id="customerForm">
+                        <form asp-action="Update" id="supplierForm">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-group mb-3">
                                 <label asp-for="CompanyName" class="control-label"></label>
@@ -20,14 +20,9 @@
                                 <span asp-validation-for="CompanyName" class="text-danger"></span>
                             </div>
                             <div class="form-group mb-3">
-                                <label asp-for="TaxNo" class="control-label"></label>
-                                <input asp-for="TaxNo" class="form-control" />
-                                <span asp-validation-for="TaxNo" class="text-danger"></span>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label asp-for="Email" class="control-label"></label>
-                                <input asp-for="Email" class="form-control" />
-                                <span asp-validation-for="Email" class="text-danger"></span>
+                                <label asp-for="Adress" class="control-label"></label>
+                                <input asp-for="Adress" class="form-control" />
+                                <span asp-validation-for="Adress" class="text-danger"></span>
                             </div>
                             <div class="form-group mb-3">
                                 <label asp-for="PhoneNumber" class="control-label"></label>
@@ -35,9 +30,14 @@
                                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                             </div>
                             <div class="form-group mb-3">
-                                <label asp-for="Adress" class="control-label"></label>
-                                <input asp-for="Adress" class="form-control" />
-                                <span asp-validation-for="Adress" class="text-danger"></span>
+                                <label asp-for="Email" class="control-label"></label>
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="TaxNo" class="control-label"></label>
+                                <input asp-for="TaxNo" class="form-control" />
+                                <span asp-validation-for="TaxNo" class="text-danger"></span>
                             </div>
                             <div class="form-group">
                                 <input type="submit" value="Güncelle" class="btn btn-success" />

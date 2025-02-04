@@ -4,7 +4,8 @@
     {
         public override void Configure(EntityTypeBuilder<PurchaseOrder> builder)
         {
-            builder.HasMany(x => x.PurchaseOrderDetails).WithOne(x => x.PurchaseOrder).HasForeignKey(x => x.PurchaseOrderId);
+
+            builder.HasOne(po => po.Supplier).WithMany(s => s.PurchaseOrders).HasForeignKey(po => po.SupplierId);
             base.Configure(builder);
         }
     }

@@ -4,7 +4,7 @@
     {
         public override void Configure(EntityTypeBuilder<Customer> builder)
         {
-            builder.HasMany(c => c.Orders).WithOne(s=>s.Customer).HasForeignKey(o => o.CustomerId);
+            builder.Property(c => c.CompanyName).IsRequired().HasMaxLength(100);
             base.Configure(builder);
         }
     }

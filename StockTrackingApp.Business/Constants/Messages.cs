@@ -32,6 +32,8 @@
         public const string LoginSuccessful = "Login_Successful";
         public const string InvalidRegisterCode = "Invalid_Register_Code";
 
+        public const string ModelisNull = "Model_is_Null";
+
         // Email For Messages
         #region Email Messages
         public const string GetAllSuccess = "Gönderilen mailler başarıyla getirildi.";

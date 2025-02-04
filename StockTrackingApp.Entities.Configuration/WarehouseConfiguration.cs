@@ -5,7 +5,7 @@ namespace StockTrackingApp.Entities.Configuration
     {
         public override void Configure(EntityTypeBuilder<Warehouse> builder)
         {
-            builder.HasMany(x => x.Stocks).WithOne(x => x.Warehouse).HasForeignKey(x => x.WareHouseId);
+            builder.Property(w => w.Name).IsRequired().HasMaxLength(100);
             base.Configure(builder);
         }
     }

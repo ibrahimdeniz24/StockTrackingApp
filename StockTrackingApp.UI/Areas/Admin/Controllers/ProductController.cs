@@ -1,5 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using StockTrackingApp.Dtos.Products;
+using StockTrackingApp.UI.Areas.Admin.Models.ProductVMs;
+using System.Text;
+using X.PagedList.Extensions;
 
 namespace StockTrackingApp.UI.Areas.Admin.Controllers
 {
@@ -9,20 +13,107 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         private readonly IMapper _mapper;
         private readonly ICategoryService _categoryService;
         private readonly ISupplierService _supplierService;
-        private readonly IProductSupplierService _productSupplierService;
 
-        public ProductController(IProductService productService, IMapper mapper, ICategoryService categoryService, ISupplierService supplierService, IProductSupplierService productSupplierService)
+        public ProductController(IProductService productService, IMapper mapper, ICategoryService categoryService, ISupplierService supplierService)
         {
             _productService = productService;
             _mapper = mapper;
             _categoryService = categoryService;
             _supplierService = supplierService;
-            _productSupplierService = productSupplierService;
+ 
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(int? page, int pageSize = 10)
         {
-            return View();
+            // Sayfa numarası kontrolüz
+            page ??= 1;
+            if (pageSize <= 0) pageSize = 10; // Geçersiz pageSize değerlerini engelle
+
+            // Ürünleri getir ve AdminProductListVM'e map et
+            var productsGetResult = await _productService.GetAllAsync();
+            var productList = _mapper.Map<List<AdminProductListVM>>(productsGetResult.Data)
+                                     .OrderBy(o => o.Name) // Sıralama önce yapılmalı
+                                     .ToList();
+
+            // Sayfalama işlemi
+            var pagedList = productList.ToPagedList(page.Value, pageSize);
+
+            // View'a gerekli verileri gönder
+            ViewBag.PageSize = pageSize;
+
+            return View(pagedList);
         }
+
+
+
+        public async Task<List<AdminProductListVM>> Search(string product)
+        {
+            var productsGetResult = await _productService.GetAllAsync();
+            var productList = _mapper.Map<List<AdminProductListVM>>(productsGetResult.Data);
+
+            var searchList = productList
+                .Where(s => s.Name.IndexOf(product, StringComparison.OrdinalIgnoreCase) >= 0)
+                .OrderBy(o => o.Name)
+                .ToList();
+
+            return searchList;
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Create(AdminProductCreateVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(x => x.Errors)
+                                              .Select(e => e.ErrorMessage)
+                                              .Distinct();
+                return Json(new { success = false, message = string.Join(", ", errors) });
+            }
+
+            var productDto = _mapper.Map<ProductCreateDto>(model);
+            var addResult = await _productService.AddAsync(productDto);
+
+            if (!addResult.IsSuccess)
+            {
+                return Json(new { success = false, message = addResult.Message });
+            }
+
+            return Json(new { success = true, message = "Ürün başarıyla eklendi!" });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetCategories()
+        {
+            var categories = await _categoryService.GetAllAsync();
+
+            // Eğer gelen data DTO içeriyorsa, doğru şekilde isimlendir
+            var categoryList = categories.Data.Select(c => new
+            {
+                Id = c.Id,
+                Name = c.CategoryName
+            }).ToList();
+
+            return Json(categoryList);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetSuppliers()
+        {
+            var suppliers = await _supplierService.GetAllAsync();
+
+            // Eğer gelen data DTO içeriyorsa, doğru şekilde isimlendir
+            var supplierList = suppliers.Data.Select(c => new
+            {
+                Id = c.Id,
+                Name = c.CompanyName
+            }).ToList();
+
+            return Json(supplierList);
+        }
+
     }
 }

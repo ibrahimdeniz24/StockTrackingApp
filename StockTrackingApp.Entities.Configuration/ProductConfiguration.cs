@@ -4,11 +4,9 @@
     {
         public override void Configure(EntityTypeBuilder<Product> builder)
         {
-
-            builder.HasMany(x=>x.Stocks).WithOne(x=>x.Product).HasForeignKey(x=>x.ProductId);
-            builder.HasMany(x=>x.OrderDetails).WithOne(x=>x.Product).HasForeignKey(x=>x.ProductId);
-            builder.HasMany(x=>x.PurchaseOrderDetails).WithOne(x=>x.Product).HasForeignKey(x=>x.ProductId);
-            builder.HasMany(x=>x.ProductSuppliers).WithOne(x=>x.Product).HasForeignKey(x=>x.ProductId);
+            builder.Property(p => p.Name).IsRequired().HasMaxLength(100);
+            builder.HasOne(p => p.Category).WithMany(c => c.Products).HasForeignKey(p => p.CategoryId);
+            builder.HasOne(x=>x.Supplier).WithMany(x=>x.Products).HasForeignKey(x=>x.SupplierId);
             base.Configure(builder);
         }
     }

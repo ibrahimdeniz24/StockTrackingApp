@@ -2,6 +2,7 @@
 using StockTrackingApp.Business.Interfaces.Services;
 using StockTrackingApp.Dtos.Customers;
 using StockTrackingApp.Dtos.Suppliers;
+using System.Web.Mvc;
 
 namespace StockTrackingApp.Business.Services
 {
@@ -18,6 +19,7 @@ namespace StockTrackingApp.Business.Services
 
         public async Task<IDataResult<SupplierDto>> AddAsync(SupplierCreateDto supplierCreateDto)
         {
+          
             var hasSupplier = await _supplierRepository.AnyAsync(x => x.TaxNo.ToLower().Trim() == supplierCreateDto.TaxNo.ToLower().Trim());
             if (hasSupplier)
             {
@@ -55,6 +57,17 @@ namespace StockTrackingApp.Business.Services
             var suppliers = await _supplierRepository.GetAllAsync();
 
             return new SuccessDataResult<List<SupplierListDto>>(suppliers.Adapt<List<SupplierListDto>>(), Messages.ListedSuccess);
+        }
+
+        public async Task<List<SelectListItem>> GetAllSupplierAsSelectListAsync()
+        {
+            var suppliers = await _supplierRepository.GetAllAsync();
+
+            return suppliers.Select(s => new SelectListItem
+            {
+                Value = s.Id.ToString(),
+                Text = s.CompanyName
+            }).ToList();
         }
 
         public async Task<IDataResult<SupplierDto>> GetByIdAsync(Guid id)

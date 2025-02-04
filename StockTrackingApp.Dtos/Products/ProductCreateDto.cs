@@ -1,9 +1,4 @@
 ﻿
-
-using StockTrackingApp.Dtos.ProductSuppliers;
-using System.Reflection.Metadata.Ecma335;
-using System.Security.AccessControl;
-
 namespace StockTrackingApp.Dtos.Products
 {
     public class ProductCreateDto
@@ -13,8 +8,9 @@ namespace StockTrackingApp.Dtos.Products
         public decimal Price { get; set; } // Fiyat
         public Guid CategoryId { get; set; } // Kategori ID (FK)
         public string CategoryName { get; set; }
+        public Guid SupplierId { get; set; }
 
-        public IEnumerable<ProductSupplierCreateDto> ProductSuppliers { get; set; }   
+        public string SupplierName { get; set; }
 
     }
 }

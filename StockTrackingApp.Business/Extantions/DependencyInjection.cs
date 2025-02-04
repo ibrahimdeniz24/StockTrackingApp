@@ -24,7 +24,6 @@ namespace StockTrackingApp.Business.Extantions
             services.AddScoped<IOrderDetailService,OrderDetailService>();
             services.AddScoped<IOrderService,OrderService>();
             services.AddScoped<IProductService,ProductService>();
-            services.AddScoped<IProductSupplierService,ProductSupplierService>();
             services.AddScoped<IPurchaseOrderService,PurchaseOrderService>();
             services.AddScoped<IPurchaseOrderDetailService,PurchaseOrderDetailService>();
             services.AddScoped<IStockService,StockService>();

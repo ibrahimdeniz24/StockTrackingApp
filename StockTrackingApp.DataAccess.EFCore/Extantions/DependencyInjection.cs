@@ -18,7 +18,6 @@ namespace StockTrackingApp.DataAccess.EFCore.Extantions
             services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IProductSupplierRepository, ProductSupplierRepository>();
             services.AddScoped<IPurchaseOrderRepository,PurchaseOrderRepository>();
             services.AddScoped<IPurchaseOrderDetailRepository, PurchaseOrderDetailRepository>();
             services.AddScoped<IStockTransactionRepository, StockTransactionRepository>();

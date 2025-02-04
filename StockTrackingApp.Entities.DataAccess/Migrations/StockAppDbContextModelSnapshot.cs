@@ -351,7 +351,8 @@ namespace StockTrackingApp.DataAccess.Migrations
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -396,7 +397,8 @@ namespace StockTrackingApp.DataAccess.Migrations
 
                     b.Property<string>("CompanyName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -585,16 +587,12 @@ namespace StockTrackingApp.DataAccess.Migrations
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("WarehouseId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("OrderId")
+                        .IsUnique();
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("WarehouseId");
 
                     b.ToTable("OrderDetails");
                 });
@@ -633,7 +631,8 @@ namespace StockTrackingApp.DataAccess.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -645,58 +644,16 @@ namespace StockTrackingApp.DataAccess.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("StockTrackingApp.Entities.DbSets.ProductSupplier", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeletedBy")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<DateTime?>("DeletedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("SupplierId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("Product_Suppliers");
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("StockTrackingApp.Entities.DbSets.PurchaseOrder", b =>
@@ -801,16 +758,12 @@ namespace StockTrackingApp.DataAccess.Migrations
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("WarehouseId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("PurchaseOrderId");
-
-                    b.HasIndex("WarehouseId");
+                    b.HasIndex("PurchaseOrderId")
+                        .IsUnique();
 
                     b.ToTable("PurchaseOrderDetails");
                 });
@@ -1028,7 +981,8 @@ namespace StockTrackingApp.DataAccess.Migrations
 
                     b.Property<string>("CompanyName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -1108,7 +1062,8 @@ namespace StockTrackingApp.DataAccess.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -1187,28 +1142,20 @@ namespace StockTrackingApp.DataAccess.Migrations
             modelBuilder.Entity("StockTrackingApp.Entities.DbSets.OrderDetail", b =>
                 {
                     b.HasOne("StockTrackingApp.Entities.DbSets.Order", "Order")
-                        .WithMany("OrderDetails")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne("OrderDetail")
+                        .HasForeignKey("StockTrackingApp.Entities.DbSets.OrderDetail", "OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("StockTrackingApp.Entities.DbSets.Product", "Product")
-                        .WithMany("OrderDetails")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StockTrackingApp.Entities.DbSets.Warehouse", "warehouse")
                         .WithMany()
-                        .HasForeignKey("WarehouseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Order");
 
                     b.Navigation("Product");
-
-                    b.Navigation("warehouse");
                 });
 
             modelBuilder.Entity("StockTrackingApp.Entities.DbSets.Product", b =>
@@ -1219,24 +1166,13 @@ namespace StockTrackingApp.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("StockTrackingApp.Entities.DbSets.ProductSupplier", b =>
-                {
-                    b.HasOne("StockTrackingApp.Entities.DbSets.Product", "Product")
-                        .WithMany("ProductSuppliers")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("StockTrackingApp.Entities.DbSets.Supplier", "Supplier")
-                        .WithMany("ProductSuppliers")
+                        .WithMany("Products")
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Product");
+                    b.Navigation("Category");
 
                     b.Navigation("Supplier");
                 });
@@ -1255,28 +1191,20 @@ namespace StockTrackingApp.DataAccess.Migrations
             modelBuilder.Entity("StockTrackingApp.Entities.DbSets.PurchaseOrderDetail", b =>
                 {
                     b.HasOne("StockTrackingApp.Entities.DbSets.Product", "Product")
-                        .WithMany("PurchaseOrderDetails")
+                        .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("StockTrackingApp.Entities.DbSets.PurchaseOrder", "PurchaseOrder")
-                        .WithMany("PurchaseOrderDetails")
-                        .HasForeignKey("PurchaseOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StockTrackingApp.Entities.DbSets.Warehouse", "Warehouse")
-                        .WithMany()
-                        .HasForeignKey("WarehouseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne("PurchaseOrderDetail")
+                        .HasForeignKey("StockTrackingApp.Entities.DbSets.PurchaseOrderDetail", "PurchaseOrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Product");
 
                     b.Navigation("PurchaseOrder");
-
-                    b.Navigation("Warehouse");
                 });
 
             modelBuilder.Entity("StockTrackingApp.Entities.DbSets.Stock", b =>
@@ -1301,7 +1229,7 @@ namespace StockTrackingApp.DataAccess.Migrations
             modelBuilder.Entity("StockTrackingApp.Entities.DbSets.StockTransaction", b =>
                 {
                     b.HasOne("StockTrackingApp.Entities.DbSets.Stock", "Stock")
-                        .WithMany("StockTransactions")
+                        .WithMany()
                         .HasForeignKey("StockId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1321,33 +1249,24 @@ namespace StockTrackingApp.DataAccess.Migrations
 
             modelBuilder.Entity("StockTrackingApp.Entities.DbSets.Order", b =>
                 {
-                    b.Navigation("OrderDetails");
+                    b.Navigation("OrderDetail")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("StockTrackingApp.Entities.DbSets.Product", b =>
                 {
-                    b.Navigation("OrderDetails");
-
-                    b.Navigation("ProductSuppliers");
-
-                    b.Navigation("PurchaseOrderDetails");
-
                     b.Navigation("Stocks");
                 });
 
             modelBuilder.Entity("StockTrackingApp.Entities.DbSets.PurchaseOrder", b =>
                 {
-                    b.Navigation("PurchaseOrderDetails");
-                });
-
-            modelBuilder.Entity("StockTrackingApp.Entities.DbSets.Stock", b =>
-                {
-                    b.Navigation("StockTransactions");
+                    b.Navigation("PurchaseOrderDetail")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("StockTrackingApp.Entities.DbSets.Supplier", b =>
                 {
-                    b.Navigation("ProductSuppliers");
+                    b.Navigation("Products");
 
                     b.Navigation("PurchaseOrders");
                 });

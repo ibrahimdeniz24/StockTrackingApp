@@ -37,7 +37,6 @@ namespace StockTrackingApp.DataAccess.Contexts
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
-        public virtual DbSet<ProductSupplier> Product_Suppliers { get; set; } = null!;
         public virtual DbSet<PurchaseOrder> PurchaseOrders { get; set; } = null!;
         public virtual DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; } = null!;
         public virtual DbSet<RegisterCode> RegisterCodes { get; set; } = null!;

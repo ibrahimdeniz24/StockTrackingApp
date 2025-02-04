@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using StockTrackingApp.Dtos.Categories;
+using StockTrackingApp.Business.Constants;
+using StockTrackingApp.Core.Utilities.Results.Concrete;
 using StockTrackingApp.Dtos.Suppliers;
-using StockTrackingApp.UI.Areas.Admin.Models.CategoryVMs;
 using StockTrackingApp.UI.Areas.Admin.Models.SupplierVMs;
 using System.Text;
 using X.PagedList.Extensions;
@@ -22,11 +22,11 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int? page, int pageSize = 10)
         {
             int pageNumber = page ?? 1;
-            var categoriesGetResult = await _supplierService.GetAllAsync();
-            var categoryList = _mapper.Map<List<AdminSupplierListVM>>(categoriesGetResult.Data).OrderBy(o => o.CompanyName).ToList();
+            var suppliersGetResult = await _supplierService.GetAllAsync();
+            var supplierList = _mapper.Map<List<AdminSupplierListVM>>(suppliersGetResult.Data).OrderBy(o => o.CompanyName).ToList();
 
 
-            var pagedList = categoryList.ToPagedList(pageNumber, pageSize);
+            var pagedList = supplierList.ToPagedList(pageNumber, pageSize);
 
             ViewBag.PageSize = pageSize;
 
@@ -36,10 +36,10 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
 
         public async Task<List<AdminSupplierListVM>> Search(string supplier)
         {
-            var categoriesGetResult = await _supplierService.GetAllAsync();
-            var categoryList = _mapper.Map<List<AdminSupplierListVM>>(categoriesGetResult.Data);
+            var suppliersGetResult = await _supplierService.GetAllAsync();
+            var supplierList = _mapper.Map<List<AdminSupplierListVM>>(suppliersGetResult.Data);
 
-            var searchList = categoryList
+            var searchList = supplierList
                 .Where(s => s.CompanyName.IndexOf(supplier, StringComparison.OrdinalIgnoreCase) >= 0)
                 .OrderBy(o => o.CompanyName)
                 .ToList();
@@ -74,10 +74,15 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
                 NotifyError(errorMessages.ToString());
                 return RedirectToAction(nameof(Index));
             }
+            if (model == null)
+            {
+                NotifyErrorLocalized(Messages.ModelisNull);
+                return RedirectToAction(nameof(Index));
+            }
 
-            var categoryDto = _mapper.Map<SupplierCreateDto>(model);
+            var supplierDto = _mapper.Map<SupplierCreateDto>(model);
 
-            var addResult = await _supplierService.AddAsync(categoryDto);
+            var addResult = await _supplierService.AddAsync(supplierDto);
             if (!addResult.IsSuccess)
             {
                 NotifyErrorLocalized(addResult.Message);
@@ -92,15 +97,15 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
-            var getCategory = await _supplierService.GetDetailsByIdAsync(id);
+            var getSupplier = await _supplierService.GetDetailsByIdAsync(id);
 
-            if (!getCategory.IsSuccess)
+            if (!getSupplier.IsSuccess)
             {
-                NotifyErrorLocalized(getCategory.Message);
+                NotifyErrorLocalized(getSupplier.Message);
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(_mapper.Map<AdminCategoryDetailsVM>(getCategory.Data));
+            return View(_mapper.Map<AdminSupplierDetailsVM>(getSupplier.Data));
         }
 
 
@@ -147,22 +152,30 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var categoryUpdateDto = _mapper.Map<SupplierUpdateDto>(supplierUpdateVM);
-            var categoryUpdateResponse = await _supplierService.UpdateAsync(categoryUpdateDto);
-            if (!categoryUpdateResponse.IsSuccess)
+            var supplierUpdateDto = _mapper.Map<SupplierUpdateDto>(supplierUpdateVM);
+            var supplierUpdateResponse = await _supplierService.UpdateAsync(supplierUpdateDto);
+            if (!supplierUpdateResponse.IsSuccess)
             {
-                NotifyErrorLocalized(categoryUpdateResponse.Message);
+                NotifyErrorLocalized(supplierUpdateResponse.Message);
                 return View(nameof(Index));
             }
             else
             {
-                NotifySuccessLocalized(categoryUpdateResponse.Message);
+                NotifySuccessLocalized(supplierUpdateResponse.Message);
             }
 
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsSelectList()
+        {
+            var suppliers = await _supplierService.GetAllSupplierAsSelectListAsync();
+            return Json(suppliers);
+        }
 
 
     }
+
+
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StockTrackingApp.DataAccess.Interfaces.Repositories
 {
-    public interface IProductRepository : IAsyncRepository, IAsyncFindableRepository<Product>, IAsyncInsertableRepository<Product>, IAsyncDeleteableRepository<Product>, IAsyncQueryableRepository<Product>, IAsyncUpdateableRepository<Product>
+    public interface IProductRepository : IAsyncRepository, IAsyncFindableRepository<Product>, IAsyncInsertableRepository<Product>, IAsyncDeleteableRepository<Product>, IAsyncQueryableRepository<Product>, IAsyncUpdateableRepository<Product>,IAsyncTransactionRepository
     {
     }
 }
