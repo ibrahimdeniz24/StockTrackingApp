@@ -1,36 +1,47 @@
-﻿@model IEnumerable<StockTrackingApp.UI.Areas.Admin.Models.AdminVMs.AdminAdminListVM>
+﻿@using StockTrackingApp.UI.Areas.Admin.Models.WarehouseVMs
+@model IEnumerable<StockTrackingApp.UI.Areas.Admin.Models.WarehouseVMs.AdminWarehouseListVM>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
+
 <section class="section">
     <div class="row" id="table-hover-row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <!-- Category Create Butonu -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoryModal">
-                        Yeni Kategori Oluştur
+                    <!-- Warehouse Create Butonu -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#warehouseCreateModal">
+                        Yeni Depo Oluştur
                     </button>
                     <!-- Partial View Modal İçeriğini Yüklemek İçin Boş Modal Div -->
                     <div id="modalContainer">
-                        @* @await Html.PartialAsync("_CategoryCreateModal", new AdminCategoryCreateVM())
-                        @await Html.PartialAsync("_CategoryUpdateModal", new AdminCategoryUpdateVM()) *@
+                        @await Html.PartialAsync("_WarehouseCreateModal", new AdminWarehouseCreateVM())
+                        @await Html.PartialAsync("_WarehouseUpdateModal", new AdminWarehouseUpdateVM())
                     </div>
                 </div>
                 <div class="card-content">
                     <div class="card-body">
                         <!-- Table with outer spacing -->
                         <div class="table-responsive">
+
                             <table class="table table-hover mb-0">
                                 <thead>
                                     <tr>
-                                        <th>@Html.DisplayNameFor(model => model.Id)</th>
-                                        <th>@Html.DisplayNameFor(model => model.FirstName)</th>
-                                        <th>@Html.DisplayNameFor(model => model.LastName)</th>
-                                        <th>@Html.DisplayNameFor(model => model.Email)</th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Id)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Name)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.PhoneNumber)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Location)
+                                        </th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -42,13 +53,13 @@
                                                 @Html.DisplayFor(modelItem => item.Id)
                                             </td>
                                             <td class="text-bold-500">
-                                                @Html.DisplayFor(modelItem => item.FirstName)
+                                                @Html.DisplayFor(modelItem => item.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.PhoneNumber)
                                             </td>
                                             <td class="text-bold-500">
-                                                @Html.DisplayFor(modelItem => item.LastName)
-                                            </td>
-                                            <td class="text-bold-500">
-                                                @Html.DisplayFor(modelItem => item.Email)
+                                                @Html.DisplayFor(modelItem => item.Location)
                                             </td>
                                             <td>
                                                 <div class="btn-group dropend me-1 mb-1">
@@ -59,8 +70,9 @@
                                                         Seçenekler
                                                     </button>
                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        <a data-bs-toggle="modal" data-bs-target="#updateCategoryModal" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-name="@item.FirstName" class="dropdown-item" data-kt-users-table-filter="delete_row">Düzenle</a>
-                                                        <a class="dropdown-item" href="@Url.Action("Details", "Admin", new { id = item.Id })">Details</a>
+                                                        <a data-bs-toggle="modal" data-bs-target="#updateWarehouseModal" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-name="@item.Name" data-item-location="@item.Location" data-item-phone="@item.PhoneNumber" class="dropdown-item" data-kt-users-table-filter="delete_row">Düzenle</a>
+                                                        <a class="dropdown-item" href="@Url.Action("Details", "Warehouse", new { id = item.Id })">Details</a>
+
                                                     </div>
 
                                                 </div>
@@ -75,20 +87,82 @@
             </div>
         </div>
     </div>
+
 </section>
+
 <script src="~/AdminLayout/assets/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     $(document).ready(function () {
-        $('#updateCategoryModal').on('show.bs.modal', function (event) {
+        $('#updateWarehouseModal').on('show.bs.modal', function (event) {
             let button = $(event.relatedTarget);
             let itemId = button.data('item-id');
             let itemName = button.data('item-name');
+            let itemLocation = button.data('item-location');
+            let itemPhone = button.data('item-phone');
 
             let modal = $(this);
             modal.find('input[name="Id"]').val(itemId);
-            modal.find('input[name="CategoryName"]').val(itemName);
+            modal.find('input[name="Name"]').val(itemName);
+            modal.find('input[name="Location"]').val(itemLocation);
+            modal.find('input[name="PhoneNumber"]').val(itemPhone);
         });
     });
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

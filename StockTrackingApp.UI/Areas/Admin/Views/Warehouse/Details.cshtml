@@ -1,0 +1,133 @@
+﻿@using StockTrackingApp.UI.Areas.Admin.Models.WarehouseVMs
+@model StockTrackingApp.UI.Areas.Admin.Models.WarehouseVMs.AdminWarehouseDetailsVM
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section id="multiple-column-form">
+    <div class="row match-height">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Depo Detayı</h4>
+                    <div class="col-sm-12 d-flex justify-content-end">
+                        <a data-bs-toggle="modal" data-bs-target="#updateWarehouseModal" asp-route-id="@Model.Id" data-item-id="@Model.Id" data-item-name="@Model.Name" data-item-location="@Model.Location" data-item-phone="@Model.PhoneNumber" class="btn btn-primary" data-kt-users-table-filter="delete_row">Düzenle</a>
+                        <a href="javascript:void(0)" class="btn btn-danger" onclick="confirmDelete('@Url.Action("Delete", "Warehouse", new { area = "Admin", id = Model.Id })')">Delete</a>
+                        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                    </div>
+                    <div id="modalContainer">
+                        @await Html.PartialAsync("_WarehouseUpdateModal", new AdminWarehouseUpdateVM())
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+                        <form class="form form-horizontal">
+                            <div class="form-body">
+                                <div class="row">
+
+                                    <div class="col-md-4">
+                                        <label> @Html.DisplayNameFor(model => model.Id)</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <label> @Html.DisplayFor(model => model.Id)</label>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label> @Html.DisplayNameFor(model => model.Name)</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <label> @Html.DisplayFor(model => model.Name)</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label> @Html.DisplayNameFor(model => model.PhoneNumber)</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <label> @Html.DisplayFor(model => model.PhoneNumber)</label>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label> @Html.DisplayNameFor(model => model.Location)</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <label> @Html.DisplayFor(model => model.Location)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<script src="~/AdminLayout/assets/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#updateWarehouseModal').on('show.bs.modal', function (event) {
+            let button = $(event.relatedTarget);
+            let itemId = button.data('item-id');
+            let itemName = button.data('item-name');
+            let itemLocation = button.data('item-location');
+            let itemPhone = button.data('item-phone');
+
+            let modal = $(this);
+            modal.find('input[name="Id"]').val(itemId);
+            modal.find('input[name="CompanyName"]').val(itemName);
+            modal.find('input[name="Location"]').val(itemLocation);
+            modal.find('input[name="PhoneNumber"]').val(itemPhone);
+        });
+    });
+</script>
+
+
+<script>
+    function confirmDelete(url) {
+        Swal.fire({
+            title: 'Emin misiniz?',
+            text: "Bu işlemi geri alamazsınız!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Vazgeç'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Fetch ile silme isteği
+                fetch(url, {
+                    method: 'POST', // Eğer GET kullanıyorsanız bunu GET yapın
+                })
+                .then(response => {
+                    if (response.ok) {
+                        Swal.fire(
+                            'Silindi!',
+                            'Depo başarıyla silindi.',
+                            'success'
+                        ).then(() => {
+                            location.reload(); // Sayfayı yenileyin veya gerekli güncellemeleri yapın
+                        });
+                    } else {
+                        Swal.fire(
+                            'Hata!',
+                            'Bir sorun oluştu, Depo silinemedi.',
+                            'error'
+                        );
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    Swal.fire(
+                        'Hata!',
+                        'Bir hata oluştu.',
+                        'error'
+                    );
+                });
+            }
+        });
+    }
+</script>

@@ -1,21 +1,21 @@
 ﻿using AutoMapper;
-using StockTrackingApp.Business.Constants;
-using StockTrackingApp.Core.Utilities.Results.Concrete;
-using StockTrackingApp.Dtos.Categories;
+using StockTrackingApp.Dtos.Warehouses;
 using StockTrackingApp.UI.Areas.Admin.Models.CategoryVMs;
+using StockTrackingApp.UI.Areas.Admin.Models.WarehouseVMs;
 using System.Text;
 using X.PagedList.Extensions;
 
 namespace StockTrackingApp.UI.Areas.Admin.Controllers
 {
-    public class CategoryController : AdminBaseController
+    public class WarehouseController : AdminBaseController
     {
-        private readonly ICategoryService _categoryService;
+
+        private readonly IWarehouseService _warehouseService;
         private readonly IMapper _mapper;
 
-        public CategoryController(ICategoryService categoryService, IMapper mapper)
+        public WarehouseController(IWarehouseService warehouseService, IMapper mapper)
         {
-            _categoryService = categoryService;
+            _warehouseService = warehouseService;
             _mapper = mapper;
         }
 
@@ -23,8 +23,8 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int? page, int pageSize = 10)
         {
             int pageNumber = page ?? 1;
-            var categoriesGetResult = await _categoryService.GetAllAsync();
-            var categoryList = _mapper.Map<List<AdminCategoryListVM>>(categoriesGetResult.Data).OrderBy(o => o.CategoryName).ToList();
+            var warehousesGetResult = await _warehouseService.GetAllAsync();
+            var categoryList = _mapper.Map<List<AdminWarehouseListVM>>(warehousesGetResult.Data).OrderBy(o => o.Name).ToList();
 
 
             var pagedList = categoryList.ToPagedList(pageNumber, pageSize);
@@ -35,23 +35,21 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         }
 
 
-        public async Task<List<AdminCategoryListVM>> Search(string category)
+        public async Task<List<AdminWarehouseListVM>> Search(string warehouse)
         {
-            var categoriesGetResult = await _categoryService.GetAllAsync();
-            var categoryList = _mapper.Map<List<AdminCategoryListVM>>(categoriesGetResult.Data);
+            var warehousesGetResult = await _warehouseService.GetAllAsync();
+            var warehouseList = _mapper.Map<List<AdminWarehouseListVM>>(warehousesGetResult.Data);
 
-            var searchList = categoryList
-                .Where(s => s.CategoryName.IndexOf(category, StringComparison.OrdinalIgnoreCase) >= 0)
-                .OrderBy(o => o.CategoryName)
+            var searchList = warehouseList
+                .Where(s => s.Name.IndexOf(warehouse, StringComparison.OrdinalIgnoreCase) >= 0)
+                .OrderBy(o => o.Name)
                 .ToList();
 
             return searchList;
         }
 
 
-
-        [HttpPost]
-        public async Task<IActionResult> Create(AdminCategoryCreateVM model)
+        public async Task<IActionResult> Create(AdminWarehouseCreateVM model)
         {
             if (!ModelState.IsValid)
             {
@@ -77,52 +75,51 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var categoryDto = _mapper.Map<CategoryCreateDto>(model);
-
-            var addResult = await _categoryService.AddAsync(categoryDto);
-            if (!addResult.IsSuccess)
+            var warehouseDto = _mapper.Map<WarehouseCreateDto>(model);
+            var addResult = await _warehouseService.AddAsync(warehouseDto);
+            if (addResult.IsSuccess)
             {
-                NotifyErrorLocalized(addResult.Message);
+                NotifySuccess(addResult.Message);
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                NotifyError(addResult.Message);
                 return RedirectToAction(nameof(Index));
             }
 
-            NotifySuccessLocalized(addResult.Message);
-            return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Details(Guid id)
-        {
-            var getCategory = await _categoryService.GetDetailsByIdAsync(id);
-
-            if (!getCategory.IsSuccess)
-            {
-                NotifyErrorLocalized(getCategory.Message);
-                return RedirectToAction(nameof(Index));
-            }
-
-            return View(_mapper.Map<AdminCategoryDetailsVM>(getCategory.Data));
-        }
-
-
-        [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _categoryService.DeleteAsync(id);
-            if (result.IsSuccess)
+            var deleteResult = await _warehouseService.DeleteAsync(id);
+            if (deleteResult.IsSuccess)
             {
-                NotifySuccessLocalized(result.Message);
+                NotifySuccess(deleteResult.Message);
+                return RedirectToAction(nameof(Index));
             }
             else
             {
-                NotifyErrorLocalized(result.Message);
+                NotifyError(deleteResult.Message);
+                return RedirectToAction(nameof(Index));
             }
-
-            return Json(result);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Update(AdminCategoryUpdateVM categoryUpdateVM)
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var getDetailsResult = await _warehouseService.GetDetailsByIdAsync(id);
+            if (getDetailsResult.IsSuccess)
+            {
+                return View(_mapper.Map<AdminWarehouseDetailsVM>(getDetailsResult.Data));
+            }
+            else
+            {
+                NotifyError(getDetailsResult.Message);
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        public async Task<IActionResult> Update(AdminWarehouseUpdateVM warehouseUpdateVM)
         {
             if (!ModelState.IsValid)
             {
@@ -148,21 +145,18 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var categoryUpdateDto = _mapper.Map<CategoryUpdateDto>(categoryUpdateVM);
-            var categoryUpdateResponse = await _categoryService.UpdateAsync(categoryUpdateDto);
-            if (!categoryUpdateResponse.IsSuccess)
+            var warehouseDto = _mapper.Map<WarehouseUpdateDto>(warehouseUpdateVM);
+            var updateResult = await _warehouseService.UpdateAsync(warehouseDto);
+            if (updateResult.IsSuccess)
             {
-                NotifyErrorLocalized(categoryUpdateResponse.Message);
-                return View(nameof(Index));
+                NotifySuccess(updateResult.Message);
+                return RedirectToAction(nameof(Index));
             }
             else
             {
-                NotifySuccessLocalized(categoryUpdateResponse.Message);
+                NotifyError(updateResult.Message);
             }
-
             return RedirectToAction(nameof(Index));
         }
-
     }
 }
-

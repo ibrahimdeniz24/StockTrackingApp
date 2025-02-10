@@ -5,12 +5,14 @@ using StockTrackingApp.Dtos.Categories;
 using StockTrackingApp.Dtos.Customers;
 using StockTrackingApp.Dtos.Products;
 using StockTrackingApp.Dtos.Suppliers;
+using StockTrackingApp.Dtos.Warehouses;
 using StockTrackingApp.UI.Areas.Admin.Models.AdminVMs;
 using StockTrackingApp.UI.Areas.Admin.Models.ApiUserVMs;
 using StockTrackingApp.UI.Areas.Admin.Models.CategoryVMs;
 using StockTrackingApp.UI.Areas.Admin.Models.CustomerVMs;
 using StockTrackingApp.UI.Areas.Admin.Models.ProductVMs;
 using StockTrackingApp.UI.Areas.Admin.Models.SupplierVMs;
+using StockTrackingApp.UI.Areas.Admin.Models.WarehouseVMs;
 
 namespace StockTrackingApp.UI.Profiles
 {
@@ -63,7 +65,17 @@ namespace StockTrackingApp.UI.Profiles
             //ProductController
             CreateMap<AdminProductCreateVM, ProductCreateDto>();
             CreateMap<ProductListDto, AdminProductListVM>();
-    
+            CreateMap<ProductDetailsDto, AdminProductDetailsVM>();
+            CreateMap<ProductListDto, AdminProductListVM>();
+
+
+
+            //WarehouseController
+            CreateMap<AdminWarehouseCreateVM, WarehouseCreateDto>();
+            CreateMap<WarehouseDetailsDto, AdminWarehouseDetailsVM>();
+            CreateMap<WarehouseListDto, AdminWarehouseListVM>();
+            CreateMap<AdminWarehouseUpdateVM, WarehouseUpdateDto>();
+
         }
     }
 }

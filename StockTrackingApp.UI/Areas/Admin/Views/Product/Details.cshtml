@@ -1,0 +1,177 @@
+﻿@using StockTrackingApp.UI.Areas.Admin.Models.ProductVMs
+@model StockTrackingApp.UI.Areas.Admin.Models.ProductVMs.AdminProductDetailsVM
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<section id="multiple-column-form">
+    <div class="row match-height">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Müşteri Detayı</h4>
+                    <div class="col-sm-12 d-flex justify-content-end">
+                        <a data-bs-toggle="modal" data-bs-target="#updateProductModal" asp-route-id="@Model.Id" data-item-id="@Model.Id" data-item-name="@Model.Name" data-item-sku="@Model.SKU" data-item-categories="@Model.CategoryName" data-item-suppliers="@Model.SupplierName" class="btn btn-primary" data-item-price="@Model.Price" data-kt-users-table-filter="delete_row">Düzenle</a>
+                        <a href="javascript:void(0)" class="btn btn-danger" onclick="confirmDelete('@Url.Action("Delete", "Product", new { area = "Admin", id = Model.Id })')">Delete</a>
+                        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                    </div>
+                    <div id="modalContainer">
+                        @await Html.PartialAsync("_ProductUpdateModal", new AdminProductUpdateVM())
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+                        <form class="form form-horizontal">
+                            <div class="form-body">
+                                <div class="row">
+
+                                    <div class="col-md-4">
+                                        <label> @Html.DisplayNameFor(model => model.Id)</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <label> @Html.DisplayFor(model => model.Id)</label>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label> @Html.DisplayNameFor(model => model.Name)</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <label> @Html.DisplayFor(model => model.Name)</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label> @Html.DisplayNameFor(model => model.SKU)</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <label> @Html.DisplayFor(model => model.SKU)</label>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label> @Html.DisplayNameFor(model => model.CategoryName)</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <label> @Html.DisplayFor(model => model.CategoryName)</label>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label> @Html.DisplayNameFor(model => model.SupplierName)</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <label> @Html.DisplayFor(model => model.SupplierName)</label>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<script src="~/AdminLayout/assets/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#updateProductModal').on('show.bs.modal', function (event) {
+            let button = $(event.relatedTarget);
+            let itemId = button.data('item-id');
+            let itemName = button.data('item-name');
+            let itemSku = button.data('item-sku');
+            let itemPrice = button.data('item-price');
+            let itemCateogires = button.data('item-categories');
+            let itemSuppliers = button.data('item-suppliers');
+
+            let modal = $(this);
+            modal.find('input[name="Id"]').val(itemId);
+            modal.find('input[name="Name"]').val(itemName);
+            modal.find('input[name="SKU"]').val(itemSku);
+            modal.find('input[name="Price"]').val(itemPrice);
+            modal.find('input[name="Categories"]').val(itemCateogires);
+            modal.find('input[name="Suppliers"]').val(itemSuppliers);
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#productUpdateModal').on('show.bs.modal', function () {
+            $.getJSON('/Admin/Product/GetCategories', function (data) {
+                var dropdown = $('#categoryDropdown');
+                dropdown.empty();
+                dropdown.append('<option value="">Kategori Seçin</option>');
+
+                // Eğer JSON'daki "name" property yerine başka bir isim kullanılmışsa, burayı güncelle!
+                $.each(data, function (index, category) {
+                    dropdown.append($('<option></option>').attr('value', category.id).text(category.name));
+                });
+            });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#productUpdateModal').on('show.bs.modal', function () {
+            $.getJSON('/Admin/Product/GetSuppliers', function (data) {
+                var dropdown = $('#supplierDropdown');
+                dropdown.empty();
+                dropdown.append('<option value="">Tedarikçi Seçin</option>');
+
+                // Eğer JSON'daki "name" property yerine başka bir isim kullanılmışsa, burayı güncelle!
+                $.each(data, function (index, supplier) {
+                    dropdown.append($('<option></option>').attr('value', supplier.id).text(supplier.name));
+                });
+            });
+        });
+    });
+</script>
+
+<script>
+    function confirmDelete(url) {
+        Swal.fire({
+            title: 'Emin misiniz?',
+            text: "Bu işlemi geri alamazsınız!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Vazgeç'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Fetch ile silme isteği
+                fetch(url, {
+                    method: 'POST', // Eğer GET kullanıyorsanız bunu GET yapın
+                })
+                .then(response => {
+                    if (response.ok) {
+                        Swal.fire(
+                            'Silindi!',
+                            'Müşteri başarıyla silindi.',
+                            'success'
+                        ).then(() => {
+                            location.reload(); // Sayfayı yenileyin veya gerekli güncellemeleri yapın
+                        });
+                    } else {
+                        Swal.fire(
+                            'Hata!',
+                            'Bir sorun oluştu, Müşteri silinemedi.',
+                            'error'
+                        );
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    Swal.fire(
+                        'Hata!',
+                        'Bir hata oluştu.',
+                        'error'
+                    );
+                });
+            }
+        });
+    }
+</script>

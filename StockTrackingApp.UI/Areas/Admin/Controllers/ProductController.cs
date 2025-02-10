@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using StockTrackingApp.Dtos.Products;
 using StockTrackingApp.UI.Areas.Admin.Models.ProductVMs;
 using System.Text;
@@ -81,6 +80,39 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
             }
 
             return Json(new { success = true, message = "Ürün başarıyla eklendi!" });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var getProduct = await _productService.GetDetailsByIdAsync(id);
+
+            if (!getProduct.IsSuccess)
+            {
+                NotifyErrorLocalized(getProduct.Message);
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(_mapper.Map<AdminProductDetailsVM>(getProduct.Data));
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var result = await _productService.DeleteAsync(id);
+            if (result.IsSuccess)
+            {
+                NotifySuccessLocalized(result.Message);
+            }
+            else
+            {
+                NotifyErrorLocalized(result.Message);
+            }
+
+            return Json(result);
         }
 
 

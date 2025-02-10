@@ -36,6 +36,7 @@ namespace StockTrackingApp.Business.Services
                     return new ErrorResult(Messages.DeleteFail);
                 }
                 await _purchaseOrderRepository.DeleteAsync(purchaseOrder);
+                await _purchaseOrderRepository.SaveChangesAsync();
                 return new SuccessResult(Messages.DeleteSuccess);
             }
             catch (Exception ex)

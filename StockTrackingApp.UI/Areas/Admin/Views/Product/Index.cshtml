@@ -18,7 +18,7 @@
                     <!-- Partial View Modal İçeriğini Yüklemek İçin Boş Modal Div -->
                     <div id="modalContainer">
                         @await Html.PartialAsync("_ProductCreateModal", new AdminProductCreateVM())
-                        @* @await Html.PartialAsync("_CategoryUpdateModal", new AdminCategoryUpdateVM()) *@
+                        @await Html.PartialAsync("_ProductUpdateModal", new AdminProductUpdateVM())
                     </div>
                 </div>
                 <div class="card-content">
@@ -60,11 +60,11 @@
                                                         Seçenekler
                                                     </button>
                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        <a data-bs-toggle="modal" data-bs-target="#updateProductModal" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-name="@item.Name" class="dropdown-item" data-kt-users-table-filter="delete_row">Düzenle</a>
+                                                        <a data-bs-toggle="modal" data-bs-target="#updateProductModal" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-name="@item.Name" data-item-sku="@item.SKU" data-item-categories="@item.Categories" data-item-price="@item.Price" data-item-suppliers="@item.Suppliers" class="dropdown-item" data-kt-users-table-filter="delete_row">Düzenle</a>
                                                         <a class="dropdown-item" href="@Url.Action("Details", "Product", new { id = item.Id })">Details</a>
 
                                                     </div>
-
+                                                   
                                                 </div>
                                             </td>
                                         </tr>
@@ -87,13 +87,20 @@
             let button = $(event.relatedTarget);
             let itemId = button.data('item-id');
             let itemName = button.data('item-name');
+            let itemSku = button.data('item-sku');
+            let itemPrice = button.data('item-price');
+            let itemCateogires = button.data('item-categories');
+            let itemSuppliers = button.data('item-suppliers');
 
             let modal = $(this);
             modal.find('input[name="Id"]').val(itemId);
-            modal.find('input[name="CategoryName"]').val(itemName);
+            modal.find('input[name="Name"]').val(itemName);
+            modal.find('input[name="SKU"]').val(itemSku);
+            modal.find('input[name="Price"]').val(itemPrice);
+            modal.find('input[name="Categories"]').val(itemCateogires);
+            modal.find('input[name="Suppliers"]').val(itemSuppliers);
         });
     });
-      
 </script>
 <script>
     $(document).ready(function () {
@@ -114,6 +121,40 @@
 <script>
     $(document).ready(function () {
         $('#productCreateModal').on('show.bs.modal', function () {
+            $.getJSON('/Admin/Product/GetSuppliers', function (data) {
+                var dropdown = $('#supplierDropdown');
+                dropdown.empty();
+                dropdown.append('<option value="">Tedarikçi Seçin</option>');
+
+                // Eğer JSON'daki "name" property yerine başka bir isim kullanılmışsa, burayı güncelle!
+                $.each(data, function (index, supplier) {
+                    dropdown.append($('<option></option>').attr('value', supplier.id).text(supplier.name));
+                });
+            });
+        });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $('#updateProductModal').on('show.bs.modal', function () {
+            $.getJSON('/Admin/Product/GetCategories', function (data) {
+                var dropdown = $('#categoryDropdown');
+                dropdown.empty();
+                dropdown.append('<option value="">Kategori Seçin</option>');
+
+                // Eğer JSON'daki "name" property yerine başka bir isim kullanılmışsa, burayı güncelle!
+                $.each(data, function (index, category) {
+                    dropdown.append($('<option></option>').attr('value', category.id).text(category.name));
+                });
+            });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#updateProductModal').on('show.bs.modal', function () {
             $.getJSON('/Admin/Product/GetSuppliers', function (data) {
                 var dropdown = $('#supplierDropdown');
                 dropdown.empty();

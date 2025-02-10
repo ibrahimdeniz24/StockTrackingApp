@@ -40,6 +40,7 @@ namespace StockTrackingApp.Business.Services
                     return new ErrorResult(Messages.DeleteFail);
                 }
                 await _warehouseRepository.DeleteAsync(warehouse);
+                await _warehouseRepository.SaveChangesAsync();
                 return new SuccessResult(Messages.DeleteSuccess);
             }
             catch (Exception ex)
@@ -76,6 +77,20 @@ namespace StockTrackingApp.Business.Services
             }
 
             return new SuccessDataResult<WarehouseDetailsDto>(_mapper.Map<WarehouseDetailsDto>(warehouse), Messages.ListedSuccess);
+        }
+
+        public async Task<IDataResult<WarehouseDto>> UpdateAsync(WarehouseUpdateDto warehouseUpdateDto)
+        {
+            var warehouse = await _warehouseRepository.GetByIdAsync(warehouseUpdateDto.Id);
+            if (warehouse == null)
+            {
+                return new ErrorDataResult<WarehouseDto>(Messages.UpdateFail);
+            }
+
+            var updatedWarehouse = _mapper.Map(warehouseUpdateDto, warehouse);
+            await _warehouseRepository.UpdateAsync(updatedWarehouse);
+            await _warehouseRepository.SaveChangesAsync();
+            return new SuccessDataResult<WarehouseDto>(_mapper.Map<WarehouseDto>(updatedWarehouse), Messages.UpdateSuccess);
         }
     }
 }

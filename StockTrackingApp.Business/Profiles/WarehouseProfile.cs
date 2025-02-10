@@ -7,10 +7,11 @@ namespace StockTrackingApp.Business.Profiles
     {
         public WarehouseProfile()
         {
-            CreateMap<Warehouse, WarehouseCreateDto>();
+            CreateMap<WarehouseCreateDto, Warehouse>();
             CreateMap<Warehouse, WarehouseDetailsDto>();
             CreateMap<Warehouse, WarehouseDto>();
             CreateMap<Warehouse, WarehouseListDto>();
+            CreateMap<WarehouseUpdateDto, Warehouse>();
         }
     }
 }
