@@ -65,10 +65,26 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var errors = ModelState.Values.SelectMany(x => x.Errors)
-                                              .Select(e => e.ErrorMessage)
-                                              .Distinct();
-                return Json(new { success = false, message = string.Join(", ", errors) });
+                var errors = ModelState.Values.SelectMany(x => x.Errors);
+                var errorMessages = new StringBuilder();
+
+                foreach (var error in errors)
+                {
+                    if (errorMessages.Length > 0)
+                    {
+                        errorMessages.Append(", ");
+
+                        if (errorMessages.ToString().Contains(error.ErrorMessage))
+                        {
+                            continue;
+                        }
+                    }
+
+                    errorMessages.Append(error.ErrorMessage);
+                }
+
+                NotifyError(errorMessages.ToString());
+                return RedirectToAction(nameof(Index));
             }
 
             var productDto = _mapper.Map<ProductCreateDto>(model);
@@ -76,10 +92,12 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
 
             if (!addResult.IsSuccess)
             {
-                return Json(new { success = false, message = addResult.Message });
+                NotifyErrorLocalized(addResult.Message);
+                return RedirectToAction(nameof(Index));
             }
 
-            return Json(new { success = true, message = "Ürün başarıyla eklendi!" });
+            NotifySuccessLocalized(addResult.Message);
+            return RedirectToAction(nameof(Index));
         }
 
 
@@ -116,6 +134,9 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         }
 
 
+   
+
+        //Ajax ile modala veri doldurmak için
         [HttpGet]
         public async Task<IActionResult> GetCategories()
         {
@@ -131,7 +152,7 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
             return Json(categoryList);
         }
 
-
+        //Ajax ile modala veri doldurmak için
         [HttpGet]
         public async Task<IActionResult> GetSuppliers()
         {

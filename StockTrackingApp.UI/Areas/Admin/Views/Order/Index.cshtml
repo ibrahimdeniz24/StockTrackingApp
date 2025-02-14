@@ -1,0 +1,156 @@
+﻿@using StockTrackingApp.UI.Areas.Admin.Models.OrderVMs
+@model IEnumerable<StockTrackingApp.UI.Areas.Admin.Models.OrderVMs.AdminOrderListVM>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<section class="section">
+    <div class="row" id="table-hover-row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <!-- Order Create Butonu -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderCreateModal">
+                        Yeni Sipariş Oluştur
+                    </button>
+                    <!-- Partial View Modal İçeriğini Yüklemek İçin Boş Modal Div -->
+                    <div id="modalContainer">
+                        @await Html.PartialAsync("_OrderCreateModal", new AdminOrderCreateVM())
+                        @await Html.PartialAsync("_OrderUpdateModal", new AdminOrderUpdateVM())
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+                        <!-- Table with outer spacing -->
+                        <div class="table-responsive">
+
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Id)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.OrderDate)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.DeliveryDate)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.CustomerName)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.OrderStatus)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Description)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.TotalAmount)
+                                        </th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Id)
+                                            </td>
+                                            <td class="text-bold-500">
+                                                @Html.DisplayFor(modelItem => item.OrderDate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.DeliveryDate)
+                                            </td>
+                                            <td class="text-bold-500">
+                                                @Html.DisplayFor(modelItem => item.CustomerName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.OrderStatus)
+                                            </td>
+                                            <td class="text-bold-500">
+                                                @Html.DisplayFor(modelItem => item.Description)
+                                            </td>
+                                            <td class="text-bold-500">
+                                                @Html.DisplayFor(modelItem => item.TotalAmount)
+                                            </td>
+                                            <td>
+                                                <div class="btn-group dropend me-1 mb-1">
+
+                                                    <button class="btn btn-light rounded-pill  dropdown-toggle" type="button"
+                                                            id="dropdownMenuButton" data-bs-toggle="dropdown"
+                                                            aria-haspopup="true" aria-expanded="false">
+                                                        Seçenekler
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <a data-bs-toggle="modal" data-bs-target="#updateOrderModal" asp-route-id="@item.Id" data-item-id="@item.Id"  class="dropdown-item" data-kt-users-table-filter="delete_row">Düzenle</a>
+                                                        <a class="dropdown-item" href="@Url.Action("Details", "Order", new { id = item.Id })">Details</a>
+
+                                                    </div>
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<script src="~/AdminLayout/assets/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#updateOrderModal').on('show.bs.modal', function (event) {
+            let button = $(event.relatedTarget);
+            let itemId = button.data('item-id');
+
+
+            let modal = $(this);
+            modal.find('input[name="Id"]').val(itemId);
+   
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#customerDropdown").select2({
+            placeholder: "Müşteri Ara...",
+            allowClear: true,
+            minimumInputLength: 1,
+            dropdownParent: $("#customerDropdown").parent(), // Bu satırı ekle modal oldugu için bu ekledik
+            ajax: {
+                url: "@Url.Action("GetCustomers", "Order", new { area = "Admin" })",
+                dataType: "json",
+                delay: 250,
+                data: function (params) {
+                    return { term: params.term };
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return { id: item.id, text: item.text };
+                        })
+                    };
+                }
+            }
+        });
+    });
+
+</script>
+
+
+
+

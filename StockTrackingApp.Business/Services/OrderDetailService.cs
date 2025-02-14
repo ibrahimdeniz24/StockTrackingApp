@@ -83,12 +83,12 @@ namespace StockTrackingApp.Business.Services
                 return new ErrorDataResult<OrderDetailDto>(Messages.FoundFail);
             }
 
-            var updatedCustomer = _mapper.Map(orderDetailUpdateDto, orderDetail);
+            var updatedOrderDetail = _mapper.Map(orderDetailUpdateDto, orderDetail);
 
-            await _orderDetailRepository.UpdateAsync(updatedCustomer);
+            await _orderDetailRepository.UpdateAsync(updatedOrderDetail);
             await _orderDetailRepository.SaveChangesAsync();
 
-            return new SuccessDataResult<OrderDetailDto>(_mapper.Map<OrderDetailDto>(updatedCustomer), Messages.UpdateSuccess);
+            return new SuccessDataResult<OrderDetailDto>(_mapper.Map<OrderDetailDto>(updatedOrderDetail), Messages.UpdateSuccess);
         }
     }
 }
