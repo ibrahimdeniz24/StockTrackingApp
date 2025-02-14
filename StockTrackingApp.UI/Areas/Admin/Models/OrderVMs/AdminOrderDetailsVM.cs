@@ -1,9 +1,10 @@
-﻿using StockTrackingApp.Dtos.OrderDetails;
-namespace StockTrackingApp.Dtos.Orders
+﻿using StockTrackingApp.Entities.Enums;
+
+namespace StockTrackingApp.UI.Areas.Admin.Models.OrderVMs
 {
-    public class OrderDto
+    public class AdminOrderDetailsVM
     {
-        public Guid Id { get; set; }
+        public Guid Id  { get; set; }
         public Guid CustomerId { get; set; }
         public DateTime OrderDate { get; set; }
         public DateTime DeliveryDate { get; set; }

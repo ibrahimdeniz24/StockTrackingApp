@@ -7,9 +7,11 @@ namespace StockTrackingApp.Business.Profiles
     {
         public StockProfile()
         {
-            CreateMap<Stock,StockCreateDto>();
+            CreateMap<StockCreateDto, Stock>();
+            CreateMap<StockUpdateDto, Stock>();
             CreateMap<Stock,StockDto>();
             CreateMap<Stock,StockListDto>();
+            CreateMap<Stock,StockDetailsDto>();
 
         }
     }

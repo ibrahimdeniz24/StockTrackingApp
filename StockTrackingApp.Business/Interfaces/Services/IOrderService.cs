@@ -1,4 +1,5 @@
-﻿using StockTrackingApp.Dtos.Orders;
+﻿using StockTrackingApp.Dtos.Customers;
+using StockTrackingApp.Dtos.Orders;
 
 namespace StockTrackingApp.Business.Interfaces.Services
 {
@@ -8,8 +9,10 @@ namespace StockTrackingApp.Business.Interfaces.Services
         Task<IDataResult<OrderDto>> AddAsync(OrderCreateDto orderCreateDto);
 
         Task<IDataResult<List<OrderListDto>>> GetAllAsync();
-        //Task<IDataResult<OrderDto>> UpdateAsync(o customerUpdateDto);
+        Task<IDataResult<OrderDto>> UpdateAsync(OrderUpdateDto orderUpdateDto);
         Task<IResult> DeleteAsync(Guid id);
         Task<IDataResult<OrderDetailsDto>> GetDetailsByIdAsync(Guid id);
+
+
     }
 }

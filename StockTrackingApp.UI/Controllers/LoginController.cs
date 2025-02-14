@@ -83,7 +83,15 @@ namespace StockTrackingApp.UI.Controllers
 
         }
 
+
+        public async Task<IActionResult> ForgotPassword()
+        {
+            return View();
+        }
+
+
         //[HttpPost]
+
         //public async Task<IActionResult> ForgotPassword(ForgotPasswordVM model)
         //{
         //    if (!ModelState.IsValid)

@@ -1,0 +1,48 @@
+﻿@model StockTrackingApp.UI.Areas.Admin.Models.StockVMs.AdminStockCreateVM
+
+<div class="modal fade" id="stockCreateModal" tabindex="-1" aria-labelledby="stockProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="stockProductModalLabel">Yeni Stok Ekle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form asp-action="Create" id="stockForm">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group mb-3">
+                                <label asp-for="Quantity" class="control-label"></label>
+                                <input asp-for="Quantity" class="form-control" />
+                                <span asp-validation-for="Quantity" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="ProductId">Ürün Seçin</label>
+                                <select id="productDropdown" name="ProductId" class="form-control">
+                                    <option value="">Ürün Seçin</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="WarehouseId">Depo Seç</label>
+                                <select id="warehouseDropdown" name="WarehouseId" class="form-control">
+                                    <option value="">Depo Seçin</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Oluştur" class="btn btn-success" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

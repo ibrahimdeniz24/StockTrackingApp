@@ -15,6 +15,10 @@
     <link rel="stylesheet" href="~/AdminLayout/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="~/AdminLayout/assets/css/app.css">
     <link rel="shortcut icon" href="~/AdminLayout/assets/images/favicon.svg" type="image/x-icon">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
 
 
 </head>
@@ -82,18 +86,25 @@
                                 <li class="submenu-item ">
                                     <a asp-action="Index" asp-controller="Supplier" asp-area="Admin">Tedarikçiler</a>
                                 </li>
+                                <li class="submenu-item ">
+                                    <a asp-action="Index" asp-controller="Order" asp-area="Admin">Siparişler</a>
+                                </li>
                             </ul>
 
                         </li>
 
                         <li class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
-                                <i class="bi bi-cart-plus"></i>
+                                <i class="bi bi-box-seam"></i>
                                 <span>Depo İşlemleri</span>
                             </a>
                             <ul class="submenu">
                                 <li class="submenu-item ">
                                     <a asp-action="Index" asp-controller="Warehouse" asp-area="Admin">Depolar</a>
+                                </li>
+
+                                <li class="submenu-item ">
+                                    <a asp-action="Index" asp-controller="Stock" asp-area="Admin">Stoklar</a>
                                 </li>
                             </ul>
 
@@ -129,9 +140,12 @@
         </div>
         @RenderSection("Scripts", required: false)
         @await Component.InvokeAsync("Notyf")
-        <!-- SweetAlert2 CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
+
+
+        <!-- SweetAlert2 JS -->
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+      
         <!-- SweetAlert2 JS -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

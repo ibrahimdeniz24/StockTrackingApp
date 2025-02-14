@@ -1,0 +1,70 @@
+﻿@model StockTrackingApp.UI.Areas.Admin.Models.OrderVMs.AdminOrderCreateVM
+
+<div class="modal fade" id="orderCreateModal" tabindex="-1" aria-labelledby="createOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createOrderModalLabel">Yeni Sipariş Oluştur</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form asp-action="Create" id="orderForm">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group mb-3">
+                                <label asp-for="CustomerId" class="control-label"></label>
+                                <select id="customerDropdown" name="CustomerId" class="form-control" style="width: 100%;">
+                                    <option value="">Müşteri Seç</option>
+                                </select>
+                                <span asp-validation-for="CustomerId" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label asp-for="OrderDate" class="control-label"></label>
+                                <input type="date" asp-for="OrderDate" class="form-control" />
+                                <span asp-validation-for="OrderDate" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="DeliveryDate" class="control-label"></label>
+                                <input type="date" asp-for="DeliveryDate" class="form-control" />
+                                <span asp-validation-for="DeliveryDate" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="Description" class="control-label"></label>
+                                <input asp-for="Description" class="form-control" />
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="TotalAmount" class="control-label"></label>
+                                <input asp-for="TotalAmount" class="form-control" />
+                                <span asp-validation-for="TotalAmount" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="CategoryId">Kategori Seç</label>
+                                <select id="categoryDropdown" name="CategoryId" class="form-control">
+                                    <option value="">Kategori Seçin</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="SupplierId">Tedarikçi Seç</label>
+                                <select id="supplierDropdown" name="SupplierId" class="form-control">
+                                    <option value="">Tedarikçi Seçin</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Oluştur" class="btn btn-success" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

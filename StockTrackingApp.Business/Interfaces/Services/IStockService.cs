@@ -10,5 +10,9 @@ namespace StockTrackingApp.Business.Interfaces.Services
 
         Task<IDataResult<List<StockListDto>>> GetAllAsync();
         Task<IResult> DeleteAsync(Guid id);
+
+        Task<IDataResult<StockDto>> UpdateAsync(StockUpdateDto stockUpdateDto);
+
+        Task<IDataResult<StockDetailsDto>> GetDetailsByIdAsync(Guid id);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using StockTrackingApp.Business.Interfaces.Services;
 using StockTrackingApp.Dtos.Stocks;
+using StockTrackingApp.Entities.DbSets;
 
 namespace StockTrackingApp.Business.Services
 {
@@ -62,6 +63,31 @@ namespace StockTrackingApp.Business.Services
 
             return new ErrorDataResult<StockDto>(Messages.FoundFail);
 
+        }
+
+        public async Task<IDataResult<StockDetailsDto>> GetDetailsByIdAsync(Guid id)
+        {
+            var stockDetailsDto = await _stockRepository.GetByIdAsync(id);
+            if (stockDetailsDto != null)
+            {
+                return new SuccessDataResult<StockDetailsDto>(_mapper.Map<StockDetailsDto>(stockDetailsDto), Messages.FoundSuccess);
+            }
+
+            return new ErrorDataResult<StockDetailsDto>(Messages.FoundFail);
+        }
+
+        public async Task<IDataResult<StockDto>> UpdateAsync(StockUpdateDto stockUpdateDto)
+        {
+            var stockDto =  await _stockRepository.GetByIdAsync(stockUpdateDto.Id);
+            if (stockDto == null)
+            {
+                return new ErrorDataResult<StockDto>(Messages.FoundFail);
+            }
+
+            var updatedStock = _mapper.Map(stockUpdateDto, stockDto);
+            await _stockRepository.UpdateAsync(updatedStock);
+            await _stockRepository.SaveChangesAsync();
+            return new SuccessDataResult<StockDto>(_mapper.Map<StockDto>(updatedStock), Messages.UpdateSuccess);
         }
     }
 }

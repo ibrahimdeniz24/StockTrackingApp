@@ -2,12 +2,18 @@
 
 namespace StockTrackingApp.Dtos.Orders
 {
-    internal class OrderUpdateDto
+    public class OrderUpdateDto
     {
         public Guid Id { get; set; }
         public Guid CustomerId { get; set; }
         public DateTime OrderDate { get; set; }
+        public DateTime DeliveryDate { get; set; }
         public decimal TotalAmount { get; set; }
-        public List<OrderDetailUpdateDto> OrderDetails { get; set; }
+
+        public string Description { get; set; }
+
+        public OrderStatus OrderStatus { get; set; }
+
+        public Guid OrderDetailId { get; set; }
     }
 }

@@ -9,11 +9,13 @@ namespace StockTrackingApp.Business.Services
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
+        private readonly ICustomerRepository _customerRepository;
 
-        public OrderService(IOrderRepository orderRepository, IMapper mapper)
+        public OrderService(IOrderRepository orderRepository, IMapper mapper, ICustomerRepository customerRepository)
         {
             _orderRepository = orderRepository;
             _mapper = mapper;
+            _customerRepository = customerRepository;
         }
 
         public async Task<IDataResult<OrderDto>> AddAsync(OrderCreateDto orderCreateDto)
@@ -53,6 +55,7 @@ namespace StockTrackingApp.Business.Services
             return new SuccessDataResult<List<OrderListDto>>(orders.Adapt<List<OrderListDto>>(), Messages.ListedSuccess);
         }
 
+
         public async Task<IDataResult<OrderDto>> GetByIdAsync(Guid id)
         {
             var order = await _orderRepository.GetByIdAsync(id);
@@ -74,5 +77,24 @@ namespace StockTrackingApp.Business.Services
 
             return new SuccessDataResult<OrderDetailsDto>(_mapper.Map<OrderDetailsDto>(order), Messages.ListedSuccess);
         }
+
+        public async Task<IDataResult<OrderDto>> UpdateAsync(OrderUpdateDto orderUpdateDto)
+        {
+            var orderDto = await _orderRepository.GetByIdAsync(orderUpdateDto.Id);
+
+            if (orderDto == null)
+            {
+                return new ErrorDataResult<OrderDto>(Messages.UpdateFail);
+            }
+
+            var updatedOrder = _mapper.Map(orderUpdateDto,orderDto);
+            await _orderRepository.UpdateAsync(updatedOrder);
+            await _orderRepository.SaveChangesAsync();
+
+            return new SuccessDataResult<OrderDto>(_mapper.Map<OrderDto>(updatedOrder), Messages.UpdateSuccess);
+        }
+
+
+        
     }
 }
