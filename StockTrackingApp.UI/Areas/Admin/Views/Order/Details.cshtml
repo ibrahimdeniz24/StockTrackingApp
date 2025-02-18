@@ -1,5 +1,5 @@
-﻿@using StockTrackingApp.UI.Areas.Admin.Models.SupplierVMs
-@model StockTrackingApp.UI.Areas.Admin.Models.SupplierVMs.AdminSupplierDetailsVM
+﻿@using StockTrackingApp.UI.Areas.Admin.Models.OrderVMs
+@model StockTrackingApp.UI.Areas.Admin.Models.OrderVMs.AdminOrderDetailsVM
 
 @{
     ViewData["Title"] = "Details";
@@ -11,14 +11,14 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Tedarikçi Detayı</h4>
+                    <h4 class="card-title">Sipariş Detayı</h4>
                     <div class="col-sm-12 d-flex justify-content-end">
-                        <a data-bs-toggle="modal" data-bs-target="#updateSupplierModal" asp-route-id="@Model.Id" data-item-id="@Model.Id" data-item-name="@Model.CompanyName" data-item-email="@Model.Email" data-item-phone="@Model.PhoneNumber" data-item-tax="@Model.TaxNo" data-item-adress="@Model.Adress" class="btn btn-primary" data-kt-users-table-filter="delete_row">Düzenle</a>
-                        <a href="javascript:void(0)" class="btn btn-danger" onclick="confirmDelete('@Url.Action("Delete", "Supplier", new { area = "Admin", id = Model.Id })')">Delete</a>
+                        <a data-bs-toggle="modal" data-bs-target="#updateOrderModal" asp-route-id="@Model.Id" data-item-id="@Model.Id"  class="btn btn-primary" data-kt-users-table-filter="delete_row">Düzenle</a>
+                        <a href="javascript:void(0)" class="btn btn-danger" onclick="confirmDelete('@Url.Action("Delete", "Order", new { area = "Admin", id = Model.Id })')">Delete</a>
                         <a asp-action="Index" class="btn btn-secondary">Back to List</a>
                     </div>
                     <div id="modalContainer">
-                        @await Html.PartialAsync("_SupplierUpdateModal", new AdminSupplierUpdateVM())
+                        @await Html.PartialAsync("_OrderUpdateModal", new AdminOrderUpdateVM())
                     </div>
                 </div>
                 <div class="card-content">
@@ -35,37 +35,38 @@
                                     </div>
 
                                     <div class="col-md-4">
-                                        <label> @Html.DisplayNameFor(model => model.CompanyName)</label>
+                                        <label> @Html.DisplayNameFor(model => model.CustomerId)</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <label> @Html.DisplayFor(model => model.CompanyName)</label>
+                                        <label> @Html.DisplayFor(model => model.CustomerId)</label>
                                     </div>
                                     <div class="col-md-4">
-                                        <label> @Html.DisplayNameFor(model => model.TaxNo)</label>
+                                        <label> @Html.DisplayNameFor(model => model.DeliveryDate)</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <label> @Html.DisplayFor(model => model.TaxNo)</label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label> @Html.DisplayNameFor(model => model.PhoneNumber)</label>
-                                    </div>
-                                    <div class="col-md-8 form-group">
-                                        <label> @Html.DisplayFor(model => model.PhoneNumber)</label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label> @Html.DisplayNameFor(model => model.Email)</label>
-                                    </div>
-                                    <div class="col-md-8 form-group">
-                                        <label> @Html.DisplayFor(model => model.Email)</label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label> @Html.DisplayNameFor(model => model.Adress)</label>
-                                    </div>
-                                    <div class="col-md-8 form-group">
-                                        <label> @Html.DisplayFor(model => model.Adress)</label>
+                                        <label> @Html.DisplayFor(model => model.DeliveryDate)</label>
                                     </div>
 
+                                    <div class="col-md-4">
+                                        <label> @Html.DisplayNameFor(model => model.Description)</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <label> @Html.DisplayFor(model => model.Description)</label>
+                                    </div>
 
+                                    <div class="col-md-4">
+                                        <label> @Html.DisplayNameFor(model => model.OrderDate)</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <label> @Html.DisplayFor(model => model.OrderDate)</label>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label> @Html.DisplayNameFor(model => model.OrderStatus)</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <label> @Html.DisplayFor(model => model.OrderStatus)</label>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -77,27 +78,17 @@
     </div>
 </section>
 
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     $(document).ready(function () {
-        $('#updateSupplierModal').on('show.bs.modal', function (event) {
+        $('#updateOrderModal').on('show.bs.modal', function (event) {
             let button = $(event.relatedTarget);
             let itemId = button.data('item-id');
-            let itemName = button.data('item-name');
-            let itemTaxNo = button.data('item-tax');
-            let itemEmail = button.data('item-email');
-            let itemPhone = button.data('item-phone');
-            let itemAdress = button.data('item-adress');
 
             let modal = $(this);
             modal.find('input[name="Id"]').val(itemId);
-            modal.find('input[name="CompanyName"]').val(itemName);
-            modal.find('input[name="TaxNo"]').val(itemTaxNo);
-            modal.find('input[name="Email"]').val(itemEmail);
-            modal.find('input[name="PhoneNumber"]').val(itemPhone);
-            modal.find('input[name="Adress"]').val(itemAdress);
+
         });
     });
 </script>
@@ -123,7 +114,7 @@
                     if (response.ok) {
                         Swal.fire(
                             'Silindi!',
-                            'Tedarikçi başarıyla silindi.',
+                            'Sipariş başarıyla silindi.',
                             'success'
                         ).then(() => {
                             location.reload(); // Sayfayı yenileyin veya gerekli güncellemeleri yapın
@@ -131,7 +122,7 @@
                     } else {
                         Swal.fire(
                             'Hata!',
-                            'Bir sorun oluştu, Tedarikçi silinemedi.',
+                            'Bir sorun oluştu, Sipariş silinemedi.',
                             'error'
                         );
                     }
@@ -148,51 +139,3 @@
         });
     }
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

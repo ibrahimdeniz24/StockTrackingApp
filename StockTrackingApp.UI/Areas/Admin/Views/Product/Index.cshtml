@@ -64,7 +64,7 @@
                                                         <a class="dropdown-item" href="@Url.Action("Details", "Product", new { id = item.Id })">Details</a>
 
                                                     </div>
-                                                   
+
                                                 </div>
                                             </td>
                                         </tr>
@@ -78,8 +78,8 @@
         </div>
     </div>
 </section>
-<script src="~/AdminLayout/assets/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 <script>
     $(document).ready(function () {
@@ -102,72 +102,61 @@
         });
     });
 </script>
-<script>
-    $(document).ready(function () {
-        $('#productCreateModal').on('show.bs.modal', function () {
-            $.getJSON('/Admin/Product/GetCategories', function (data) {
-                var dropdown = $('#categoryDropdown');
-                dropdown.empty();
-                dropdown.append('<option value="">Kategori Seçin</option>');
-
-                // Eğer JSON'daki "name" property yerine başka bir isim kullanılmışsa, burayı güncelle!
-                $.each(data, function (index, category) {
-                    dropdown.append($('<option></option>').attr('value', category.id).text(category.name));
-                });
-            });
-        });
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $('#productCreateModal').on('show.bs.modal', function () {
-            $.getJSON('/Admin/Product/GetSuppliers', function (data) {
-                var dropdown = $('#supplierDropdown');
-                dropdown.empty();
-                dropdown.append('<option value="">Tedarikçi Seçin</option>');
-
-                // Eğer JSON'daki "name" property yerine başka bir isim kullanılmışsa, burayı güncelle!
-                $.each(data, function (index, supplier) {
-                    dropdown.append($('<option></option>').attr('value', supplier.id).text(supplier.name));
-                });
-            });
-        });
-    });
-</script>
-
 
 <script>
     $(document).ready(function () {
-        $('#updateProductModal').on('show.bs.modal', function () {
-            $.getJSON('/Admin/Product/GetCategories', function (data) {
-                var dropdown = $('#categoryDropdown');
-                dropdown.empty();
-                dropdown.append('<option value="">Kategori Seçin</option>');
-
-                // Eğer JSON'daki "name" property yerine başka bir isim kullanılmışsa, burayı güncelle!
-                $.each(data, function (index, category) {
-                    dropdown.append($('<option></option>').attr('value', category.id).text(category.name));
-                });
-            });
+        $("#categoryDropdown").select2({
+            placeholder: "Kategori Ara...",
+            allowClear: true,
+            minimumInputLength: 1,
+            dropdownParent: $("#categoryDropdown").parent(), // Bu satırı ekle modal oldugu için bu ekledik
+            ajax: {
+                url: "@Url.Action("GetCategories", "Product", new { area = "Admin" })",
+                dataType: "json",
+                delay: 250,
+                data: function (params) {
+                    return { term: params.term };
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return { id: item.id, text: item.text };
+                        })
+                    };
+                },
+                cache: true
+            }
         });
     });
+
 </script>
+
 <script>
     $(document).ready(function () {
-        $('#updateProductModal').on('show.bs.modal', function () {
-            $.getJSON('/Admin/Product/GetSuppliers', function (data) {
-                var dropdown = $('#supplierDropdown');
-                dropdown.empty();
-                dropdown.append('<option value="">Tedarikçi Seçin</option>');
-
-                // Eğer JSON'daki "name" property yerine başka bir isim kullanılmışsa, burayı güncelle!
-                $.each(data, function (index, supplier) {
-                    dropdown.append($('<option></option>').attr('value', supplier.id).text(supplier.name));
-                });
-            });
+        $("#supplierDropdown").select2({
+            placeholder: "Tedarikçi Ara...",
+            allowClear: true,
+            minimumInputLength: 1,
+            dropdownParent: $("#supplierDropdown").parent(), // Bu satırı ekle modal oldugu için bu ekledik
+            ajax: {
+                url: "@Url.Action("GetSuppliers", "Product", new { area = "Admin" })",
+                dataType: "json",
+                delay: 250,
+                data: function (params) {
+                    return { term: params.term };
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return { id: item.id, text: item.text };
+                        })
+                    };
+                }
+            }
         });
     });
-</script>
 
+
+</script>
 
 
