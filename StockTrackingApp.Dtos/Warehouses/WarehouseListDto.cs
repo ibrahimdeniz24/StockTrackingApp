@@ -15,7 +15,5 @@ namespace StockTrackingApp.Dtos.Warehouses
         public string Location { get; set; } // Lokasyon
 
         public string PhoneNumber { get; set; }
-
-        public virtual ICollection<Stock> Stocks { get; set; }
     }
 }

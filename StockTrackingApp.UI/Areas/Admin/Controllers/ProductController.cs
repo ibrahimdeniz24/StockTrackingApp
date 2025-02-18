@@ -19,7 +19,7 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
             _mapper = mapper;
             _categoryService = categoryService;
             _supplierService = supplierService;
- 
+
         }
 
         [HttpGet]
@@ -134,37 +134,40 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         }
 
 
-   
+
 
         //Ajax ile modala veri doldurmak için
         [HttpGet]
-        public async Task<IActionResult> GetCategories()
+        public async Task<IActionResult> GetCategories(string term)
         {
+            if (string.IsNullOrWhiteSpace(term))
+            {
+                return Json(new List<object>());
+            }
             var categories = await _categoryService.GetAllAsync();
 
             // Eğer gelen data DTO içeriyorsa, doğru şekilde isimlendir
-            var categoryList = categories.Data.Select(c => new
-            {
-                Id = c.Id,
-                Name = c.CategoryName
-            }).ToList();
-
-            return Json(categoryList);
+            var filteredCategoryList = categories.Data.
+                Where(c => c.CategoryName.Contains(term, StringComparison.OrdinalIgnoreCase)).
+                Select(c => new { id = c.Id, text = c.CategoryName }).ToList();
+            return Json(filteredCategoryList);
         }
 
         //Ajax ile modala veri doldurmak için
         [HttpGet]
-        public async Task<IActionResult> GetSuppliers()
+        public async Task<IActionResult> GetSuppliers(string term)
         {
+            if (string.IsNullOrWhiteSpace(term))
+            {
+                return Json(new List<object>());
+            }
+
             var suppliers = await _supplierService.GetAllAsync();
 
             // Eğer gelen data DTO içeriyorsa, doğru şekilde isimlendir
-            var supplierList = suppliers.Data.Select(c => new
-            {
-                Id = c.Id,
-                Name = c.CompanyName
-            }).ToList();
-
+            var supplierList = suppliers.Data.
+                Where(c => c.CompanyName.Contains(term, StringComparison.OrdinalIgnoreCase)).
+                Select(c => new { id = c.Id, text = c.CompanyName }).ToList();
             return Json(supplierList);
         }
 

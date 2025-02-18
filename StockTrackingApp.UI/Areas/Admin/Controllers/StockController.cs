@@ -150,20 +150,29 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
-        //Ajax Methods 
-        public async Task<IActionResult> GetProducts()
-        {
-            var productsGetResult = await _productService.GetAllAsync();
-            var productList = productsGetResult.Data.Select(s => new { s.Id, s.Name }).ToList();
-            return Json(productList);
-        }
         //Ajax Methods 
         public async Task<IActionResult> GetWarehouses()
         {
             var warehousesGetResult = await _warehouseService.GetAllAsync();
             var warehouseList = warehousesGetResult.Data.Select(s => new { s.Id, s.Name }).ToList();
             return Json(warehouseList);
+        }
+
+        public async Task<IActionResult> GetProducts(string term)
+        {
+            if (string.IsNullOrWhiteSpace(term))
+            {
+                return Json(new List<object>());
+            }
+
+            var products = await _productService.GetAllAsync(); // Tüm müşterileri getir
+            var filteredProducts = products.Data
+                .Where(c => c.
+                Name.Contains(term, StringComparison.OrdinalIgnoreCase)) // İçerenleri filtrele
+                .Select(c => new { id = c.Id, text = c.Name }) // JSON formatına çevir
+                .ToList();
+
+            return Json(filteredProducts);
         }
     }
 }
