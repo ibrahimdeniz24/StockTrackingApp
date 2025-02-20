@@ -23,7 +23,7 @@ namespace StockTrackingApp.Entities.DbSets
 
         public Guid SupplierId { get; set; }
 
-        public virtual PurchaseOrderDetail PurchaseOrderDetail { get; set; }
+        public virtual ICollection<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
 
     }
 }

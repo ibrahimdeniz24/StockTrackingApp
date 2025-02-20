@@ -6,8 +6,8 @@ namespace StockTrackingApp.Entities.DbSets
     {
         public Guid OrderId { get; set; } // Sipariş ID (FK)
         public virtual Order Order { get; set; } // Sipariş İlişkisi
-        public Guid ProductId { get; set; } // Ürün ID (FK)
-        public virtual Product Product { get; set; } // Ürün İlişkisi
+        public Guid StockId { get; set; } // Stock ID (FK)
+        public virtual Stock Stock { get; set; } // Stock İlişkisi
         public int Quantity { get; set; } // Miktar
         public decimal UnitPrice { get; set; } // Birim Fiyat
 

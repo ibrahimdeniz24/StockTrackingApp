@@ -10,7 +10,8 @@ namespace StockTrackingApp.Business.Profiles
             CreateMap<StockCreateDto, Stock>();
             CreateMap<StockUpdateDto, Stock>();
             CreateMap<Stock,StockDto>();
-            CreateMap<Stock,StockListDto>();
+            CreateMap<Stock,StockListDto>()
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Name));  // ProductName'i Product.Name'e maple
             CreateMap<Stock,StockDetailsDto>();
 
         }

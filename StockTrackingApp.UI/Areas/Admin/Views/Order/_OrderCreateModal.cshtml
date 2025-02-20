@@ -1,4 +1,5 @@
-﻿@model StockTrackingApp.UI.Areas.Admin.Models.OrderVMs.AdminOrderCreateVM
+﻿@using StockTrackingApp.Entities.Enums
+@model StockTrackingApp.UI.Areas.Admin.Models.OrderVMs.AdminOrderCreateVM
 
 <div class="modal fade" id="orderCreateModal" tabindex="-1" aria-labelledby="createOrderModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -12,48 +13,81 @@
                     <div class="col-md-12">
                         <form asp-action="Create" id="orderForm">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label asp-for="OrderDate" class="control-label"></label>
+                                    <input id="dateTimePicker" type="datetime-local" asp-for="OrderDate" class="form-control"
+                                           value="@(Model?.OrderDate.ToString("yyyy-MM-ddTHH:mm") ?? DateTime.Now.ToString("yyyy-MM-ddTHH:mm"))" required />
+                                    <span asp-validation-for="OrderDate" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label asp-for="DeliveryDate" class="control-label">Teslimat Tarihi ve Saati</label>
+                                    <input type="datetime-local" asp-for="DeliveryDate" class="form-control"
+                                           value="@(Model?.DeliveryDate.ToString("yyyy-MM-ddTHH:mm") ?? DateTime.Now.ToString("yyyy-MM-ddTHH:mm"))" required />
+                                    <span asp-validation-for="DeliveryDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="Description" class="control-label"></label>
+                                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+
+
                             <div class="form-group mb-3">
                                 <label asp-for="CustomerId" class="control-label"></label>
-                                <select id="customerDropdown" name="CustomerId" class="form-control" style="width: 100%;">
+                                <select id="customerDropdown" name="CustomerId" class="form-control" style="width: 100%;" required>
                                     <option value="">Müşteri Seç</option>
                                 </select>
                                 <span asp-validation-for="CustomerId" class="text-danger"></span>
                             </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="OrderStatus">Sipariş Durumu</label>
+                                <select asp-for="OrderStatus" class="form-control" required>
+                                    @foreach (var status in Enum.GetValues(typeof(OrderStatus)))
+                                    {
+                                        <option value="@status">@status</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="OrderStatus" class="text-danger"></span>
+                            </div>
 
-                            <div class="form-group mb-3">
-                                <label asp-for="OrderDate" class="control-label"></label>
-                                <input type="date" asp-for="OrderDate" class="form-control" />
-                                <span asp-validation-for="OrderDate" class="text-danger"></span>
+                            <h4>Ürünler</h4>
+                            <div id="orderDetails">
+                                <div class="order-detail">
+                                    <div class="order-detail d-flex gap-3">
+                                        <div>
+                                            <label>Stok Adı:</label>
+                                            <select id="stockDropdown" name="StockId" class="form-control" style="width: 100%;" required>
+                                                <option value="">Stok Seç</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label>Adet:</label>
+                                            <input name="OrderDetailDtos[0].Quantity" type="number" class="form-control" required />
+                                        </div>
+
+                                        <div>
+                                            <label>Birim Fiyat:</label>
+                                            <input name="OrderDetailDtos[0].UnitPrice" type="number" step="0.01" class="form-control" required />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group mb-3">
-                                <label asp-for="DeliveryDate" class="control-label"></label>
-                                <input type="date" asp-for="DeliveryDate" class="form-control" />
-                                <span asp-validation-for="DeliveryDate" class="text-danger"></span>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label asp-for="Description" class="control-label"></label>
-                                <input asp-for="Description" class="form-control" />
-                                <span asp-validation-for="Description" class="text-danger"></span>
-                            </div>
+
+                            <button type="button" id="addDetail" class="btn btn-secondary mt-2">Ürün Ekle</button>
                             <div class="form-group mb-3">
                                 <label asp-for="TotalAmount" class="control-label"></label>
-                                <input asp-for="TotalAmount" class="form-control" />
+                                <input asp-for="TotalAmount" type="number" step="0.01" class="form-control" required />
                                 <span asp-validation-for="TotalAmount" class="text-danger"></span>
                             </div>
-                            <div class="form-group mb-3">
-                                <label for="CategoryId">Kategori Seç</label>
-                                <select id="categoryDropdown" name="CategoryId" class="form-control">
-                                    <option value="">Kategori Seçin</option>
-                                </select>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="SupplierId">Tedarikçi Seç</label>
-                                <select id="supplierDropdown" name="SupplierId" class="form-control">
-                                    <option value="">Tedarikçi Seçin</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" value="Oluştur" class="btn btn-success" />
+                            <div class="form-group mt-3">
+                                <button type="submit" class="btn btn-success">Oluştur</button>
+                               
                             </div>
                         </form>
                     </div>
@@ -65,6 +99,10 @@
         </div>
     </div>
 </div>
+
+
+
+
 
 
 

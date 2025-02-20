@@ -10,12 +10,14 @@ namespace StockTrackingApp.Entities.DbSets
         }
         public string Name { get; set; } // Ürün Adı
         public string SKU { get; set; } // Stok Kodu
-        public decimal Price { get; set; } // Fiyat
         public Guid CategoryId { get; set; } // Kategori ID (FK)
         public virtual Category Category { get; set; } // Kategori İlişkisi
 
+        public byte[] ProductImage { get; set; }
+
         public Guid SupplierId { get; set; }
         public virtual Supplier Supplier { get; set; }
+
         public virtual ICollection<Stock> Stocks { get; set; }
        
     }

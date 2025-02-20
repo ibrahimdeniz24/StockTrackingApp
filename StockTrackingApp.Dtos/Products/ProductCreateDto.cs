@@ -10,6 +10,8 @@ namespace StockTrackingApp.Dtos.Products
         public string CategoryName { get; set; }
         public Guid SupplierId { get; set; }
 
+        public byte[] ProductImage { get; set; }
+
         public string SupplierName { get; set; }
 
     }

@@ -15,13 +15,15 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         private readonly IMapper _mapper;
         private readonly IProductService _productService;
         private readonly ICustomerService _customerService;
+        private readonly IStockService _stockService;
 
-        public OrderController(IOrderService orderService, IOrderDetailService orderDetailService, IMapper mapper, ICustomerService customerService)
+        public OrderController(IOrderService orderService, IOrderDetailService orderDetailService, IMapper mapper, ICustomerService customerService, IStockService stockService)
         {
             _orderService = orderService;
             _orderDetailService = orderDetailService;
             _mapper = mapper;
             _customerService = customerService;
+            _stockService = stockService;
         }
 
         public async Task<IActionResult> Index(int? page, int pageSize = 10)
@@ -86,21 +88,6 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
             {
                 NotifyErrorLocalized(addResult.Message);
                 return RedirectToAction(nameof(Index));
-            }
-
-
-
-            // OrderDetail ekleme işlemi (tek bir tane)
-            if (model.adminOrderDetailCreateVM != null)
-            {
-                var orderDetailDto = _mapper.Map<OrderDetailCreateDto>(model.adminOrderDetailCreateVM);
-                var addDetailResult = await _orderDetailService.AddAsync(orderDetailDto);
-
-                if (!addDetailResult.IsSuccess)
-                {
-                    NotifyErrorLocalized(addDetailResult.Message);
-                    return RedirectToAction(nameof(Index));
-                }
             }
 
             NotifySuccessLocalized(addResult.Message);
@@ -181,6 +168,27 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
 
             return Json(filteredCustomers);
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetStocks(string term)
+        {
+            if (string.IsNullOrWhiteSpace(term))
+            {
+                return Json(new List<object>());
+            }
+
+            var stocks = await _stockService.GetAllAsync(); // Tüm Stokları getir
+            var filteredStocks = stocks.Data
+                .Where(c => c.
+                ProductName.Contains(term, StringComparison.OrdinalIgnoreCase)) // İçerenleri filtrele
+                .Select(c => new { id = c.Id, text = c.ProductName }) // JSON formatına çevir
+                .ToList();
+
+            return Json(filteredStocks);
+        }
+
+
 
     }
 }

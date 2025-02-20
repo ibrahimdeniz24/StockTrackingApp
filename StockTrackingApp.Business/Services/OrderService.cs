@@ -1,6 +1,7 @@
 ﻿
 using StockTrackingApp.Business.Interfaces.Services;
 using StockTrackingApp.Dtos.Customers;
+using StockTrackingApp.Dtos.OrderDetails;
 using StockTrackingApp.Dtos.Orders;
 
 namespace StockTrackingApp.Business.Services
@@ -9,23 +10,27 @@ namespace StockTrackingApp.Business.Services
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
-        private readonly ICustomerRepository _customerRepository;
 
         public OrderService(IOrderRepository orderRepository, IMapper mapper, ICustomerRepository customerRepository)
         {
             _orderRepository = orderRepository;
             _mapper = mapper;
-            _customerRepository = customerRepository;
         }
 
         public async Task<IDataResult<OrderDto>> AddAsync(OrderCreateDto orderCreateDto)
         {
             var order = _mapper.Map<Order>(orderCreateDto);
 
+            if (orderCreateDto.OrderDetailDtos != null && orderCreateDto.OrderDetailDtos.Any())
+            {
+                order.OrderDetails = orderCreateDto.OrderDetailDtos.Select(dt => _mapper.Map<OrderDetail>(dt)).ToList();
+            }
+
             await _orderRepository.AddAsync(order);
             await _orderRepository.SaveChangesAsync();
 
-            return new SuccessDataResult<OrderDto>(_mapper.Map<OrderDto>(order), Messages.AddSuccess);
+            var orderDto = _mapper.Map<OrderDto>(order);
+            return new SuccessDataResult<OrderDto>(_mapper.Map<OrderDto>(orderDto), Messages.AddSuccess);
         }
 
         public async Task<IResult> DeleteAsync(Guid id)

@@ -14,6 +14,6 @@ namespace StockTrackingApp.UI.Areas.Admin.Models.OrderVMs
 
         public OrderStatus OrderStatus { get; set; }
 
-        public AdminOrderDetailCreateVM adminOrderDetailCreateVM { get; set; }
+        public ICollection<AdminOrderDetailCreateVM> AdminOrderDetailCreateVMs { get; set; }
     }
 }

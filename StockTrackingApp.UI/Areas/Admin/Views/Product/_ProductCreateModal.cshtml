@@ -1,5 +1,6 @@
 ﻿@model StockTrackingApp.UI.Areas.Admin.Models.ProductVMs.AdminProductCreateVM
 
+<!-- Ürün Ekle Modal -->
 <div class="modal fade" id="productCreateModal" tabindex="-1" aria-labelledby="createProductModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -8,44 +9,48 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <form asp-action="Create" id="productForm">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="form-group mb-3">
-                                <label asp-for="Name" class="control-label"></label>
-                                <input asp-for="Name" class="form-control" />
-                                <span asp-validation-for="Name" class="text-danger"></span>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label asp-for="SKU" class="control-label"></label>
-                                <input asp-for="SKU" class="form-control" />
-                                <span asp-validation-for="SKU" class="text-danger"></span>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label asp-for="Price" class="control-label"></label>
-                                <input asp-for="Price" class="form-control" />
-                                <span asp-validation-for="Price" class="text-danger"></span>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label asp-for="CategoryId">Kategori Seç</label>
-                                <select id="categoryDropdown" name="CategoryId" class="form-control" style="width: 100%;">
-                                    <option value="">Kategori Seçin</option>
-                                </select>
-                                <span asp-validation-for="CategoryId" class="text-danger"></span>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label asp-for="SupplierId">Tedarikçi Seç</label>
-                                <select id="supplierDropdown" name="SupplierId" class="form-control" style="width: 100%;">
-                                    <option value="">Tedarikçi Seçin</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" value="Oluştur" class="btn btn-success" />
-                            </div>
-                        </form>
+                <form asp-action="Create" id="productForm">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="SKU" class="control-label"></label>
+                            <input asp-for="SKU" class="form-control" />
+                            <span asp-validation-for="SKU" class="text-danger"></span>
+                        </div>
                     </div>
-                </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Price" class="control-label"></label>
+                            <input asp-for="Price" class="form-control" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="CategoryId">Kategori Seç</label>
+                            <select id="categoryDropdown" name="CategoryId" class="form-control" style="width: 100%;">
+                                <option value="">Kategori Seçin</option>
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="SupplierId">Tedarikçi Seç</label>
+                        <select id="supplierDropdown" name="SupplierId" class="form-control" style="width: 100%;">
+                            <option value="">Tedarikçi Seçin</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Oluştur" class="btn btn-success" />
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
@@ -53,6 +58,3 @@
         </div>
     </div>
 </div>
-
-
-
