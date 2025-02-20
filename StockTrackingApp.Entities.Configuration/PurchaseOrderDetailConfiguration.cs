@@ -7,11 +7,12 @@ namespace StockTrackingApp.Entities.Configuration
     {
         public override void Configure(EntityTypeBuilder<PurchaseOrderDetail> builder)
         {
-            // ✅ 1:1 ilişki - Her PurchaseOrder'ın yalnızca bir PurchaseOrderDetail'i olabilir.
-            builder.HasOne(pod => pod.PurchaseOrder)
-                   .WithOne(po => po.PurchaseOrderDetail)  // 1:1 ilişki
-                   .HasForeignKey<PurchaseOrderDetail>(pod => pod.PurchaseOrderId)
+            // ✅ 1:N ilişki - Her PurchaseOrder birden fazla PurchaseOrderDetail'e sahip olabilir.
+            builder.HasOne(pod => pod.PurchaseOrder)       // PurchaseOrderDetail, bir PurchaseOrder'a bağlıdır.
+                   .WithMany(po => po.PurchaseOrderDetails) // PurchaseOrder, birden fazla PurchaseOrderDetail'e sahip olabilir.
+                   .HasForeignKey(pod => pod.PurchaseOrderId)
                    .OnDelete(DeleteBehavior.Restrict);
+
 
             // ✅ 1:N olarak bırakıldı (Bir Product, birden fazla PurchaseOrderDetail'de olabilir.)
             builder.HasOne(pod => pod.Product)
@@ -21,6 +22,8 @@ namespace StockTrackingApp.Entities.Configuration
 
             builder.Property(pod => pod.Quantity)
                    .IsRequired();
+
+            builder.Property(o => o.UnitPrice).HasPrecision(18, 4);
 
             base.Configure(builder);
         }

@@ -10,6 +10,8 @@ namespace StockTrackingApp.Dtos.Stocks
     {
         public Guid Id { get; set; }
         public int Quantity { get; set; }
+
+        public decimal PurchasePrice { get; set; } // AlışFiyat
         public Guid WareHouseId { get; set; }
         public Guid ProductId { get; set; }
 

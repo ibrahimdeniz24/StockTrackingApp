@@ -18,6 +18,11 @@
                                 <span asp-validation-for="Quantity" class="text-danger"></span>
                             </div>
                             <div class="form-group mb-3">
+                                <label asp-for="PurchasePrice" class="control-label"></label>
+                                <input asp-for="PurchasePrice" class="form-control" />
+                                <span asp-validation-for="PurchasePrice" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
                                 <label for="ProductId">Ürün Seçin</label>
                                 <select id="productDropdown" name="ProductId" class="form-control" style="width: 100%;">
                                     <option value="">Ürün Seçin</option>

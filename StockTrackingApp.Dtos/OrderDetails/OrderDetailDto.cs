@@ -10,7 +10,7 @@ namespace StockTrackingApp.Dtos.OrderDetails
     {
         public Guid Id { get; set; }
         public Guid OrderId { get; set; }
-        public Guid ProductId { get; set; }
+        public Guid StockId { get; set; }
 
         public Guid WarehouseId { get; set; }
         public int Quantity { get; set; }

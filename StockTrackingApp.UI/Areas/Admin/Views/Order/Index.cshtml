@@ -151,6 +151,140 @@
 
 </script>
 
+<script>
+    $(document).ready(function () {
+        // Sayfa yüklendiğinde ilk select2'yi başlat
+        initSelect2();
+
+        // Yeni detay eklemek için event listener
+        document.getElementById('addDetail').addEventListener('click', function () {
+            const index = document.querySelectorAll('.order-detail').length;
+
+            // Yeni eklenen stok detaylarını içeren HTML kodu
+            const detailHtml = `
+                <div class="order-detail d-flex gap-3">
+                    <div>
+                        <label>Stok Adı:</label>
+                        <select id="stockDropdown${index}" name="OrderDetailDtos[${index}].StockId" class="form-control" style="width: 100%;" required>
+                            <option value="">Stok Seç</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Adet:</label>
+                        <input name="OrderDetailDtos[${index}].Quantity" type="number" class="form-control" required />
+                    </div>
+                    <div>
+                        <label>Birim Fiyat:</label>
+                        <input name="OrderDetailDtos[${index}].UnitPrice" type="number" step="0.01" class="form-control" required />
+                    </div>
+                </div>`;
+
+            document.getElementById('orderDetails').insertAdjacentHTML('beforeend', detailHtml);
+
+            // Yeni eklenen select2 öğesini başlat
+            initSelect2(index);
+        });
+
+        document.getElementById('orderDetails').addEventListener('click', function (e) {
+            if (e.target.classList.contains('removeDetail')) {
+                e.target.closest('.order-detail').remove();
+            }
+        });
+
+        // select2'yi başlatan fonksiyon
+        function initSelect2(index = '') {
+            $(`#stockDropdown${index}`).select2({
+                placeholder: "Stok Ara...",
+                allowClear: true,
+                minimumInputLength: 1,
+                dropdownParent: $("#stockDropdown" + index).parent(), // Modal içinde doğru yerleştirme
+                ajax: {
+                    url: "@Url.Action("GetStocks", "Order", new { area = "Admin" })",
+                    dataType: "json",
+                    delay: 250,
+                    data: function (params) {
+                        return { term: params.term };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return { id: item.id, text: item.text };
+                            })
+                        };
+                    }
+                }
+            });
+        }
+    });
+</script>
+
+
+@* <script>
+    $(document).ready(function () {
+        $("#stockDropdown").select2({
+            placeholder: "Stok Ara...",
+            allowClear: true,
+            minimumInputLength: 1,
+            dropdownParent: $("#stockDropdown").parent(), // Bu satırı ekle modal oldugu için bu ekledik
+            ajax: {
+                url: "@Url.Action("GetStocks", "Order", new { area = "Admin" })",
+                dataType: "json",
+                delay: 250,
+                data: function (params) {
+                    return { term: params.term };
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return { id: item.id, text: item.text };
+                        })
+                    };
+                }
+            }
+        });
+    });
+
+</script>
+
+<script>
+    document.getElementById('addDetail').addEventListener('click', function () {
+        const index = document.querySelectorAll('.order-detail').length;
+
+        // Yeni eklenen stok detaylarını içeren HTML kodu
+        const detailHtml = `
+            <div class="order-detail d-flex gap-3">
+                <div>
+                    <label>Stok Adı:</label>
+                    <select id="stockDropdown${index}" name="OrderDetailDtos[${index}].StockId" class="form-control" style="width: 100%;" required>
+                        <option value="">Stok Seç</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Adet:</label>
+                    <input name="OrderDetailDtos[${index}].Quantity" type="number" class="form-control" required />
+                </div>
+                <div>
+                    <label>Birim Fiyat:</label>
+                    <input name="OrderDetailDtos[${index}].UnitPrice" type="number" step="0.01" class="form-control" required />
+                </div>
+            </div>`;
+
+        document.getElementById('orderDetails').insertAdjacentHTML('beforeend', detailHtml);
+
+        // Yeni select öğesine select2'yi uygula
+        setTimeout(function() {
+            $(`#stockDropdown${index}`).select2(); // Dinamik olarak eklenen select öğesine select2 uygula
+        }, 1); // setTimeout kullanarak hemen çalışmasını sağlıyoruz
+    });
+
+    document.getElementById('orderDetails').addEventListener('click', function (e) {
+        if (e.target.classList.contains('removeDetail')) {
+            e.target.closest('.order-detail').remove();
+        }
+    });
+</script>
+ *@
+
 
 
 
