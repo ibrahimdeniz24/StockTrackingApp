@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using StockTrackingApp.Dtos.Products;
 using StockTrackingApp.UI.Areas.Admin.Models.ProductVMs;
+using StockTrackingApp.UI.Extantions;
 using System.Text;
 using X.PagedList.Extensions;
 
@@ -88,6 +89,13 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
             }
 
             var productDto = _mapper.Map<ProductCreateDto>(model);
+
+            if (model.NewPicture == null || model.NewPicture.Length==0)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            productDto.ProductImage = await model.NewPicture.FileToByteArrayAsync();
             var addResult = await _productService.AddAsync(productDto);
 
             if (!addResult.IsSuccess)

@@ -13,7 +13,7 @@
                 <div class="card-header">
                     <h4 class="card-title">Müşteri Detayı</h4>
                     <div class="col-sm-12 d-flex justify-content-end">
-                        <a data-bs-toggle="modal" data-bs-target="#updateProductModal" asp-route-id="@Model.Id" data-item-id="@Model.Id" data-item-name="@Model.Name" data-item-sku="@Model.SKU" data-item-categories="@Model.CategoryName" data-item-suppliers="@Model.SupplierName" class="btn btn-primary" data-item-price="@Model.Price" data-kt-users-table-filter="delete_row">Düzenle</a>
+                        <a data-bs-toggle="modal" data-bs-target="#updateProductModal" asp-route-id="@Model.Id" data-item-id="@Model.Id" data-item-name="@Model.Name" data-item-sku="@Model.SKU" data-item-categories="@Model.CategoryName" data-item-suppliers="@Model.SupplierName" class="btn btn-primary"  data-kt-users-table-filter="delete_row">Düzenle</a>
                         <a href="javascript:void(0)" class="btn btn-danger" onclick="confirmDelete('@Url.Action("Delete", "Product", new { area = "Admin", id = Model.Id })')">Delete</a>
                         <a asp-action="Index" class="btn btn-secondary">Back to List</a>
                     </div>
@@ -80,7 +80,6 @@
             let itemId = button.data('item-id');
             let itemName = button.data('item-name');
             let itemSku = button.data('item-sku');
-            let itemPrice = button.data('item-price');
             let itemCateogires = button.data('item-categories');
             let itemSuppliers = button.data('item-suppliers');
 
@@ -88,7 +87,6 @@
             modal.find('input[name="Id"]').val(itemId);
             modal.find('input[name="Name"]').val(itemName);
             modal.find('input[name="SKU"]').val(itemSku);
-            modal.find('input[name="Price"]').val(itemPrice);
             modal.find('input[name="Categories"]').val(itemCateogires);
             modal.find('input[name="Suppliers"]').val(itemSuppliers);
         });

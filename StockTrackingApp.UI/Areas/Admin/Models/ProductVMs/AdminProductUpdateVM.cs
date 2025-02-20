@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using StockTrackingApp.Entities.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace StockTrackingApp.UI.Areas.Admin.Models.ProductVMs
 {
@@ -12,14 +13,13 @@ namespace StockTrackingApp.UI.Areas.Admin.Models.ProductVMs
         [Required(ErrorMessage = "SKU zorunludur.")]
         public string SKU { get; set; }
 
-        [Required(ErrorMessage = "Fiyat zorunludur.")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "Fiyat 0'dan büyük olmalıdır.")]
-        public decimal Price { get; set; }
-
         [Required(ErrorMessage = "Kategori seçimi zorunludur.")]
         public Guid CategoryId { get; set; }
 
         [Required(ErrorMessage = "Tedarikçi seçimi zorunludur.")]
         public Guid SupplierId { get; set; }
+
+        public VatRate VatRate { get; set; }
+        public byte[] ProductImage { get; set; }
     }
 }

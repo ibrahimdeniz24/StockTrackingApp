@@ -13,6 +13,11 @@ namespace StockTrackingApp.UI.Extantions
 
         public static async Task<byte[]> FileToByteArrayAsync(this IFormFile formFile)
         {
+            if (formFile == null || formFile.Length == 0)
+            {
+                throw new ArgumentException("Dosya yüklenmedi veya boş.", nameof(formFile));
+            }
+
             using MemoryStream memoryStream = new();
             await formFile.CopyToAsync(memoryStream);
             return memoryStream.ToArray();

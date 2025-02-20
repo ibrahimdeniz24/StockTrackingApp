@@ -2,7 +2,7 @@
 @model StockTrackingApp.UI.Areas.Admin.Models.OrderVMs.AdminOrderCreateVM
 
 <div class="modal fade" id="orderCreateModal" tabindex="-1" aria-labelledby="createOrderModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="createOrderModalLabel">Yeni Sipariş Oluştur</h5>
@@ -59,22 +59,28 @@
                             <div id="orderDetails">
                                 <div class="order-detail">
                                     <div class="order-detail d-flex gap-3">
-                                        <div>
+                                        <div style="flex:2;">
                                             <label>Stok Adı:</label>
                                             <select id="stockDropdown" name="StockId" class="form-control" style="width: 100%;" required>
                                                 <option value="">Stok Seç</option>
                                             </select>
                                         </div>
 
-                                        <div>
+                                        <div style="flex:1;">
                                             <label>Adet:</label>
-                                            <input name="OrderDetailDtos[0].Quantity" type="number" class="form-control" required />
+                                            <input id="quantity" name="OrderDetailDtos[0].Quantity" type="number" class="form-control" oninput="calculateTotal()" required />
                                         </div>
 
-                                        <div>
+                                        <div style="flex:1;">
                                             <label>Birim Fiyat:</label>
-                                            <input name="OrderDetailDtos[0].UnitPrice" type="number" step="0.01" class="form-control" required />
+                                            <input id="unitPrice" name="OrderDetailDtos[0].UnitPrice" type="number" step="0.01" class="form-control" oninput="calculateTotal()" required />
                                         </div>
+
+                                        <div style="flex:1;">
+                                            <label>Toplam Tutar:</label>
+                                            <input id="totalAmount" name="OrderDetailDtos[0].TotalAmount" type="number" step="0.01" class="form-control" readonly />
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -82,7 +88,7 @@
                             <button type="button" id="addDetail" class="btn btn-secondary mt-2">Ürün Ekle</button>
                             <div class="form-group mb-3">
                                 <label asp-for="TotalAmount" class="control-label"></label>
-                                <input asp-for="TotalAmount" type="number" step="0.01" class="form-control" required />
+                                <input  asp-for="TotalAmount" type="number" step="0.01" class="form-control" />
                                 <span asp-validation-for="TotalAmount" class="text-danger"></span>
                             </div>
                             <div class="form-group mt-3">
@@ -99,10 +105,6 @@
         </div>
     </div>
 </div>
-
-
-
-
 
 
 

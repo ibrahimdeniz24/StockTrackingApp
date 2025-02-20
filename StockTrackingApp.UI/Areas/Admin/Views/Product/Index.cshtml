@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int row = 0;
 }
 
 <section class="section">
@@ -28,9 +29,9 @@
                             <table class="table table-hover mb-0">
                                 <thead>
                                     <tr>
-                                        <th>@Html.DisplayNameFor(model => model.Id)</th>
+                                        <th>#</th>
+                                        <th>@Html.DisplayNameFor(model => model.ProductImage)</th>
                                         <th>@Html.DisplayNameFor(model => model.Name)</th>
-                                        <th>@Html.DisplayNameFor(model => model.Price)</th>
                                         <th>@Html.DisplayNameFor(model => model.SKU)</th>
                                         <th>Action</th>
                                     </tr>
@@ -38,15 +39,23 @@
                                 <tbody>
                                     @foreach (var item in Model)
                                     {
+                                        row++;
                                         <tr>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Id)
+                                                @row;
+                                            </td>
+                                            <td class="text-bold-500">
+                                                @if (item.ProductImage != null && item.ProductImage.Length > 0)
+                                                {
+                                                    <img src="@($"data:image/png;base64,{Convert.ToBase64String(item.ProductImage)}")" witdh="150px" height="150px" alt="Profile Picture" />
+                                                }
+                                                else
+                                                {
+                                                    <span>No Profile Picture</span> <!-- Alternatif içerik veya mesaj -->
+                                                }
                                             </td>
                                             <td class="text-bold-500">
                                                 @Html.DisplayFor(modelItem => item.Name)
-                                            </td>
-                                            <td class="text-bold-500">
-                                                @Html.DisplayFor(modelItem => item.Price)
                                             </td>
                                             <td class="text-bold-500">
                                                 @Html.DisplayFor(modelItem => item.SKU)
@@ -60,7 +69,7 @@
                                                         Seçenekler
                                                     </button>
                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        <a data-bs-toggle="modal" data-bs-target="#updateProductModal" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-name="@item.Name" data-item-sku="@item.SKU" data-item-categories="@item.Categories" data-item-price="@item.Price" data-item-suppliers="@item.Suppliers" class="dropdown-item" data-kt-users-table-filter="delete_row">Düzenle</a>
+                                                        <a data-bs-toggle="modal" data-bs-target="#updateProductModal" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-name="@item.Name" data-item-sku="@item.SKU" data-item-categories="@item.Categories"  data-item-suppliers="@item.Suppliers" class="dropdown-item" data-kt-users-table-filter="delete_row">Düzenle</a>
                                                         <a class="dropdown-item" href="@Url.Action("Details", "Product", new { id = item.Id })">Details</a>
 
                                                     </div>
@@ -87,7 +96,6 @@
             let itemId = button.data('item-id');
             let itemName = button.data('item-name');
             let itemSku = button.data('item-sku');
-            let itemPrice = button.data('item-price');
             let itemCateogires = button.data('item-categories');
             let itemSuppliers = button.data('item-suppliers');
 
@@ -95,7 +103,6 @@
             modal.find('input[name="Id"]').val(itemId);
             modal.find('input[name="Name"]').val(itemName);
             modal.find('input[name="SKU"]').val(itemSku);
-            modal.find('input[name="Price"]').val(itemPrice);
             modal.find('input[name="Categories"]').val(itemCateogires);
             modal.find('input[name="Suppliers"]').val(itemSuppliers);
         });

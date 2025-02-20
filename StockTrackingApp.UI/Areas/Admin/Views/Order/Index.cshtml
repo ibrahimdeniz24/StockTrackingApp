@@ -88,7 +88,7 @@
                                                         Seçenekler
                                                     </button>
                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        <a data-bs-toggle="modal" data-bs-target="#updateOrderModal" asp-route-id="@item.Id" data-item-id="@item.Id"  class="dropdown-item" data-kt-users-table-filter="delete_row">Düzenle</a>
+                                                        <a data-bs-toggle="modal" data-bs-target="#updateOrderModal" asp-route-id="@item.Id" data-item-id="@item.Id" class="dropdown-item" data-kt-users-table-filter="delete_row">Düzenle</a>
                                                         <a class="dropdown-item" href="@Url.Action("Details", "Order", new { id = item.Id })">Details</a>
 
                                                     </div>
@@ -120,7 +120,7 @@
 
             let modal = $(this);
             modal.find('input[name="Id"]').val(itemId);
-   
+
         });
     });
 </script>
@@ -163,20 +163,24 @@
             // Yeni eklenen stok detaylarını içeren HTML kodu
             const detailHtml = `
                 <div class="order-detail d-flex gap-3">
-                    <div>
+                    <div style="flex:2;">
                         <label>Stok Adı:</label>
                         <select id="stockDropdown${index}" name="OrderDetailDtos[${index}].StockId" class="form-control" style="width: 100%;" required>
                             <option value="">Stok Seç</option>
                         </select>
                     </div>
-                    <div>
+                    <div style="flex:1;">
                         <label>Adet:</label>
-                        <input name="OrderDetailDtos[${index}].Quantity" type="number" class="form-control" required />
+                        <input id="quantity" name="OrderDetailDtos[${index}].Quantity" type="number" class="form-control" oninput="calculateTotal()" required />
                     </div>
-                    <div>
+                    <div style="flex:1;">
                         <label>Birim Fiyat:</label>
-                        <input name="OrderDetailDtos[${index}].UnitPrice" type="number" step="0.01" class="form-control" required />
+                        <input id="unitPrice" name="OrderDetailDtos[${index}].UnitPrice" type="number" step="0.01" class="form-control" oninput="calculateTotal()" required />
                     </div>
+                       <div style="flex:1;">
+                          <label>Toplam Tutar:</label>
+                          <input id="totalAmount" name="OrderDetailDtos[${index}].TotalAmount" type="number" step="0.01" class="form-control" readonly />
+                       </div>
                 </div>`;
 
             document.getElementById('orderDetails').insertAdjacentHTML('beforeend', detailHtml);
@@ -216,74 +220,27 @@
             });
         }
     });
-</script>
-
-
-@* <script>
-    $(document).ready(function () {
-        $("#stockDropdown").select2({
-            placeholder: "Stok Ara...",
-            allowClear: true,
-            minimumInputLength: 1,
-            dropdownParent: $("#stockDropdown").parent(), // Bu satırı ekle modal oldugu için bu ekledik
-            ajax: {
-                url: "@Url.Action("GetStocks", "Order", new { area = "Admin" })",
-                dataType: "json",
-                delay: 250,
-                data: function (params) {
-                    return { term: params.term };
-                },
-                processResults: function (data) {
-                    return {
-                        results: $.map(data, function (item) {
-                            return { id: item.id, text: item.text };
-                        })
-                    };
-                }
-            }
-        });
-    });
 
 </script>
 
 <script>
-    document.getElementById('addDetail').addEventListener('click', function () {
-        const index = document.querySelectorAll('.order-detail').length;
+    function calculateTotal() {
+                                        document.querySelectorAll('.order-detail').forEach(detail => {
+                                            const quantityInput = detail.querySelector('[name$=".Quantity"]');
+                                            const unitPriceInput = detail.querySelector('[name$=".UnitPrice"]');
+                                            const totalAmountInput = detail.querySelector('[name$=".TotalAmount"]');
 
-        // Yeni eklenen stok detaylarını içeren HTML kodu
-        const detailHtml = `
-            <div class="order-detail d-flex gap-3">
-                <div>
-                    <label>Stok Adı:</label>
-                    <select id="stockDropdown${index}" name="OrderDetailDtos[${index}].StockId" class="form-control" style="width: 100%;" required>
-                        <option value="">Stok Seç</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Adet:</label>
-                    <input name="OrderDetailDtos[${index}].Quantity" type="number" class="form-control" required />
-                </div>
-                <div>
-                    <label>Birim Fiyat:</label>
-                    <input name="OrderDetailDtos[${index}].UnitPrice" type="number" step="0.01" class="form-control" required />
-                </div>
-            </div>`;
+                                            const quantity = parseFloat(quantityInput?.value) || 0;
+                                            const unitPrice = parseFloat(unitPriceInput?.value) || 0;
+                                            if (totalAmountInput) {
+                                                totalAmountInput.value = (quantity * unitPrice).toFixed(2);
+                                            }
+                                        });
+                                    }
 
-        document.getElementById('orderDetails').insertAdjacentHTML('beforeend', detailHtml);
-
-        // Yeni select öğesine select2'yi uygula
-        setTimeout(function() {
-            $(`#stockDropdown${index}`).select2(); // Dinamik olarak eklenen select öğesine select2 uygula
-        }, 1); // setTimeout kullanarak hemen çalışmasını sağlıyoruz
-    });
-
-    document.getElementById('orderDetails').addEventListener('click', function (e) {
-        if (e.target.classList.contains('removeDetail')) {
-            e.target.closest('.order-detail').remove();
-        }
-    });
 </script>
- *@
+
+
 
 
 

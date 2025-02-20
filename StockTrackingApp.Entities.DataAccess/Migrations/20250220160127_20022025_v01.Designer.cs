@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StockTrackingApp.DataAccess.Contexts;
 
@@ -11,9 +12,11 @@ using StockTrackingApp.DataAccess.Contexts;
 namespace StockTrackingApp.DataAccess.Migrations
 {
     [DbContext(typeof(StockAppDbContext))]
-    partial class StockAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250220160127_20022025_v01")]
+    partial class _20022025_v01
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
