@@ -1,4 +1,6 @@
 ﻿
+using StockTrackingApp.Dtos.OrderDetails;
+
 namespace StockTrackingApp.Dtos.Orders
 {
     public class OrderListDto
@@ -13,6 +15,6 @@ namespace StockTrackingApp.Dtos.Orders
 
         public OrderStatus OrderStatus { get; set; }
 
-        public Guid OrderDetailId { get; set; }
+        public ICollection<OrderDetailListDto> OrderDetailListDtos { get; set; }
     }
 }

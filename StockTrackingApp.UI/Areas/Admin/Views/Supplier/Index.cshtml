@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int row = 0;
 }
 
 <section class="section">
@@ -28,7 +29,7 @@
                             <table class="table table-hover mb-0">
                                 <thead>
                                     <tr>
-                                        <th>@Html.DisplayNameFor(model => model.Id)</th>
+                                        <th>#</th>
                                         <th>@Html.DisplayNameFor(model => model.CompanyName)</th>
                                         <th>@Html.DisplayNameFor(model => model.Adress)</th>
                                         <th>@Html.DisplayNameFor(model => model.PhoneNumber)</th>
@@ -40,9 +41,10 @@
                                 <tbody>
                                     @foreach (var item in Model)
                                     {
+                                        row++;
                                         <tr>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Id)
+                                                @row
                                             </td>
                                             <td class="text-bold-500">
                                                 @Html.DisplayFor(modelItem => item.CompanyName)

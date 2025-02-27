@@ -1,0 +1,63 @@
+﻿@model IEnumerable<StockTrackingApp.UI.Areas.Admin.Models.ProductVMs.AdminProductListVM>
+@{
+    int row = 0;
+}
+
+<section class="section">
+    <div class="row" id="table-hover-row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Kategoriye Ait Ürünler</h4>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+                    </div>
+                    <!-- table hover -->
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+
+                            
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>@Html.DisplayNameFor(model => model.ProductImage)</th>
+                                    <th>@Html.DisplayNameFor(model => model.SKU)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Name)</th>
+                                    <th>@Html.DisplayNameFor(model => model.CategoryName)</th>
+                                    <th>@Html.DisplayNameFor(model => model.SupplierName)</th>
+                                    <th>@Html.DisplayNameFor(model => model.VatRate)</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    row++;
+                                    <tr>
+                                        <td>@row</td>
+                                        <td>
+                                            @if (item.ProductImage != null && item.ProductImage.Length > 0)
+                                            {
+                                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(item.ProductImage)}")" witdh="150px" height="150px" alt="Profile Picture" />
+                                            }
+                                            else
+                                            {
+                                                <span>No Profile Picture</span> <!-- Alternatif içerik veya mesaj -->
+                                            }
+                                        </td>
+                                        <td class="text-bold-500">@item.SKU</td>
+                                        <td >@item.Name</td>
+                                        <td class="text-bold-500">@item.CategoryName</td>
+                                        <td>@item.SupplierName</td>
+                                        <td class="text-bold-500">@item.VatRate</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

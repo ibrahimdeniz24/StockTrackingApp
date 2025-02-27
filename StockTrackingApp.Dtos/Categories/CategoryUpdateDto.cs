@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace StockTrackingApp.Dtos.Categories
 {
     public class CategoryUpdateDto
@@ -11,5 +6,8 @@ namespace StockTrackingApp.Dtos.Categories
         public Guid Id { get; set; }
 
         public string CategoryName { get; set; }
+
+        public string Description { get; set; }
+
     }
 }

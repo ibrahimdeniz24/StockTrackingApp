@@ -1,14 +1,9 @@
-﻿using StockTrackingApp.Dtos.Products;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace StockTrackingApp.Dtos.Suppliers
 {
     public class SupplierDetailsDto
     {
+        public Guid Id { get; set; } // Tedarikçi ID
         public string CompanyName { get; set; } // Tedarikçi Adı
 
         public string Adress { get; set; }

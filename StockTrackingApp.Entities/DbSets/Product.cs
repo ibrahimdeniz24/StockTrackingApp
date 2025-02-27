@@ -15,8 +15,6 @@ namespace StockTrackingApp.Entities.DbSets
 
         public byte[] ProductImage { get; set; }
 
-        public VatRate VatRate { get; set; }
-
         public Guid SupplierId { get; set; }
         public virtual Supplier Supplier { get; set; }
 

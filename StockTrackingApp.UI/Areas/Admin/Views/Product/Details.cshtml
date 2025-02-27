@@ -28,10 +28,17 @@
                                 <div class="row">
 
                                     <div class="col-md-4">
-                                        <label> @Html.DisplayNameFor(model => model.Id)</label>
+                                        <label> @Html.DisplayNameFor(model => model.ProductImage)</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <label> @Html.DisplayFor(model => model.Id)</label>
+                                        @if (Model.ProductImage != null && Model.ProductImage.Length > 0)
+                                        {
+                                            <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.ProductImage)}")" witdh="150px" height="150px" alt="Profile Picture" />
+                                        }
+                                        else
+                                        {
+                                            <span>No Profile Picture</span> <!-- Alternatif içerik veya mesaj -->
+                                        }
                                     </div>
 
                                     <div class="col-md-4">

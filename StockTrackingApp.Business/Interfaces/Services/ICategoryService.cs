@@ -1,4 +1,5 @@
 ﻿using StockTrackingApp.Dtos.Categories;
+using StockTrackingApp.Dtos.Products;
 using System.Web.Mvc;
 
 namespace StockTrackingApp.Business.Interfaces.Services
@@ -15,5 +16,7 @@ namespace StockTrackingApp.Business.Interfaces.Services
 
 
         Task<List<SelectListItem>> GetAllCategoryAsSelectListAsync();
+
+        Task<IEnumerable<ProductDto>> GetProductsByCategoryAsync(Guid categoryId);
     }
 }

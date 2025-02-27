@@ -49,7 +49,8 @@ namespace StockTrackingApp.Business.Services
         {
             var stocks = await _stockRepository.GetAllAsync();
 
-            return new SuccessDataResult<List<StockListDto>>(stocks.Adapt<List<StockListDto>>(), Messages.ListedSuccess);
+            return new SuccessDataResult<List<StockListDto>>(_mapper.Map<List<StockListDto>>(stocks), Messages.ListedSuccess);
+            
         }
 
         public async Task<IDataResult<StockDto>> GetByIdAsync(Guid id)

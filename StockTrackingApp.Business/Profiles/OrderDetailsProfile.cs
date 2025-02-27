@@ -7,7 +7,7 @@ namespace StockTrackingApp.Business.Profiles
     {
         public OrderDetailsProfile()
         {
-            CreateMap<OrderDetail,OrderDetailCreateDto>();
+            CreateMap<OrderDetailCreateDto, OrderDetail>();
             CreateMap<OrderDetail,OrderDetailDetailsDto>();
             CreateMap<OrderDetail,OrderDetailDto>();
             CreateMap<OrderDetail,OrderDetailListDto>();

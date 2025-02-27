@@ -13,6 +13,6 @@ namespace StockTrackingApp.Dtos.Orders
 
         public OrderStatus OrderStatus { get; set; }
 
-        public ICollection<OrderDetailDto> OrderDetailDtos { get; set; }
+        public List<OrderDetailCreateDto> OrderDetailDtos { get; set; } = new();
     }
 }

@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int row = 0;
 }
 
 <section class="section">
@@ -28,46 +29,62 @@
                             <table class="table table-hover mb-0">
                                 <thead>
                                     <tr>
-                                        <th>@Html.DisplayNameFor(model => model.Id)</th>
-                                        <th>@Html.DisplayNameFor(model => model.ProductId)</th>
+                                        <th>#</th>
+                                        <th>@Html.DisplayNameFor(model => model.ProductImage)</th>
+                                        <th>@Html.DisplayNameFor(model => model.SKU)</th>
                                         <th>@Html.DisplayNameFor(model => model.ProductName)</th>
-                                        <th>@Html.DisplayNameFor(model => model.WareHouseId)</th>
+                                        <th>@Html.DisplayNameFor(model => model.Quantity)</th>
+                                        <th>@Html.DisplayNameFor(model => model.WareHouseName)</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in Model)
                                     {
-                                            <tr>
-                                                <td>
-                                                @Html.DisplayFor(modelItem => item.Id)
-                                                </td>
-                                                <td class="text-bold-500">
-                                                @Html.DisplayFor(modelItem => item.ProductId)
-                                                </td>
-                                                <td class="text-bold-500">
+                                        row++;
+                                        <tr>
+                                            <td>
+                                                @row
+                                            </td>
+                                            <td class="text-bold-500">
+                                                @if (item.ProductImage != null && item.ProductImage.Length > 0)
+                                                {
+                                                    <img src="@($"data:image/png;base64,{Convert.ToBase64String(item.ProductImage)}")" witdh="150px" height="150px" alt="Profile Picture" />
+                                                }
+                                                else
+                                                {
+                                                    <span>No Profile Picture</span> <!-- Alternatif içerik veya mesaj -->
+                                                }
+                                            </td>
+                                            <td class="text-bold-500">
+                                                @Html.DisplayFor(modelItem => item.SKU)
+                                            </td>
+                                            <td class="text-bold-500">
                                                 @Html.DisplayFor(modelItem => item.ProductName)
-                                                </td>
-                                                <td class="text-bold-500">
-                                                @Html.DisplayFor(modelItem => item.WareHouseId)
-                                                </td>
-                                                <td>
-                                                    <div class="btn-group dropend me-1 mb-1">
+                                            </td>
+                                            <td class="text-bold-500">
+                                                @Html.DisplayFor(modelItem => item.Quantity)
+                                            </td>
+                                            <td class="text-bold-500">
+                                                @Html.DisplayFor(modelItem => item.WareHouseName)
+                                            </td>
+                                            <td>
+                                                <div class="btn-group dropend me-1 mb-1">
 
-                                                        <button class="btn btn-light rounded-pill  dropdown-toggle" type="button"
-                                                                id="dropdownMenuButton" data-bs-toggle="dropdown"
-                                                                aria-haspopup="true" aria-expanded="false">
-                                                            Seçenekler
-                                                        </button>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <button class="btn btn-light rounded-pill  dropdown-toggle" type="button"
+                                                            id="dropdownMenuButton" data-bs-toggle="dropdown"
+                                                            aria-haspopup="true" aria-expanded="false">
+                                                        Seçenekler
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                         <a data-bs-toggle="modal" data-bs-target="#stockUpdateModal" asp-route-id="@item.Id" data-item-id="@item.Id" class="dropdown-item" data-kt-users-table-filter="delete_row">Düzenle</a>
-                                                            <a class="dropdown-item" href="@Url.Action("Details", "Stock", new { id = item.Id })">Details</a>
-
-                                                        </div>
+                                                        <a class="dropdown-item" href="@Url.Action("Details", "Stock", new { id = item.Id })">Details</a>
 
                                                     </div>
-                                                </td>
-                                            </tr>
+
+                                                </div>
+                                            </td>
+                                        </tr>
                                     }
                                 </tbody>
                             </table>

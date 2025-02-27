@@ -6,5 +6,8 @@ namespace StockTrackingApp.UI.Areas.Admin.Models.CategoryVMs
     {
         [Required(ErrorMessage = "Kategori adı zorunludur.")]
         public string CategoryName { get; set; }
+
+        public string? Description { get; set; }
+
     }
 }

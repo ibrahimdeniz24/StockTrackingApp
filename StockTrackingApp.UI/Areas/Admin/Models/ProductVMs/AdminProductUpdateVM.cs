@@ -21,5 +21,7 @@ namespace StockTrackingApp.UI.Areas.Admin.Models.ProductVMs
 
         public VatRate VatRate { get; set; }
         public byte[] ProductImage { get; set; }
+
+        public IFormFile? NewPicture { get; set; }
     }
 }

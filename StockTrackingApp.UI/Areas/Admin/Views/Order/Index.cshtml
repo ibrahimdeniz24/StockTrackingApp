@@ -1,9 +1,11 @@
-﻿@using StockTrackingApp.UI.Areas.Admin.Models.OrderVMs
+﻿@using StockTrackingApp.Entities.Enums
+@using StockTrackingApp.UI.Areas.Admin.Models.OrderVMs
 @model IEnumerable<StockTrackingApp.UI.Areas.Admin.Models.OrderVMs.AdminOrderListVM>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int row = 0;
 }
 
 
@@ -31,7 +33,7 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.Id)
+                                            #
                                         </th>
                                         <th>
                                             @Html.DisplayNameFor(model => model.OrderDate)
@@ -57,9 +59,10 @@
                                 <tbody>
                                     @foreach (var item in Model)
                                     {
+                                        row++;
                                         <tr>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Id)
+                                                @row
                                             </td>
                                             <td class="text-bold-500">
                                                 @Html.DisplayFor(modelItem => item.OrderDate)
@@ -125,85 +128,14 @@
     });
 </script>
 <script>
-    $(document).ready(function () {
-        $("#customerDropdown").select2({
-            placeholder: "Müşteri Ara...",
-            allowClear: true,
-            minimumInputLength: 1,
-            dropdownParent: $("#customerDropdown").parent(), // Bu satırı ekle modal oldugu için bu ekledik
-            ajax: {
-                url: "@Url.Action("GetCustomers", "Order", new { area = "Admin" })",
-                dataType: "json",
-                delay: 250,
-                data: function (params) {
-                    return { term: params.term };
-                },
-                processResults: function (data) {
-                    return {
-                        results: $.map(data, function (item) {
-                            return { id: item.id, text: item.text };
-                        })
-                    };
-                }
-            }
-        });
-    });
-
-</script>
-
-<script>
-    $(document).ready(function () {
-        // Sayfa yüklendiğinde ilk select2'yi başlat
-        initSelect2();
-
-        // Yeni detay eklemek için event listener
-        document.getElementById('addDetail').addEventListener('click', function () {
-            const index = document.querySelectorAll('.order-detail').length;
-
-            // Yeni eklenen stok detaylarını içeren HTML kodu
-            const detailHtml = `
-                <div class="order-detail d-flex gap-3">
-                    <div style="flex:2;">
-                        <label>Stok Adı:</label>
-                        <select id="stockDropdown${index}" name="OrderDetailDtos[${index}].StockId" class="form-control" style="width: 100%;" required>
-                            <option value="">Stok Seç</option>
-                        </select>
-                    </div>
-                    <div style="flex:1;">
-                        <label>Adet:</label>
-                        <input id="quantity" name="OrderDetailDtos[${index}].Quantity" type="number" class="form-control" oninput="calculateTotal()" required />
-                    </div>
-                    <div style="flex:1;">
-                        <label>Birim Fiyat:</label>
-                        <input id="unitPrice" name="OrderDetailDtos[${index}].UnitPrice" type="number" step="0.01" class="form-control" oninput="calculateTotal()" required />
-                    </div>
-                       <div style="flex:1;">
-                          <label>Toplam Tutar:</label>
-                          <input id="totalAmount" name="OrderDetailDtos[${index}].TotalAmount" type="number" step="0.01" class="form-control" readonly />
-                       </div>
-                </div>`;
-
-            document.getElementById('orderDetails').insertAdjacentHTML('beforeend', detailHtml);
-
-            // Yeni eklenen select2 öğesini başlat
-            initSelect2(index);
-        });
-
-        document.getElementById('orderDetails').addEventListener('click', function (e) {
-            if (e.target.classList.contains('removeDetail')) {
-                e.target.closest('.order-detail').remove();
-            }
-        });
-
-        // select2'yi başlatan fonksiyon
-        function initSelect2(index = '') {
-            $(`#stockDropdown${index}`).select2({
-                placeholder: "Stok Ara...",
+        $(document).ready(function () {
+            $("#customerDropdown").select2({
+                placeholder: "Müşteri Ara...",
                 allowClear: true,
                 minimumInputLength: 1,
-                dropdownParent: $("#stockDropdown" + index).parent(), // Modal içinde doğru yerleştirme
+                dropdownParent: $("#customerDropdown").parent(), // Bu satırı ekle modal oldugu için bu ekledik
                 ajax: {
-                    url: "@Url.Action("GetStocks", "Order", new { area = "Admin" })",
+                    url: "@Url.Action("GetCustomers", "Order", new { area = "Admin" })",
                     dataType: "json",
                     delay: 250,
                     data: function (params) {
@@ -218,30 +150,139 @@
                     }
                 }
             });
-        }
+        });
+
+
+
+
+    $(document).ready(function () {
+        initSelect2(0);
     });
 
+    function initSelect2(index) {
+        $(`#stockDropdown${index}`).select2({
+            placeholder: "Stok Ara...",
+            allowClear: true,
+            minimumInputLength: 1,
+            dropdownParent: $(`#stockDropdown${index}`).parent(),
+            ajax: {
+                url: "@Url.Action("GetStocks", "Order", new { area = "Admin" })",
+                dataType: "json",
+                delay: 250,
+                data: function (params) {
+                    return { term: params.term };
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return { id: item.id, text: item.text };
+                        })
+                    };
+                }
+            }
+        });
+    }
+
+    function addOrderDetail() {
+        var index = $("#orderDetailsBody tr").length;
+        var rowHtml = `
+    <tr>
+        <td>
+            <select id="stockDropdown${index}" name="AdminOrderDetailCreateVMs[${index}].StockId" class="form-control stockDropdown" required></select>
+        </td>
+        <td>
+            <input name="AdminOrderDetailCreateVMs[${index}].Quantity" type="number" class="form-control quantity" min="1" oninput="calculateTotal(this)" required />
+        </td>
+        <td>
+            <input name="AdminOrderDetailCreateVMs[${index}].UnitPrice" type="number" step="0.01" class="form-control unitPrice" min="0" oninput="calculateTotal(this)" required />
+        </td>
+        <td>
+            <input name="AdminOrderDetailCreateVMs[${index}].TotalPriceExcludingVAT" type="number" step="0.01" class="form-control TotalPriceExcludingVAT" readonly />
+        </td>
+        <td>
+            <select name="AdminOrderDetailCreateVMs[${index}].VatRate" class="form-control vatRate" required onchange="calculateTotal(this)">
+                 @foreach (var vatRate in Enum.GetValues(typeof(VatRate)))
+                 {
+                        <option value="@((int)vatRate)">@vatRate</option>
+                 }
+            </select>
+        </td>
+        <td>
+            <input name="AdminOrderDetailCreateVMs[${index}].TotalPriceIncludingVAT" type="number" step="0.01" class="form-control totalPriceVat" readonly />
+        </td>
+        <td>
+            <button type="button" class="btn btn-danger" onclick="removeOrderDetail(this)">Sil</button>
+        </td>
+    </tr>`;
+
+        $("#orderDetailsBody").append(rowHtml);
+        initSelect2(index); // Yeni eklenen dropdown için Select2 başlat
+        updateOrderDetailIndexes(); // Index'leri güncelle
+    }
+
+    function removeOrderDetail(button) {
+        $(button).closest("tr").remove();
+        updateOrderDetailIndexes(); // Silme işleminden sonra index'leri güncelle
+        updateTotalOrderAmount(); // Toplam tutarı güncelle
+    }
+
+    function calculateTotal(input) {
+        var row = $(input).closest("tr");
+        var quantity = parseFloat(row.find(".quantity").val()) || 0;
+        var unitPrice = parseFloat(row.find(".unitPrice").val()) || 0;
+        var vatRate = parseFloat(row.find(".vatRate").val()) || 0; // KDV Oranı
+
+        var total = quantity * unitPrice;
+        var vatAmount = total * vatRate / 100; // KDV Tutarı
+        var totalWithVat = total + vatAmount; // KDV Dahil Toplam
+
+        row.find(".TotalPriceExcludingVAT").val(total.toFixed(2));
+        row.find(".totalPriceVat").val(totalWithVat.toFixed(2));
+        row.find(".totalVat").val(vatAmount.toFixed(2));
+
+        updateTotalOrderAmount();
+    }
+
+    function updateTotalOrderAmount() {
+        var totalAmount = 0; // Toplam KDV Hariç Tutar
+        var totalVat = 0; // Toplam KDV Tutarı
+        var totalWithVat = 0; // Toplam KDV Dahil Tutar
+
+        $(".TotalPriceExcludingVAT").each(function () {
+            var amount = parseFloat($(this).val()) || 0;
+            totalAmount += amount;
+        });
+
+        $(".totalPriceVat").each(function () {
+            var amountWithVat = parseFloat($(this).val()) || 0;
+            totalWithVat += amountWithVat;
+        });
+
+        totalVat = totalWithVat - totalAmount; // KDV tutarını hesapla
+
+        // Değerleri ilgili input alanlarına yaz
+        $("#TotalAmount").val(totalAmount.toFixed(2)); // Toplam KDV hariç tutar
+        $("#TotalVat").val(totalVat.toFixed(2)); // Toplam KDV tutarı
+        $("#TotalWithVat").val(totalWithVat.toFixed(2)); // Toplam KDV dahil tutar
+    }
+
+
+    // Sipariş detay satırları silindiğinde index'leri günceller
+    function updateOrderDetailIndexes() {
+        $("#orderDetailsBody tr").each(function (index, row) {
+            $(row).find("select, input").each(function () {
+                var nameAttr = $(this).attr("name");
+                if (nameAttr) {
+                    var newName = nameAttr.replace(/\[\d+\]/, `[${index}]`);
+                    $(this).attr("name", newName);
+                }
+            });
+
+            // ID güncelleme
+            var stockDropdown = $(row).find(".stockDropdown");
+            stockDropdown.attr("id", `stockDropdown${index}`);
+            initSelect2(index); // Güncellenen ID için Select2 başlat
+        });
+    }
+
 </script>
-
-<script>
-    function calculateTotal() {
-                                        document.querySelectorAll('.order-detail').forEach(detail => {
-                                            const quantityInput = detail.querySelector('[name$=".Quantity"]');
-                                            const unitPriceInput = detail.querySelector('[name$=".UnitPrice"]');
-                                            const totalAmountInput = detail.querySelector('[name$=".TotalAmount"]');
-
-                                            const quantity = parseFloat(quantityInput?.value) || 0;
-                                            const unitPrice = parseFloat(unitPriceInput?.value) || 0;
-                                            if (totalAmountInput) {
-                                                totalAmountInput.value = (quantity * unitPrice).toFixed(2);
-                                            }
-                                        });
-                                    }
-
-</script>
-
-
-
-
-
-

@@ -1,6 +1,7 @@
 ﻿
 using StockTrackingApp.Business.Interfaces.Services;
 using StockTrackingApp.Dtos.Categories;
+using StockTrackingApp.Dtos.Products;
 using System.Web.Mvc;
 
 namespace StockTrackingApp.Business.Services
@@ -9,11 +10,13 @@ namespace StockTrackingApp.Business.Services
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
+        private readonly IProductRepository productRepository;
 
-        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper)
+        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper, IProductRepository productRepository)
         {
             _categoryRepository = categoryRepository;
             _mapper = mapper;
+            this.productRepository = productRepository;
         }
 
         public async Task<IDataResult<CategoryDto>> AddAsync(CategoryCreateDto categoryCreateDto)
@@ -56,7 +59,8 @@ namespace StockTrackingApp.Business.Services
         {
             var categories = await _categoryRepository.GetAllAsync();
 
-            return new SuccessDataResult<List<CategoryListDto>>(categories.Adapt<List<CategoryListDto>>(), Messages.ListedSuccess);
+            return new SuccessDataResult<List<CategoryListDto>>(_mapper.Map<List<CategoryListDto>>(categories), Messages.ListedSuccess);
+
         }
 
         public async Task<List<SelectListItem>> GetAllCategoryAsSelectListAsync()
@@ -90,6 +94,13 @@ namespace StockTrackingApp.Business.Services
             }
 
             return new SuccessDataResult<CategoryDetailsDto>(_mapper.Map<CategoryDetailsDto>(category), Messages.ListedSuccess);
+        }
+
+        public async Task<IEnumerable<ProductDto>> GetProductsByCategoryAsync(Guid categoryId)
+        {
+            var product = await productRepository.GetAllAsync(x=>x.CategoryId == categoryId);
+
+            return product.Adapt<IEnumerable<ProductDto>>();
         }
 
         public async Task<IDataResult<CategoryDto>> UpdateAsync(CategoryUpdateDto categoryUpdateDto)

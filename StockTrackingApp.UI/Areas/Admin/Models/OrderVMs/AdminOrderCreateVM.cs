@@ -8,7 +8,7 @@ namespace StockTrackingApp.UI.Areas.Admin.Models.OrderVMs
         public Guid CustomerId { get; set; }
         public DateTime OrderDate { get; set; }
         public DateTime DeliveryDate { get; set; }
-        public decimal TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; } //Siparişin Toplam tutarı
 
         public string Description { get; set; }
 

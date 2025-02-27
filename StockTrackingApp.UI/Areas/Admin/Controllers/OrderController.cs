@@ -29,7 +29,7 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int? page, int pageSize = 10)
         {
             int pageNumber = page ?? 1;
-            var orderGetResult = await _orderDetailService.GetAllAsync();
+            var orderGetResult = await _orderService.GetAllAsync();
             var orderList = _mapper.Map<List<AdminOrderListVM>>(orderGetResult.Data).OrderBy(o => o.OrderDate).ToList();
 
 
