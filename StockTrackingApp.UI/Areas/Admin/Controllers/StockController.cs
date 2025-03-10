@@ -12,13 +12,15 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         private readonly IProductService _productService;
         private readonly IWarehouseService _warehouseService;
         private readonly IMapper _mapper;
+        private readonly ISupplierService _supplierService;
 
-        public StockController(IStockService stockService, IProductService productService, IWarehouseService warehouseService, IMapper mapper)
+        public StockController(IStockService stockService, IProductService productService, IWarehouseService warehouseService, IMapper mapper, ISupplierService supplierService)
         {
             _stockService = stockService;
             _productService = productService;
             _warehouseService = warehouseService;
             _mapper = mapper;
+            _supplierService = supplierService;
         }
 
         [HttpGet]
@@ -174,5 +176,35 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
 
             return Json(filteredProducts);
         }
+
+        //Ajax ile modala veri doldurmak için
+        [HttpGet]
+        public async Task<IActionResult> GetSuppliers(string term)
+        {
+            if (string.IsNullOrWhiteSpace(term))
+            {
+                return Json(new List<object>());
+            }
+
+            var suppliers = await _supplierService.GetAllAsync();
+
+            // Eğer gelen data DTO içeriyorsa, doğru şekilde isimlendir
+            var supplierList = suppliers.Data.
+                Where(c => c.CompanyName.Contains(term, StringComparison.OrdinalIgnoreCase)).
+                Select(c => new { id = c.Id, text = c.CompanyName }).ToList();
+            return Json(supplierList);
+        }
+
+
+        public async Task<JsonResult> GetProductById(Guid id)
+        {
+            var stock = await _stockService.GetByIdAsync(id); // Asenkron olarak ürünü al
+            if (stock != null)
+            {
+                return Json(new { id = stock.Data.Id, text = stock.Data.ProductName }); // ID ve isim döndür
+            }
+            return Json(null);
+        }
+
     }
 }

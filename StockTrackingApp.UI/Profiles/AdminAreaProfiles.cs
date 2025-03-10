@@ -70,6 +70,7 @@ namespace StockTrackingApp.UI.Profiles
 
             //ProductController
             CreateMap<AdminProductCreateVM, ProductCreateDto>();
+            CreateMap<AdminProductUpdateVM, ProductUpdateDto>();
             CreateMap<ProductListDto, AdminProductListVM>();
             CreateMap<ProductDetailsDto, AdminProductDetailsVM>();
             CreateMap<ProductListDto, AdminProductListVM>();

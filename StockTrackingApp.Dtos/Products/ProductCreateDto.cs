@@ -6,12 +6,7 @@ namespace StockTrackingApp.Dtos.Products
         public string Name { get; set; } // Ürün Adı
         public string SKU { get; set; } // Stok Kodu
         public Guid CategoryId { get; set; } // Kategori ID (FK)
-        public string CategoryName { get; set; }
-        public Guid SupplierId { get; set; }
-        public VatRate VatRate { get; set; }
-        public byte[] ProductImage { get; set; }
-
-        public string SupplierName { get; set; }
+        public byte[] ProductImage { get; set; } //Ürün Görseli
 
     }
 }

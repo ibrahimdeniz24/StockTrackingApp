@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.Metadata;
 using StockTrackingApp.Dtos.Products;
 using StockTrackingApp.UI.Areas.Admin.Models.ProductVMs;
 using StockTrackingApp.UI.Extantions;
@@ -90,7 +91,7 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
 
             var productDto = _mapper.Map<ProductCreateDto>(model);
 
-            if (model.NewPicture == null || model.NewPicture.Length==0)
+            if (model.NewPicture == null || model.NewPicture.Length == 0)
             {
                 return RedirectToAction(nameof(Index));
             }
@@ -142,6 +143,62 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         }
 
 
+        [HttpPost]
+
+        public async Task<IActionResult> Update(AdminProductUpdateVM updateVM)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(x => x.Errors);
+                var errorMessages = new StringBuilder();
+
+                foreach (var error in errors)
+                {
+                    if (errorMessages.Length > 0)
+                    {
+                        errorMessages.Append(", ");
+
+                        if (errorMessages.ToString().Contains(error.ErrorMessage))
+                        {
+                            continue;
+                        }
+                    }
+
+                    errorMessages.Append(error.ErrorMessage);
+                }
+
+                NotifyError(errorMessages.ToString());
+                return RedirectToAction(nameof(Index));
+            }
+
+
+            var productUpdateDto = _mapper.Map<ProductUpdateDto>(updateVM);
+            if (updateVM.NewPicture == null || updateVM.NewPicture.Length == 0)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            productUpdateDto.ProductImage = await updateVM.NewPicture.FileToByteArrayAsync();
+
+
+            var productUpdateResult = await _productService.UpdateAsync(productUpdateDto);
+
+            if (!productUpdateResult.IsSuccess)
+            {
+                NotifyErrorLocalized(productUpdateResult.Message);
+                return View(nameof(Index));
+            }
+            else
+            {
+                NotifySuccessLocalized(productUpdateResult.Message);
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+
+
 
 
         //Ajax ile modala veri doldurmak için
@@ -159,24 +216,6 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
                 Where(c => c.CategoryName.Contains(term, StringComparison.OrdinalIgnoreCase)).
                 Select(c => new { id = c.Id, text = c.CategoryName }).ToList();
             return Json(filteredCategoryList);
-        }
-
-        //Ajax ile modala veri doldurmak için
-        [HttpGet]
-        public async Task<IActionResult> GetSuppliers(string term)
-        {
-            if (string.IsNullOrWhiteSpace(term))
-            {
-                return Json(new List<object>());
-            }
-
-            var suppliers = await _supplierService.GetAllAsync();
-
-            // Eğer gelen data DTO içeriyorsa, doğru şekilde isimlendir
-            var supplierList = suppliers.Data.
-                Where(c => c.CompanyName.Contains(term, StringComparison.OrdinalIgnoreCase)).
-                Select(c => new { id = c.Id, text = c.CompanyName }).ToList();
-            return Json(supplierList);
         }
 
     }

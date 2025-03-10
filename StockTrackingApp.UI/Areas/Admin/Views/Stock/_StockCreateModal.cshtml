@@ -13,6 +13,12 @@
                         <form asp-action="Create" id="stockForm">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-group mb-3">
+                                <label for="ProductId">Ürün Seçin</label>
+                                <select id="productDropdown" name="ProductId" class="form-control" style="width: 100%;">
+                                    <option value="">Ürün Seçin</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-3">
                                 <label asp-for="Quantity" class="control-label"></label>
                                 <input asp-for="Quantity" class="form-control" />
                                 <span asp-validation-for="Quantity" class="text-danger"></span>
@@ -23,9 +29,9 @@
                                 <span asp-validation-for="PurchasePrice" class="text-danger"></span>
                             </div>
                             <div class="form-group mb-3">
-                                <label for="ProductId">Ürün Seçin</label>
-                                <select id="productDropdown" name="ProductId" class="form-control" style="width: 100%;">
-                                    <option value="">Ürün Seçin</option>
+                                <label asp-for="SupplierId">Tedarikçi Seç</label>
+                                <select id="supplierDropdown" name="SupplierId" class="form-control" style="width: 100%;">
+                                    <option value="">Tedarikçi Seçin</option>
                                 </select>
                             </div>
                             <div class="form-group mb-3">

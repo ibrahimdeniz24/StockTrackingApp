@@ -14,6 +14,7 @@
                     <div class="col-md-12">
                         <form asp-action="Create" id="customerForm">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input asp-for="Id" type="hidden" />
                             <div class="form-group mb-3">
                                 <label asp-for="CompanyName" class="control-label"></label>
                                 <input asp-for="CompanyName" class="form-control" />

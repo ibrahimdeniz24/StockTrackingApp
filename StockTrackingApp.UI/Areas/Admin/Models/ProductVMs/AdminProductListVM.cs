@@ -11,8 +11,9 @@ namespace StockTrackingApp.UI.Areas.Admin.Models.ProductVMs
         public VatRate VatRate { get; set; }
         public byte[] ProductImage { get; set; }
         public List<SelectListItem>? Categories { get; set; } // Kategori Adı
-        public List<SelectListItem>? Suppliers { get; set; } // Kategori Adı
-        public string SupplierName { get; set; }
         public string CategoryName { get; set; }
+
+        public Guid CategoryId { get; set; }
+
     }
 }

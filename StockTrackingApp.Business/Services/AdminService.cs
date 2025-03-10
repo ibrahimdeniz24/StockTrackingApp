@@ -1,9 +1,12 @@
 ﻿
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StockTrackingApp.Business.Interfaces.Services;
 using StockTrackingApp.Core.Enums;
+using StockTrackingApp.Core.Utilities.Results.Concrete;
 using StockTrackingApp.Dtos.Admins;
+using System.Security.Claims;
 
 namespace StockTrackingApp.Business.Services
 {
@@ -12,12 +15,15 @@ namespace StockTrackingApp.Business.Services
         private readonly IAdminRepository _adminRepository;
         private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AdminService(IAdminRepository adminRepository, IAccountService accountService, IMapper mapper)
+
+        public AdminService(IAdminRepository adminRepository, IAccountService accountService, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _adminRepository = adminRepository;
             _accountService = accountService;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IDataResult<AdminDto>> AddAsync(AdminCreateDto adminCreateDto)
@@ -76,7 +82,7 @@ namespace StockTrackingApp.Business.Services
             return result;
         }
 
-        public async Task<IResult> DeleteAsync(Guid id)
+        public async Task<Core.Utilities.Results.IResult> DeleteAsync(Guid id)
         {
             var admin = await _adminRepository.GetByIdAsync(id);
 
@@ -127,6 +133,22 @@ namespace StockTrackingApp.Business.Services
             }
 
             return new SuccessDataResult<AdminDto>(_mapper.Map<AdminDto>(admin), Messages.ListedSuccess);
+        }
+
+        public async Task<IDataResult<AdminDto>> GetCurrentAdminAsync()
+        {
+            var identityUserId = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(identityUserId))
+                return new ErrorDataResult<AdminDto>(Messages.UserNotFound);
+
+            var admin = await _adminRepository.GetAsync(x => x.IdentityId == identityUserId);
+
+            if (admin == null)
+                return new ErrorDataResult<AdminDto>(Messages.UserNotFound);
+            var adminDto = admin.Adapt<AdminDto>();
+
+            return new SuccessDataResult<AdminDto>(adminDto, Messages.UserNotFound);
         }
 
         public async Task<IDataResult<AdminDetailsDto>> GetDetailsByIdAsync(Guid id)

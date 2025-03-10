@@ -14,6 +14,7 @@
                     <div class="col-md-12">
                         <form asp-action="Create" id="apiUserForm">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input asp-for="Id" type="hidden" />
                             <div class="form-group mb-3">
                                 <label asp-for="FirstName" class="control-label"></label>
                                 <input asp-for="FirstName" class="form-control" />

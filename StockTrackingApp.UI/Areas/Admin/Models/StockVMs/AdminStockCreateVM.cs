@@ -1,4 +1,6 @@
-﻿namespace StockTrackingApp.UI.Areas.Admin.Models.StockVMs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace StockTrackingApp.UI.Areas.Admin.Models.StockVMs
 {
     public class AdminStockCreateVM
     {
@@ -7,6 +9,8 @@
         public Guid WareHouseId { get; set; }
         public Guid ProductId { get; set; }
 
-        public string ProductName { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Tedarikçi seçimi zorunludur.")]
+        public Guid SupplierId { get; set; }
+
     }
 }

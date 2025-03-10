@@ -1,4 +1,5 @@
 ﻿@using StockTrackingApp.Entities.Enums
+@using StockTrackingApp.UI.Extantions
 @using StockTrackingApp.UI.Areas.Admin.Models.OrderVMs
 @model IEnumerable<StockTrackingApp.UI.Areas.Admin.Models.OrderVMs.AdminOrderListVM>
 
@@ -113,6 +114,7 @@
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/AdminLayout/addedjs/Datetimeflatpickr/datetimeFlatpickr.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -191,24 +193,29 @@
             <select id="stockDropdown${index}" name="AdminOrderDetailCreateVMs[${index}].StockId" class="form-control stockDropdown" required></select>
         </td>
         <td>
-            <input name="AdminOrderDetailCreateVMs[${index}].Quantity" type="number" class="form-control quantity" min="1" oninput="calculateTotal(this)" required />
+            <input name="AdminOrderDetailCreateVMs[${index}].Quantity" pattern="[0-9]+"  class="form-control quantity" min="1" oninput="calculateTotal(this)" required />
         </td>
         <td>
-            <input name="AdminOrderDetailCreateVMs[${index}].UnitPrice" type="number" step="0.01" class="form-control unitPrice" min="0" oninput="calculateTotal(this)" required />
+            <input name="AdminOrderDetailCreateVMs[${index}].UnitPrice" pattern="[0-9]+([,][0-9]+)?" step="0.01" class="form-control unitPrice" min="0" oninput="calculateTotal(this)" required />
         </td>
         <td>
-            <input name="AdminOrderDetailCreateVMs[${index}].TotalPriceExcludingVAT" type="number" step="0.01" class="form-control TotalPriceExcludingVAT" readonly />
+            <input name="AdminOrderDetailCreateVMs[${index}].TotalPriceExcludingVAT"  step="0.01" class="form-control TotalPriceExcludingVAT" readonly />
         </td>
         <td>
             <select name="AdminOrderDetailCreateVMs[${index}].VatRate" class="form-control vatRate" required onchange="calculateTotal(this)">
-                 @foreach (var vatRate in Enum.GetValues(typeof(VatRate)))
-                 {
-                        <option value="@((int)vatRate)">@vatRate</option>
-                 }
+                @foreach (var vatRate in Enum.GetValues(typeof(VatRate)).Cast<VatRate>())
+                {
+                    <option value="@((int)vatRate)">
+                        @vatRate.GetDisplayName()
+                     </option>
+                }
             </select>
         </td>
         <td>
-            <input name="AdminOrderDetailCreateVMs[${index}].TotalPriceIncludingVAT" type="number" step="0.01" class="form-control totalPriceVat" readonly />
+            <input name="AdminOrderDetailCreateVMs[${index}].TotalPriceIncludingVAT"  step="0.01" class="form-control totalVat" readonly />
+        </td>
+        <td>
+            <input name="AdminOrderDetailCreateVMs[${index}].TotalPriceIncludingVAT"  step="0.01" class="form-control totalPriceVat" readonly />
         </td>
         <td>
             <button type="button" class="btn btn-danger" onclick="removeOrderDetail(this)">Sil</button>
@@ -228,43 +235,69 @@
 
     function calculateTotal(input) {
         var row = $(input).closest("tr");
-        var quantity = parseFloat(row.find(".quantity").val()) || 0;
-        var unitPrice = parseFloat(row.find(".unitPrice").val()) || 0;
-        var vatRate = parseFloat(row.find(".vatRate").val()) || 0; // KDV Oranı
 
+        // Input değerlerini al ve virgülü noktaya çevir
+        var quantity = row.find(".quantity").val().trim().replace(",", ".");
+        var unitPrice = row.find(".unitPrice").val().trim().replace(",", ".");
+        var vatRate = row.find(".vatRate").val().trim().replace(",", ".");
+
+        console.log("Raw Inputs:", { quantity, unitPrice, vatRate }); // Hata ayıklama için
+
+        // Sayılara çevir (geçersizse 0 yap)
+        quantity = isNaN(parseFloat(quantity)) ? 0 : parseFloat(quantity);
+        unitPrice = isNaN(parseFloat(unitPrice)) ? 0 : parseFloat(unitPrice);
+        vatRate = isNaN(parseFloat(vatRate)) ? 0 : parseFloat(vatRate);
+
+        console.log("Parsed Inputs:", { quantity, unitPrice, vatRate });
+
+        // Negatif değerleri engelle
+        if (quantity < 0 || unitPrice < 0 || vatRate < 0) {
+            alert("Geçersiz değerler! Miktar, birim fiyat ve KDV oranı sıfırdan küçük olamaz.");
+            return;
+        }
+
+        // Toplam hesaplamalar
         var total = quantity * unitPrice;
-        var vatAmount = total * vatRate / 100; // KDV Tutarı
-        var totalWithVat = total + vatAmount; // KDV Dahil Toplam
+        var vatAmount = total * vatRate / 100;
+        var totalWithVat = total + vatAmount;
 
-        row.find(".TotalPriceExcludingVAT").val(total.toFixed(2));
-        row.find(".totalPriceVat").val(totalWithVat.toFixed(2));
-        row.find(".totalVat").val(vatAmount.toFixed(2));
+        console.log("Total Calculation:", { total, vatAmount, totalWithVat });
 
+        // Değerleri Türkçe formatta yaz (noktayı tekrar virgüle çevir)
+        row.find(".TotalPriceExcludingVAT").val(total.toFixed(2).replace(".", ","));
+        row.find(".totalVat").val(vatAmount.toFixed(2).replace(".", ","));
+        row.find(".totalPriceVat").val(totalWithVat.toFixed(2).replace(".", ","));
+
+        // Sipariş toplamını güncelle
         updateTotalOrderAmount();
     }
 
+
+
+
     function updateTotalOrderAmount() {
-        var totalAmount = 0; // Toplam KDV Hariç Tutar
+        var totalExcludingAmount = 0; // Toplam KDV Hariç Tutar
         var totalVat = 0; // Toplam KDV Tutarı
         var totalWithVat = 0; // Toplam KDV Dahil Tutar
 
         $(".TotalPriceExcludingVAT").each(function () {
-            var amount = parseFloat($(this).val()) || 0;
-            totalAmount += amount;
+            var amount = parseFloat($(this).val().replace(",", ".")) || 0;
+            totalExcludingAmount += amount;
         });
 
         $(".totalPriceVat").each(function () {
-            var amountWithVat = parseFloat($(this).val()) || 0;
+            var amountWithVat = parseFloat($(this).val().replace(",", ".")) || 0;
             totalWithVat += amountWithVat;
         });
 
-        totalVat = totalWithVat - totalAmount; // KDV tutarını hesapla
+        totalVat = totalWithVat - totalExcludingAmount; // KDV tutarını hesapla
 
-        // Değerleri ilgili input alanlarına yaz
-        $("#TotalAmount").val(totalAmount.toFixed(2)); // Toplam KDV hariç tutar
-        $("#TotalVat").val(totalVat.toFixed(2)); // Toplam KDV tutarı
-        $("#TotalWithVat").val(totalWithVat.toFixed(2)); // Toplam KDV dahil tutar
+        // Değerleri ilgili input alanlarına yaz (Türkçe formatta virgüllü olarak)
+        $("#TotalExcludingVATAmount").val(totalExcludingAmount.toFixed(2).replace(".", ",")); // Toplam KDV hariç tutar
+        $("#TotalVATAmount").val(totalVat.toFixed(2).replace(".", ",")); // Toplam KDV tutarı
+        $("#TotalAmount").val(totalWithVat.toFixed(2).replace(".", ",")); // Toplam KDV dahil tutar
     }
+
 
 
     // Sipariş detay satırları silindiğinde index'leri günceller
@@ -286,3 +319,5 @@
     }
 
 </script>
+
+

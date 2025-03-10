@@ -1,9 +1,4 @@
 ﻿using StockTrackingApp.Dtos.StockTransactions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StockTrackingApp.Dtos.Stocks
 {
@@ -15,6 +10,13 @@ namespace StockTrackingApp.Dtos.Stocks
         public int Quantity { get; set; }
         public Guid WareHouseId { get; set; }
         public Guid ProductId { get; set; }
+
+        public string WareHouseName { get; set; }
+
+        public string SKU { get; set; }
+
+        public string ProductName { get; set; }
+        public byte[]? ProductImage { get; set; }
 
         public IEnumerable<StockTransactionDto> StockTransactions { get; set; }
     }

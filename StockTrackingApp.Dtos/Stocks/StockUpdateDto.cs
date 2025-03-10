@@ -15,5 +15,7 @@ namespace StockTrackingApp.Dtos.Stocks
         public Guid WareHouseId { get; set; }
         public Guid ProductId { get; set; }
 
+        public Guid SupplierId { get; set; }
+
     }
 }

@@ -11,6 +11,8 @@ namespace StockTrackingApp.Dtos.Orders
         public DateTime DeliveryDate { get; set; }
         public decimal TotalAmount { get; set; }
 
+        public string? CustomerName { get; set; }
+
         public string Description { get; set; }
 
         public OrderStatus OrderStatus { get; set; }

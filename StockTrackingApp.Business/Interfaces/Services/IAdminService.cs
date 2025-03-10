@@ -1,9 +1,4 @@
 ﻿using StockTrackingApp.Dtos.Admins;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StockTrackingApp.Business.Interfaces.Services
 {
@@ -22,5 +17,7 @@ namespace StockTrackingApp.Business.Interfaces.Services
 
         Task<IResult> DeleteAsync(Guid id);
         Task<IDataResult<AdminDetailsDto>> GetDetailsByIdAsync(Guid id);
+
+        Task<IDataResult<AdminDto>> GetCurrentAdminAsync();
     }
 }

@@ -21,6 +21,8 @@ namespace StockTrackingApp.Business.Services
         {
             var order = _mapper.Map<Order>(orderCreateDto);
 
+            order.OrderNo = GenerateOrderNo();
+
             if (orderCreateDto.OrderDetailDtos != null && orderCreateDto.OrderDetailDtos.Any())
             {
                 order.OrderDetails = orderCreateDto.OrderDetailDtos.Select(dt => _mapper.Map<OrderDetail>(dt)).ToList();
@@ -100,6 +102,13 @@ namespace StockTrackingApp.Business.Services
         }
 
 
-        
+
+        public string GenerateOrderNo()
+        {
+            return $"ORD-{DateTime.UtcNow:yyyyMMdd}-{new Random().Next(100000, 999999)}";
+        }
+
+
+
     }
 }

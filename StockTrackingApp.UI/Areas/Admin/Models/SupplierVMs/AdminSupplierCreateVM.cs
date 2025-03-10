@@ -11,7 +11,7 @@ namespace StockTrackingApp.UI.Areas.Admin.Models.SupplierVMs
         public string Adress { get; set; }
 
         [Required(ErrorMessage = "Telefon numarası zorunludur.")]
-        [Phone(ErrorMessage = "Geçerli bir telefon numarası giriniz.")]
+        [RegularExpression(@"^(\d{10,11})$", ErrorMessage = "Telefon numarası 10 veya 11 haneli olmalıdır ve sadece rakam içermelidir.")]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Email adresi zorunludur.")]

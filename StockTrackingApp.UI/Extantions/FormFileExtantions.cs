@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace StockTrackingApp.UI.Extantions
 {
@@ -32,5 +33,6 @@ namespace StockTrackingApp.UI.Extantions
                 return Encoding.UTF8.GetString(bytes);
             }
         }
+
     }
 }

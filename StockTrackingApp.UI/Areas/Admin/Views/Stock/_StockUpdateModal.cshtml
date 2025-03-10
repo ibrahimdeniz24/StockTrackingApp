@@ -12,20 +12,32 @@
                     <div class="col-md-12">
                         <form asp-action="Update" id="stockForm">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input asp-for="Id" type="hidden" />
+                            <div class="form-group mb-3">
+                                <label for="ProductId">Ürün Seçin</label>
+                                <select id="productDropdown1" name="ProductId" class="form-control" style="width: 100%;">
+                                    <option value="">Ürün Seçin</option>
+                                </select>
+                            </div>
                             <div class="form-group mb-3">
                                 <label asp-for="Quantity" class="control-label"></label>
                                 <input asp-for="Quantity" class="form-control" />
                                 <span asp-validation-for="Quantity" class="text-danger"></span>
                             </div>
                             <div class="form-group mb-3">
-                                <label for="ProductId">Ürün Seçin</label>
-                                <select id="productDropdown" name="ProductId" class="form-control" style="width: 100%;">
-                                    <option value="">Ürün Seçin</option>
+                                <label asp-for="PurchasePrice" class="control-label"></label>
+                                <input asp-for="PurchasePrice" class="form-control" />
+                                <span asp-validation-for="PurchasePrice" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="SupplierId">Tedarikçi Seç</label>
+                                <select id="supplierDropdown1" name="SupplierId" class="form-control" style="width: 100%;">
+                                    <option value="">Tedarikçi Seçin</option>
                                 </select>
                             </div>
                             <div class="form-group mb-3">
                                 <label for="WarehouseId">Depo Seç</label>
-                                <select id="warehouseDropdown" name="WarehouseId" class="form-control">
+                                <select id="warehouseDropdown1" name="WarehouseId" class="form-control">
                                     <option value="">Depo Seçin</option>
                                 </select>
                             </div>

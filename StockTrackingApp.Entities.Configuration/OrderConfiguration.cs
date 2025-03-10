@@ -12,6 +12,15 @@ namespace StockTrackingApp.Entities.Configuration
                    .HasForeignKey(od => od.OrderId)         // Foreign Key tanımı
                    .OnDelete(DeleteBehavior.Cascade);       // Silme davranışı (Cascade: İlişkili kayıtlar silinir)
 
+            builder.Property(o => o.OrderDate).IsRequired();
+            builder.Property(o => o.DeliveryDate).IsRequired();
+
+            builder.HasIndex(o => o.OrderNo).IsUnique();
+
+            builder.Property(o => o.TotalAmount).HasPrecision(18, 2);
+            builder.Property(o => o.TotalExcludingVATAmount).HasPrecision(18, 2);
+            builder.Property(o => o.TotalVATAmount).HasPrecision(18, 2);
+
             base.Configure(builder);
         }
     }

@@ -15,7 +15,10 @@ namespace StockTrackingApp.Entities.Configuration
 
             builder.Property(pod => pod.Quantity)
                    .IsRequired();
-            builder.Property(o => o.UnitPrice).HasPrecision(18, 4);
+            builder.Property(o => o.UnitPrice).HasPrecision(18, 2);
+            builder.Property(o => o.TotalPriceExcludingVAT).HasPrecision(18, 2);
+            builder.Property(o => o.TotalPriceIncludingVAT).HasPrecision(18, 2);
+            builder.Property(o => o.VATAmount).HasPrecision(18, 2);
 
             base.Configure(builder);
         }
