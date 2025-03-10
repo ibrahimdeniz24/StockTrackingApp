@@ -1,4 +1,5 @@
-﻿namespace StockTrackingApp.UI.Areas.Admin.Models.StockVMs
+﻿
+namespace StockTrackingApp.UI.Areas.Admin.Models.StockVMs
 {
     public class AdminStockDetailsVM
     {
@@ -7,7 +8,12 @@
         public decimal PurchasePrice { get; set; } // AlışFiyat
         public Guid WareHouseId { get; set; }
         public Guid ProductId { get; set; }
+        public string WareHouseName { get; set; }
+        public string ProductName { get; set; }
 
-        public string ProductName { get; set; } = string.Empty;
+        public string SKU { get; set; }
+
+        public byte[]? ProductImage { get; set; }
+
     }
 }

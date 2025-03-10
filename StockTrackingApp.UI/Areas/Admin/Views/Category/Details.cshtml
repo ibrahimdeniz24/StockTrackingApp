@@ -13,7 +13,7 @@
                 <div class="card-header">
                     <h4 class="card-title">Kategori Detayı</h4>
                     <div class="col-sm-12 d-flex justify-content-end">
-                        <a data-bs-toggle="modal" data-bs-target="#updateCategoryModal" asp-route-id="@Model.Id" data-item-id="@Model.Id" data-item-name="@Model.CategoryName" class="btn btn-primary" data-kt-users-table-filter="delete_row">Düzenle</a>
+                        <a data-bs-toggle="modal" data-bs-target="#updateCategoryModal" asp-route-id="@Model.Id" data-item-id="@Model.Id" data-item-name="@Model.CategoryName" data-item-desc="@Model.Description" class="btn btn-primary" data-kt-users-table-filter="delete_row">Düzenle</a>
                         <a href="javascript:void(0)" class="btn btn-danger" onclick="confirmDelete('@Url.Action("Delete", "Category", new { area = "Admin", id = Model.Id })')">Delete</a>
                         <a asp-action="Index" class="btn btn-secondary">Back to List</a>
                     </div>
@@ -57,20 +57,7 @@
 @await Component.InvokeAsync("_AdminCategoryDetailProductsViewComponentPartial", new { id = Model.Id })
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-    $(document).ready(function () {
-        $('#updateCategoryModal').on('show.bs.modal', function (event) {
-            let button = $(event.relatedTarget);
-            let itemId = button.data('item-id');
-            let itemName = button.data('item-name');
-
-            let modal = $(this);
-            modal.find('input[name="Id"]').val(itemId);
-            modal.find('input[name="CategoryName"]').val(itemName);
-        });
-    });
-</script>
+<script src="~/AdminLayout/addedjs/Category/categoryUpdate.js"></script>
 
 <script>
     function confirmDelete(url) {

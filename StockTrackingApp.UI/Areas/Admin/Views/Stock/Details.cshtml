@@ -26,6 +26,32 @@
                         <form class="form form-horizontal">
                             <div class="form-body">
                                 <div class="row">
+                                    <div class="col-md-4">
+                                        <label> @Html.DisplayNameFor(model => model.ProductImage)</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        @if (Model.ProductImage != null && Model.ProductImage.Length > 0)
+                                        {
+                                            <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.ProductImage)}")" witdh="150px" height="150px" alt="Profile Picture" />
+                                        }
+                                        else
+                                        {
+                                            <span>No Profile Picture</span> <!-- Alternatif içerik veya mesaj -->
+                                        }
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label> @Html.DisplayNameFor(model => model.SKU)</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <label> @Html.DisplayFor(model => model.SKU)</label>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label> @Html.DisplayNameFor(model => model.ProductName)</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <label> @Html.DisplayFor(model => model.ProductName)</label>
+                                    </div>
 
                                     <div class="col-md-4">
                                         <label> @Html.DisplayNameFor(model => model.Quantity)</label>
@@ -34,19 +60,17 @@
                                         <label> @Html.DisplayFor(model => model.Quantity)</label>
                                     </div>
                                     <div class="col-md-4">
-                                        <label> @Html.DisplayNameFor(model => model.ProductId)</label>
+                                        <label> @Html.DisplayNameFor(model => model.PurchasePrice)</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <label> @Html.DisplayFor(model => model.ProductId)</label>
+                                        <label> @Html.DisplayFor(model => model.PurchasePrice)</label>
                                     </div>
-
                                     <div class="col-md-4">
-                                        <label> @Html.DisplayNameFor(model => model.WareHouseId)</label>
+                                        <label> @Html.DisplayNameFor(model => model.WareHouseName)</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <label> @Html.DisplayFor(model => model.WareHouseId)</label>
+                                        <label> @Html.DisplayFor(model => model.WareHouseName)</label>
                                     </div>
-
                                 </div>
                             </div>
                         </form>
@@ -57,53 +81,14 @@
         </div>
     </div>
 </section>
-
+<script>
+    var productUrl = "@Url.Action("GetProducts", "Stock", new { area = "Admin" })";
+    var supplierUrl = "@Url.Action("GetSuppliers", "Stock", new { area = "Admin" })";
+    var warehouseUrl = '/Admin/Stock/GetWarehouses';
+</script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-    $(document).ready(function () {
-        $('#stockUpdateModal').on('show.bs.modal', function (event) {
-            let button = $(event.relatedTarget);
-            let itemId = button.data('item-id');
-
-
-            let modal = $(this);
-            modal.find('input[name="Id"]').val(itemId);
-    });
-</script>
-
-<script>
-    $(document).ready(function () {
-        $('#stockUpdateModal').on('show.bs.modal', function () {
-            $.getJSON('/Admin/Stock/GetProducts', function (data) {
-                var dropdown = $('#productDropdown');
-                dropdown.empty();
-                dropdown.append('<option value="">Ürün Seçin</option>');
-
-                // Eğer JSON'daki "name" property yerine başka bir isim kullanılmışsa, burayı güncelle!
-                $.each(data, function (index, category) {
-                    dropdown.append($('<option></option>').attr('value', category.id).text(category.name));
-                });
-            });
-        });
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $('#stockUpdateModal').on('show.bs.modal', function () {
-            $.getJSON('/Admin/Stock/GetWarehouses', function (data) {
-                var dropdown = $('#warehouseDropdown');
-                dropdown.empty();
-                dropdown.append('<option value="">Depo Seçin</option>');
-
-                // Eğer JSON'daki "name" property yerine başka bir isim kullanılmışsa, burayı güncelle!
-                $.each(data, function (index, supplier) {
-                    dropdown.append($('<option></option>').attr('value', supplier.id).text(supplier.name));
-                });
-            });
-        });
-    });
-</script>
+<script src="~/AdminLayout/addedjs/Stock/stock.js"></script>
+<script src="~/AdminLayout/addedjs/Stock/stockUpdate.js"></script>
 
 <script>
     function confirmDelete(url) {

@@ -15,9 +15,6 @@ namespace StockTrackingApp.Entities.DbSets
 
         public byte[] ProductImage { get; set; }
 
-        public Guid SupplierId { get; set; }
-        public virtual Supplier Supplier { get; set; }
-
         public virtual ICollection<Stock> Stocks { get; set; }
        
     }

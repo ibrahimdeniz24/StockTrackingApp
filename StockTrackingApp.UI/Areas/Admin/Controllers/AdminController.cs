@@ -83,6 +83,28 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
             });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            var adminDto = await _adminService.GetCurrentAdminAsync();
+
+            var result = await _adminService.GetByIdAsync(adminDto.Data.Id);
+            if (!result.IsSuccess)
+            {
+                NotifyErrorLocalized(result.Message);
+                return RedirectToAction("Index");
+            }
+
+            var adminVM = _mapper.Map<AdminAdminVM>(result.Data);
+            NotifySuccess(result.Message);
+
+            return View(adminVM);
+        }
+
+
+
+
+
         [HttpPost]
         public async Task<IActionResult> Create(AdminAdminCreateVM model, IFormCollection collection)
         {

@@ -7,7 +7,7 @@ namespace StockTrackingApp.Entities.DbSets
         public Supplier()
         {
             PurchaseOrders = new HashSet<PurchaseOrder>();
-            Products = new HashSet<Product>();
+            Stocks = new HashSet<Stock>();
         }
         public string CompanyName { get; set; } // Tedarikçi Adı
 
@@ -18,8 +18,9 @@ namespace StockTrackingApp.Entities.DbSets
         public string Email { get; set; }
 
         public string TaxNo { get; set; }
+
         public virtual ICollection<PurchaseOrder> PurchaseOrders { get; set; }
-        public virtual ICollection<Product> Products { get; set; }
+        public virtual ICollection<Stock> Stocks { get; set; }
 
     }
 }

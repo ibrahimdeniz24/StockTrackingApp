@@ -13,10 +13,10 @@ namespace StockTrackingApp.Entities.DbSets
         public int Quantity { get; set; } // Miktar
         public decimal UnitPrice { get; set; } // Birim Fiyat
 
-        public VatRate VATRate { get; set; }
-        public decimal TotalPriceExcludingVAT => UnitPrice * Quantity; // KDV'siz toplam
-        public decimal VATAmount => TotalPriceExcludingVAT * ((decimal)VATRate / 100); // KDV tutarı
-        public decimal TotalPriceIncludingVAT => TotalPriceExcludingVAT + VATAmount; // KDV dahil toplam
+        public VatRate VATRate { get; set; } //KDV Oranı
+        public decimal TotalPriceExcludingVAT { get; set; } // KDV'siz toplam
+        public decimal VATAmount { get; set; } // KDV tutarı
+        public decimal TotalPriceIncludingVAT { get; set; } // KDV dahil toplam
 
 
     }

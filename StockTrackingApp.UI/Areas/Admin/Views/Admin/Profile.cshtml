@@ -1,0 +1,52 @@
+﻿@model StockTrackingApp.UI.Areas.Admin.Models.AdminVMs.AdminAdminVM
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Profil Sayfası";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4 text-center">
+            <div class="card p-3">
+                <img src="@Model.NewImage" class="rounded-circle" width="150" height="150" alt="Profil Fotoğrafı">
+                <h4 class="mt-3">@Model.FirstName @Model.LastName</h4>
+                <p>@Model.Email</p>
+                <form asp-action="UploadProfileImage" asp-controller="Profile" method="post" enctype="multipart/form-data">
+                    <input type="file" name="profileImage" class="form-control mb-2">
+                    <button type="submit" class="btn btn-primary btn-sm">Fotoğraf Yükle</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card p-3">
+                <h4>Profil Bilgileri</h4>
+                <form asp-action="UpdateProfile" asp-controller="Profile" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Ad</label>
+                        <input type="text" class="form-control" asp-for="FirstName">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Soyad</label>
+                        <input type="text" class="form-control" asp-for="LastName">
+                    </div>
+                    <button type="submit" class="btn btn-success">Güncelle</button>
+                </form>
+            </div>
+            <div class="card p-3 mt-3">
+                <h4>Şifre Değiştir</h4>
+                <form asp-action="ChangePassword" asp-controller="Profile" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Mevcut Şifre</label>
+                        <input type="password" class="form-control" name="currentPassword">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Yeni Şifre</label>
+                        <input type="password" class="form-control" name="newPassword">
+                    </div>
+                    <button type="submit" class="btn btn-danger">Şifreyi Güncelle</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

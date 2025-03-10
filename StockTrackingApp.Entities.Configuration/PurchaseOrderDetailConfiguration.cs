@@ -23,7 +23,7 @@ namespace StockTrackingApp.Entities.Configuration
             builder.Property(pod => pod.Quantity)
                    .IsRequired();
 
-            builder.Property(o => o.UnitPrice).HasPrecision(18, 4);
+            builder.Property(o => o.UnitPrice).HasPrecision(18, 2);
 
             base.Configure(builder);
         }

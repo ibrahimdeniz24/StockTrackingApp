@@ -69,10 +69,10 @@
                                                         Seçenekler
                                                     </button>
                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        <a data-bs-toggle="modal" data-bs-target="#updateProductModal" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-name="@item.Name" data-item-sku="@item.SKU" data-item-categories="@item.Categories"  data-item-suppliers="@item.Suppliers" class="dropdown-item" data-kt-users-table-filter="delete_row">Düzenle</a>
+                                                        <a data-bs-toggle="modal" data-bs-target="#updateProductModal" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-name="@item.Name" data-item-sku="@item.SKU" data-category-id="@item.CategoryId" class="dropdown-item" data-kt-users-table-filter="delete_row">Düzenle</a>
                                                         <a class="dropdown-item" href="@Url.Action("Details", "Product", new { id = item.Id })">Details</a>
-
                                                     </div>
+
 
                                                 </div>
                                             </td>
@@ -87,82 +87,14 @@
         </div>
     </div>
 </section>
+<script>
+      var categoryUrl = "@Url.Action("GetCategories", "Product", new { area = "Admin" })";
+</script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-    $(document).ready(function () {
-        $('#updateProductModal').on('show.bs.modal', function (event) {
-            let button = $(event.relatedTarget);
-            let itemId = button.data('item-id');
-            let itemName = button.data('item-name');
-            let itemSku = button.data('item-sku');
-            let itemCateogires = button.data('item-categories');
-            let itemSuppliers = button.data('item-suppliers');
-
-            let modal = $(this);
-            modal.find('input[name="Id"]').val(itemId);
-            modal.find('input[name="Name"]').val(itemName);
-            modal.find('input[name="SKU"]').val(itemSku);
-            modal.find('input[name="Categories"]').val(itemCateogires);
-            modal.find('input[name="Suppliers"]').val(itemSuppliers);
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function () {
-        $("#categoryDropdown").select2({
-            placeholder: "Kategori Ara...",
-            allowClear: true,
-            minimumInputLength: 1,
-            dropdownParent: $("#categoryDropdown").parent(), // Bu satırı ekle modal oldugu için bu ekledik
-            ajax: {
-                url: "@Url.Action("GetCategories", "Product", new { area = "Admin" })",
-                dataType: "json",
-                delay: 250,
-                data: function (params) {
-                    return { term: params.term };
-                },
-                processResults: function (data) {
-                    return {
-                        results: $.map(data, function (item) {
-                            return { id: item.id, text: item.text };
-                        })
-                    };
-                },
-                cache: true
-            }
-        });
-    });
-
-</script>
-
-<script>
-    $(document).ready(function () {
-        $("#supplierDropdown").select2({
-            placeholder: "Tedarikçi Ara...",
-            allowClear: true,
-            minimumInputLength: 1,
-            dropdownParent: $("#supplierDropdown").parent(), // Bu satırı ekle modal oldugu için bu ekledik
-            ajax: {
-                url: "@Url.Action("GetSuppliers", "Product", new { area = "Admin" })",
-                dataType: "json",
-                delay: 250,
-                data: function (params) {
-                    return { term: params.term };
-                },
-                processResults: function (data) {
-                    return {
-                        results: $.map(data, function (item) {
-                            return { id: item.id, text: item.text };
-                        })
-                    };
-                }
-            }
-        });
-    });
+<script src="~/AdminLayout/addedjs/Product/productCreate.js"></script>
+<script src="~/AdminLayout/addedjs/Product/productUpdate.js"></script>
 
 
-</script>
+
 
 
