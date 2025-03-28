@@ -1,7 +1,10 @@
 ﻿
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
 namespace StockTrackingApp.Entities.DbSets
 {
-    public class Stock :AuditableEntity
+    public class Stock : AuditableEntity
+
     {
         public int Quantity { get; set; }
 
@@ -15,8 +18,6 @@ namespace StockTrackingApp.Entities.DbSets
 
         public Guid SupplierId { get; set; }
         public virtual Supplier Supplier { get; set; }
-
-
 
     }
 }

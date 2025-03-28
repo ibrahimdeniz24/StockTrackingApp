@@ -18,5 +18,7 @@ namespace StockTrackingApp.Business.Interfaces.Services
         Task<List<SelectListItem>> GetAllCategoryAsSelectListAsync();
 
         Task<IEnumerable<ProductDto>> GetProductsByCategoryAsync(Guid categoryId);
+
+        Task<PagedResult<CategoryListDto>> GetPagedOrdersAsync(int pageNumber, int pageSize, string searchTerm);
     }
 }

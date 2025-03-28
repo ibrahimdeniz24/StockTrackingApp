@@ -96,9 +96,31 @@ namespace StockTrackingApp.Business.Services
             return new SuccessDataResult<CategoryDetailsDto>(_mapper.Map<CategoryDetailsDto>(category), Messages.ListedSuccess);
         }
 
+        public async Task<PagedResult<CategoryListDto>> GetPagedOrdersAsync(int pageNumber, int pageSize, string searchTerm)
+        {
+            var query = await _categoryRepository.GetAllAsync();
+
+            var queryDto = _mapper.Map<List<CategoryListDto>>(query);
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                queryDto = queryDto.Where(x => x.CategoryName.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+            }
+
+            var totalCount = queryDto.Count;
+
+            var items = queryDto
+                .OrderBy(x => x.CategoryName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return new PagedResult<CategoryListDto>(items, totalCount);
+        }
+
         public async Task<IEnumerable<ProductDto>> GetProductsByCategoryAsync(Guid categoryId)
         {
-            var product = await productRepository.GetAllAsync(x=>x.CategoryId == categoryId);
+            var product = await productRepository.GetAllAsync(x => x.CategoryId == categoryId);
 
             return product.Adapt<IEnumerable<ProductDto>>();
         }
@@ -116,7 +138,7 @@ namespace StockTrackingApp.Business.Services
             await _categoryRepository.UpdateAsync(updatedCategory);
             await _categoryRepository.SaveChangesAsync();
 
-            return new SuccessDataResult<CategoryDto>(_mapper.Map<CategoryDto>(updatedCategory),Messages.UpdateSuccess);
+            return new SuccessDataResult<CategoryDto>(_mapper.Map<CategoryDto>(updatedCategory), Messages.UpdateSuccess);
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿@using StockTrackingApp.UI.Areas.Admin.Models.CategoryVMs
+﻿@using StockTrackingApp.Entities.Enums
 @using X.PagedList
-@using StockTrackingApp.Entities.Enums
 @using StockTrackingApp.UI.Extantions
-@model IPagedList<StockTrackingApp.UI.Areas.Admin.Models.CategoryVMs.AdminCategoryListVM>
+@using StockTrackingApp.UI.Areas.Admin.Models.PurchaseOrderVMs
+@model IPagedList<AdminPurchaseOrderListVM>
 
 @{
     ViewData["Title"] = "Index";
@@ -10,24 +10,26 @@
     int row = 0;
 }
 
+
 <section class="section">
     <div class="row" id="table-hover-row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <!-- Category Create Butonu -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoryModal">
-                        Yeni Kategori Oluştur
+                    <!-- Order Create Butonu -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#purchaseOrderCreateModal">
+                        Yeni Satın Alma Siparişi Oluştur
                     </button>
-                    <!-- Partial View Modal İçeriğini Yüklemek İçin Boş Modal Div -->
+
+                    <!-- Modal Container -->
                     <div id="modalContainer">
-                        @await Html.PartialAsync("_CategoryCreateModal", new AdminCategoryCreateVM())
-                        @await Html.PartialAsync("_CategoryUpdateModal", new AdminCategoryUpdateVM())
+                        @await Html.PartialAsync("_PurchaseOrderCreateModal", new AdminPurchaseOrderCreateVM())
+                        @* @await Html.PartialAsync("_PurchaseOrderUpdateModal", new AdminPurchaseOrderUpdateVM()) *@
                     </div>
 
                     <!-- Arama Formu -->
                     <form method="get" class="d-flex">
-                        <input type="text" class="form-control w-auto me-2" name="searchTerm" value="@ViewBag.SearchTerm" placeholder="Kategori Adı ile Ara" />
+                        <input type="text" class="form-control w-auto me-2" name="searchTerm" value="@ViewBag.SearchTerm" placeholder="Müşteri Adı ile Ara" />
                         <button type="submit" class="btn btn-secondary">Ara</button>
                     </form>
                 </div>
@@ -35,12 +37,31 @@
                     <div class="card-body">
                         <!-- Table with outer spacing -->
                         <div class="table-responsive">
+
                             <table class="table table-hover mb-0">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>CategoryName</th>
-                                        <th>Description</th>
+                                        <th>
+                                            #
+                                        </th>
+                                        <th>
+                                            OrderDate
+                                        </th>
+                                        <th>
+                                            DeliveryDate
+                                        </th>
+                                        <th>
+                                            SupplierName
+                                        </th>
+                                        <th>
+                                            OrderStatus
+                                        </th>
+                                        <th>
+                                            Description
+                                        </th>
+                                        <th>
+                                            TotalAmount
+                                        </th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -53,10 +74,22 @@
                                                 @row
                                             </td>
                                             <td class="text-bold-500">
-                                                @Html.DisplayFor(modelItem => item.CategoryName)
+                                                @Html.DisplayFor(modelItem => item.OrderDate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.DeliveryDate)
+                                            </td>
+                                            <td class="text-bold-500">
+                                                @Html.DisplayFor(modelItem => item.SupplierName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.OrderStatus)
                                             </td>
                                             <td class="text-bold-500">
                                                 @Html.DisplayFor(modelItem => item.Description)
+                                            </td>
+                                            <td class="text-bold-500">
+                                                @Html.DisplayFor(modelItem => item.TotalAmount)
                                             </td>
                                             <td>
                                                 <div class="btn-group dropend me-1 mb-1">
@@ -67,9 +100,9 @@
                                                         Seçenekler
                                                     </button>
                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        <a data-bs-toggle="modal" data-bs-target="#updateCategoryModal" asp-route-id="@item.Id" data-item-id="@item.Id" data-item-name="@item.CategoryName" data-item-desc="@item.Description" class="dropdown-item" data-kt-users-table-filter="delete_row">Düzenle</a>
-                                                        <a class="dropdown-item" href="@Url.Action("Details", "Category", new { id = item.Id })">Details</a>
-                                                       
+                                                       @*  <a data-bs-toggle="modal" data-bs-target="#orderUpdateModal" asp-route-id="@item.Id" data-order-id="@item.Id" class="dropdown-item edit-order" data-kt-users-table-filter="delete_row">Düzenle</a> *@
+                                                        <a class="dropdown-item" href="@Url.Action("Details", "Order", new { id = item.Id })">Details</a>
+
                                                     </div>
 
                                                 </div>
@@ -115,20 +148,12 @@
                                     }
                                 </ul>
                             </nav>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 </section>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="~/AdminLayout/addedjs/Category/categoryUpdate.js"></script>
-
-
-
-
-
-
-
-

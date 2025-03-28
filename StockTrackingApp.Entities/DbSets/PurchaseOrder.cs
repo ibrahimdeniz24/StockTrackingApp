@@ -1,21 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace StockTrackingApp.Entities.DbSets
 {
     public class PurchaseOrder :AuditableEntity
     {
-        public DateTime OrderDate { get; set; }
+        public PurchaseOrder()
+        {
+            PurchaseOrderDetails = new HashSet<PurchaseOrderDetail>();
+        }
+        public string OrderNo { get; set; }
 
+        public DateTime OrderDate { get; set; }
 
         public DateTime DeliveryDate { get; set; }
 
         public OrderStatus OrderStatus { get; set; }
 
         public decimal TotalAmount { get; set; }
+        public decimal TotalExcludingVATAmount { get; set; }
+        public decimal TotalVATAmount { get; set; }
 
         public string Description { get; set; }
 

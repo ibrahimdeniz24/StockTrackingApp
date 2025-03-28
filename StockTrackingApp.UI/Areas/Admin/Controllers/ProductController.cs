@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
+using MailKit.Search;
 using Microsoft.AspNetCore.Http.Metadata;
+using StockTrackingApp.Core.Utilities.Helpers;
 using StockTrackingApp.Dtos.Products;
+using StockTrackingApp.Entities.Enums;
 using StockTrackingApp.UI.Areas.Admin.Models.ProductVMs;
 using StockTrackingApp.UI.Extantions;
 using System.Text;
+using X.PagedList;
 using X.PagedList.Extensions;
 
 namespace StockTrackingApp.UI.Areas.Admin.Controllers
@@ -25,23 +29,29 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int? page, int pageSize = 10)
+        public async Task<IActionResult> Index(int? page, int pageSize = 5, string searchTerm = null)
         {
             // Sayfa numarası kontrolüz
-            page ??= 1;
-            if (pageSize <= 0) pageSize = 10; // Geçersiz pageSize değerlerini engelle
+            int pageNumber = page ?? 1;
 
-            // Ürünleri getir ve AdminProductListVM'e map et
-            var productsGetResult = await _productService.GetAllAsync();
-            var productList = _mapper.Map<List<AdminProductListVM>>(productsGetResult.Data)
-                                     .OrderBy(o => o.Name) // Sıralama önce yapılmalı
-                                     .ToList();
+            var productPagedResult = await _productService.GetPagedOrdersAsync(pageNumber, pageSize, searchTerm);
 
-            // Sayfalama işlemi
-            var pagedList = productList.ToPagedList(page.Value, pageSize);
+            var productList = _mapper.Map<List<AdminProductListVM>>(productPagedResult.Items);
 
-            // View'a gerekli verileri gönder
+
+            var pagedList = new StaticPagedList<AdminProductListVM>(productList, pageNumber, pageSize, productPagedResult.TotalCount);
+
+            // Sayfa boyutunu ViewBag'e gönderme
             ViewBag.PageSize = pageSize;
+            ViewBag.SearchTerm = searchTerm;
+
+            // Enum değerlerini View'e gönderme (VAT oranları)
+            var vatRates = Enum.GetValues(typeof(VatRate))
+                .Cast<VatRate>()
+                .Select(v => new { Id = (int)v, Name = v.GetDisplayName() })
+            .ToList();
+
+            ViewBag.VatRates = vatRates;
 
             return View(pagedList);
         }

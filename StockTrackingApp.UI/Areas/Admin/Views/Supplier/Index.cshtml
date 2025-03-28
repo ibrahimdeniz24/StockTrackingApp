@@ -1,5 +1,8 @@
 ﻿@using StockTrackingApp.UI.Areas.Admin.Models.SupplierVMs
-@model IEnumerable<StockTrackingApp.UI.Areas.Admin.Models.SupplierVMs.AdminSupplierListVM>
+@using StockTrackingApp.Entities.Enums
+@using X.PagedList
+@using StockTrackingApp.UI.Extantions
+@model IPagedList<StockTrackingApp.UI.Areas.Admin.Models.SupplierVMs.AdminSupplierListVM>
 
 @{
     ViewData["Title"] = "Index";
@@ -11,7 +14,7 @@
     <div class="row" id="table-hover-row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <!-- Supplier Create Butonu -->
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#supplierModal">
                         Yeni Tedarikçi Oluştur
@@ -21,6 +24,12 @@
                         @await Html.PartialAsync("_SupplierCreateModal", new AdminSupplierCreateVM())
                         @await Html.PartialAsync("_SupplierUpdateModal", new AdminSupplierUpdateVM())
                     </div>
+
+                    <!-- Arama Formu -->
+                    <form method="get" class="d-flex">
+                        <input type="text" class="form-control w-auto me-2" name="searchTerm" value="@ViewBag.SearchTerm" placeholder="Tedarikçi Adı ile Ara" />
+                        <button type="submit" class="btn btn-secondary">Ara</button>
+                    </form>
                 </div>
                 <div class="card-content">
                     <div class="card-body">
@@ -30,11 +39,11 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>@Html.DisplayNameFor(model => model.CompanyName)</th>
-                                        <th>@Html.DisplayNameFor(model => model.Adress)</th>
-                                        <th>@Html.DisplayNameFor(model => model.PhoneNumber)</th>
-                                        <th>@Html.DisplayNameFor(model => model.Email)</th>
-                                        <th>@Html.DisplayNameFor(model => model.TaxNo)</th>
+                                        <th>CompanyName</th>
+                                        <th>Adress</th>
+                                        <th>PhoneNumber</th>
+                                        <th>Email</th>
+                                        <th>TaxNo</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -81,6 +90,43 @@
                                 </tbody>
                             </table>
                         </div>
+                        <!-- Sayfalama (Pagination) -->
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination pagination-primary justify-content-end">
+                                @if (Model.HasPreviousPage)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", new { page = Model.PageNumber - 1 })">Önceki</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Önceki</a>
+                                    </li>
+                                }
+
+                                @for (int i = 1; i <= Model.PageCount; i++)
+                                {
+                                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                                        <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                                    </li>
+                                }
+
+                                @if (Model.HasNextPage)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", new { page = Model.PageNumber + 1 })">Sonraki</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Sonraki</a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>

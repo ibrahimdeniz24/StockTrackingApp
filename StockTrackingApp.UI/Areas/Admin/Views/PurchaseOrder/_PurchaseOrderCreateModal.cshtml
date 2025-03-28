@@ -1,20 +1,20 @@
 ﻿@using StockTrackingApp.Entities.Enums
 @using StockTrackingApp.UI.Extantions
-@model StockTrackingApp.UI.Areas.Admin.Models.OrderVMs.AdminOrderUpdateVM
+@model StockTrackingApp.UI.Areas.Admin.Models.PurchaseOrderVMs.AdminPurchaseOrderCreateVM
 
-<div class="modal fade" id="orderUpdateModal" tabindex="-1" aria-labelledby="updateOrderModalLabel" aria-hidden="true">
+<div class="modal fade" id="PurchaseOrderCreateModal" tabindex="-1" aria-labelledby="createPurchaseOrderModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="updateOrderModalLabel">Yeni Sipariş Oluştur</h5>
+                <h5 class="modal-title" id="createOrderModalLabel">Yeni Sipariş Oluştur</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <form asp-action="Update" id="orderForm">
+                        <form asp-action="Create" id="orderForm">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <input asp-for="Id" type="hidden" />
+
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label asp-for="OrderDate" class="control-label"></label>
@@ -37,11 +37,11 @@
                             </div>
 
                             <div class="form-group mb-3">
-                                <label asp-for="CustomerId" class="control-label"></label>
-                                <select id="customerDropdown1" name="CustomerId" class="form-control" style="width: 100%;" required>
+                                <label asp-for="SupplierId" class="control-label"></label>
+                                <select id="supplierDropdown" name="SupplierId" class="form-control" style="width: 100%;" required>
                                     <option value="">Müşteri Seç</option>
                                 </select>
-                                <span asp-validation-for="CustomerId" class="text-danger"></span>
+                                <span asp-validation-for="SupplierId" class="text-danger"></span>
                             </div>
 
                             <div class="form-group mb-3">
@@ -70,10 +70,10 @@
                                         <th>İşlem</th>
                                     </tr>
                                 </thead>
-                                <tbody id="orderDetailsBody1">
+                                <tbody id="orderDetailsBody">
                                     <tr>
                                         <td>
-                                            <select id="stockDropdown10" name="AdminOrderDetailCreateVMs[0].StockId" class="form-control stockDropdown" required></select>
+                                            <select id="stockDropdown0" name="AdminOrderDetailCreateVMs[0].StockId" class="form-control stockDropdown" required></select>
                                         </td>
                                         <td>
                                             <input name="AdminOrderDetailCreateVMs[0].Quantity" pattern="[0-9]+" class="form-control quantity" oninput="calculateTotal(this)" required />
@@ -108,21 +108,21 @@
                                 </tbody>
                             </table>
 
-                            <button type="button" class="btn btn-secondary" onclick="addOrderDetail1()">Yeni Satır Ekle</button>
+                            <button type="button" class="btn btn-secondary" onclick="addOrderDetail()">Yeni Satır Ekle</button>
 
                             <!-- Toplam Tutar -->
                             <div class="mt-3">
-                                <label for="update_TotalExcludingVATAmount">Toplam Sipariş Tutarı (KDV Hariç):</label>
-                                <input id="update_TotalExcludingVATAmount" name="TotalExcludingVATAmountupt" class="form-control" readonly />
+                                <label for="TotalExcludingVATAmount">Toplam Sipariş Tutarı (KDV Hariç):</label>
+                                <input id="TotalExcludingVATAmount" name="TotalExcludingVATAmount" class="form-control" readonly />
                             </div>
                             <div class="form-group">
-                                <label for="update_TotalVATAmount">Toplam KDV Tutarı:</label>
-                                <input id="update_TotalVATAmount" name="TotalVATAmountupt" class="form-control" readonly />
+                                <label for="TotalVATAmount">Toplam KDV Tutarı:</label>
+                                <input id="TotalVATAmount" name="TotalVATAmount" class="form-control" readonly />
                             </div>
 
                             <div class="form-group">
-                                <label for="update_TotalAmount">Toplam KDV Dahil Tutar:</label>
-                                <input id="update_TotalAmount" name="TotalAmountupt" class="form-control" readonly />
+                                <label for="TotalAmount">Toplam KDV Hariç Tutar:</label>
+                                <input id="TotalAmount" name="TotalAmount" class="form-control" readonly />
                             </div>
 
                             <div class="form-group mb-3">

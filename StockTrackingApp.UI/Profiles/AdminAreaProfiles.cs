@@ -6,6 +6,7 @@ using StockTrackingApp.Dtos.Customers;
 using StockTrackingApp.Dtos.OrderDetails;
 using StockTrackingApp.Dtos.Orders;
 using StockTrackingApp.Dtos.Products;
+using StockTrackingApp.Dtos.PurchaseOrders;
 using StockTrackingApp.Dtos.Stocks;
 using StockTrackingApp.Dtos.Suppliers;
 using StockTrackingApp.Dtos.Warehouses;
@@ -16,6 +17,7 @@ using StockTrackingApp.UI.Areas.Admin.Models.CustomerVMs;
 using StockTrackingApp.UI.Areas.Admin.Models.OrderDetailVMs;
 using StockTrackingApp.UI.Areas.Admin.Models.OrderVMs;
 using StockTrackingApp.UI.Areas.Admin.Models.ProductVMs;
+using StockTrackingApp.UI.Areas.Admin.Models.PurchaseOrderVMs;
 using StockTrackingApp.UI.Areas.Admin.Models.StockVMs;
 using StockTrackingApp.UI.Areas.Admin.Models.SupplierVMs;
 using StockTrackingApp.UI.Areas.Admin.Models.WarehouseVMs;
@@ -98,13 +100,24 @@ namespace StockTrackingApp.UI.Profiles
             CreateMap<OrderListDto, AdminOrderListVM>();
             CreateMap<OrderDetailsDto, AdminOrderDetailsVM>();
             CreateMap<AdminOrderCreateVM, OrderCreateDto>()
-                 .ForMember(dest => dest.OrderDetailDtos, opt => opt.MapFrom(src => src.AdminOrderDetailCreateVMs)); ;
+                 .ForMember(dest => dest.OrderDetailDtos, opt => opt.MapFrom(src => src.AdminOrderDetailCreateVMs));
             CreateMap<AdminOrderUpdateVM, OrderUpdateDto>();
 
 
             //OrderDetailController
-
             CreateMap<AdminOrderDetailCreateVM, OrderDetailCreateDto>();
+
+
+
+
+            //PurchaseOrderController
+            CreateMap<PurchaseOrderDto,AdminPurchaseOrderVM>();
+            CreateMap<PurchaseOrderListDto, AdminPurchaseOrderListVM>();
+            CreateMap<PurchaseOrderDetailsDto, AdminPurchaseOrderDetailsVM>();
+            CreateMap<AdminPurchaseOrderCreateVM, PurchaseOrderCreateDto>();
+            CreateMap<AdminPurchaseOrderUpdateVM, PurchaseOrderUpdateDto>();
+
+            
 
                  
 

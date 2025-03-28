@@ -5,3 +5,4 @@ global using StockTrackingApp.Core.Utilities.Results.Concrete;
 global using StockTrackingApp.Core.Utilities.Results;
 global using StockTrackingApp.DataAccess.Interfaces.Repositories;
 global using StockTrackingApp.Entities.DbSets;
+global using StockTrackingApp.Core.Utilities.Helpers;

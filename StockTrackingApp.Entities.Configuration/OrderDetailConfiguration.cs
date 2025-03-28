@@ -10,7 +10,7 @@ namespace StockTrackingApp.Entities.Configuration
             builder.HasOne(pod => pod.Order)                 // OrderDetail bir Order'a ait
                    .WithMany(po => po.OrderDetails)          // Order birden fazla OrderDetail içerir
                    .HasForeignKey(pod => pod.OrderId)        // Foreign Key tanımı
-                   .OnDelete(DeleteBehavior.Cascade);        // Sipariş silinince detaylar da silinir
+                   .OnDelete(DeleteBehavior.Restrict);
 
 
             builder.Property(pod => pod.Quantity)

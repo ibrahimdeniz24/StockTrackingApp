@@ -13,17 +13,13 @@ namespace StockTrackingApp.Entities.Configuration
                    .HasForeignKey(pod => pod.PurchaseOrderId)
                    .OnDelete(DeleteBehavior.Restrict);
 
-
-            // ✅ 1:N olarak bırakıldı (Bir Product, birden fazla PurchaseOrderDetail'de olabilir.)
-            builder.HasOne(pod => pod.Product)
-                   .WithMany()
-                   .HasForeignKey(pod => pod.ProductId)
-                   .OnDelete(DeleteBehavior.Restrict);
-
             builder.Property(pod => pod.Quantity)
                    .IsRequired();
 
             builder.Property(o => o.UnitPrice).HasPrecision(18, 2);
+            builder.Property(o => o.TotalPriceExcludingVAT).HasPrecision(18, 2);
+            builder.Property(o => o.TotalPriceIncludingVAT).HasPrecision(18, 2);
+            builder.Property(o => o.VATAmount).HasPrecision(18, 2);
 
             base.Configure(builder);
         }

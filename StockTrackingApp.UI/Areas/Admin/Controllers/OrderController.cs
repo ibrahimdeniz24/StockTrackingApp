@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using StockTrackingApp.Dtos.OrderDetails;
 using StockTrackingApp.Dtos.Orders;
-using StockTrackingApp.UI.Areas.Admin.Models.OrderDetailVMs;
+using StockTrackingApp.Entities.Enums;
 using StockTrackingApp.UI.Areas.Admin.Models.OrderVMs;
 using System.Text;
+using X.PagedList;
 using X.PagedList.Extensions;
 
 namespace StockTrackingApp.UI.Areas.Admin.Controllers
@@ -13,7 +13,6 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         private readonly IOrderService _orderService;
         private readonly IOrderDetailService _orderDetailService;
         private readonly IMapper _mapper;
-        private readonly IProductService _productService;
         private readonly ICustomerService _customerService;
         private readonly IStockService _stockService;
 
@@ -26,34 +25,35 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
             _stockService = stockService;
         }
 
-        public async Task<IActionResult> Index(int? page, int pageSize = 10)
+        public async Task<IActionResult> Index(int? page, int pageSize = 10, string searchTerm = null)
+        
         {
             int pageNumber = page ?? 1;
-            var orderGetResult = await _orderService.GetAllAsync();
-            var orderList = _mapper.Map<List<AdminOrderListVM>>(orderGetResult.Data).OrderBy(o => o.OrderDate).ToList();
 
+            // Veritabanı seviyesinde sayfalama
+            var orderPagedResult = await _orderService.GetPagedOrdersAsync(pageNumber, pageSize, searchTerm);
 
-            var pagedList = orderList.ToPagedList(pageNumber, pageSize);
+            // Veritabanı sonuçlarını VM'ye dönüştürme
+            var orderList = _mapper.Map<List<AdminOrderListVM>>(orderPagedResult.Items);
 
+            // StaticPagedList ile sayfalama yapma
+            var pagedList = new StaticPagedList<AdminOrderListVM>(
+                orderList, pageNumber, pageSize, orderPagedResult.TotalCount);
+
+            // Sayfa boyutunu ViewBag'e gönderme
             ViewBag.PageSize = pageSize;
+            ViewBag.SearchTerm = searchTerm;
+
+            // Enum değerlerini View'e gönderme (VAT oranları)
+            var vatRates = Enum.GetValues(typeof(VatRate))
+                .Cast<VatRate>()
+                .Select(v => new { Id = (int)v, Name = v.GetDisplayName() })
+                .ToList();
+
+            ViewBag.VatRates = vatRates;
 
             return View(pagedList);
         }
-
-
-        public async Task<List<AdminOrderListVM>> Search(string order)
-        {
-            var ordersGetResult = await _orderDetailService.GetAllAsync();
-            var orderList = _mapper.Map<List<AdminOrderListVM>>(ordersGetResult.Data);
-
-            var searchList = orderList
-                .Where(s => s.CustomerName.IndexOf(order, StringComparison.OrdinalIgnoreCase) >= 0)
-                .OrderBy(o => o.CustomerName)
-                .ToList();
-
-            return searchList;
-        }
-
 
         public async Task<IActionResult> Create(AdminOrderCreateVM model)
         {
@@ -149,6 +149,19 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(_mapper.Map<AdminOrderDetailsVM>(getOrder.Data));
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Detailsjson(Guid id)
+        {
+            var order = await _orderService.GetByIdAsync(id);
+            if (order == null)
+            {
+                return Json(new { success = false, message = "Order not found!" });
+            }
+
+            return Json(new { success = true, data = order });
         }
 
         [HttpGet]

@@ -50,16 +50,16 @@ namespace StockTrackingApp.Business.Services
             var stocks = await _stockRepository.GetAllAsync();
 
             return new SuccessDataResult<List<StockListDto>>(_mapper.Map<List<StockListDto>>(stocks), Messages.ListedSuccess);
-            
+
         }
 
         public async Task<IDataResult<StockDto>> GetByIdAsync(Guid id)
         {
             var stock = await _stockRepository.GetByIdAsync(id);
 
-            if(stock != null)
+            if (stock != null)
             {
-                return new SuccessDataResult<StockDto>(_mapper.Map<StockDto>(stock),Messages.FoundSuccess);
+                return new SuccessDataResult<StockDto>(_mapper.Map<StockDto>(stock), Messages.FoundSuccess);
             }
 
             return new ErrorDataResult<StockDto>(Messages.FoundFail);
@@ -77,9 +77,31 @@ namespace StockTrackingApp.Business.Services
             return new ErrorDataResult<StockDetailsDto>(Messages.FoundFail);
         }
 
+        public async Task<PagedResult<StockListDto>> GetPagedOrdersAsync(int pageNumber, int pageSize, string searchTerm = null)
+        {
+            var query = await _stockRepository.GetAllAsync(s => s.Quantity > 0);
+
+            var queryDto = _mapper.Map<List<StockListDto>>(query);
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                queryDto = queryDto.Where(x => x.ProductName.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+            }
+
+            int totalCount = queryDto.Count;
+
+            var items = queryDto
+                .OrderBy(x => x.ProductName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return new PagedResult<StockListDto>(items, totalCount);
+        }
+
         public async Task<IDataResult<StockDto>> UpdateAsync(StockUpdateDto stockUpdateDto)
         {
-            var stockDto =  await _stockRepository.GetByIdAsync(stockUpdateDto.Id);
+            var stockDto = await _stockRepository.GetByIdAsync(stockUpdateDto.Id);
             if (stockDto == null)
             {
                 return new ErrorDataResult<StockDto>(Messages.FoundFail);

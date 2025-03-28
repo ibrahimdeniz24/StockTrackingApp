@@ -2,8 +2,10 @@
 using StockTrackingApp.Business.Constants;
 using StockTrackingApp.Core.Utilities.Results.Concrete;
 using StockTrackingApp.Dtos.Suppliers;
+using StockTrackingApp.Entities.Enums;
 using StockTrackingApp.UI.Areas.Admin.Models.SupplierVMs;
 using System.Text;
+using X.PagedList;
 using X.PagedList.Extensions;
 
 namespace StockTrackingApp.UI.Areas.Admin.Controllers
@@ -19,14 +21,24 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int? page, int pageSize = 10)
+        public async Task<IActionResult> Index(int? page, int pageSize = 10, string searchTerm = null)
         {
             int pageNumber = page ?? 1;
-            var suppliersGetResult = await _supplierService.GetAllAsync();
-            var supplierList = _mapper.Map<List<AdminSupplierListVM>>(suppliersGetResult.Data).OrderBy(o => o.CompanyName).ToList();
+            var suppliersGetResult = await _supplierService.GetPagedOrdersAsync(pageNumber,pageSize,searchTerm);
 
 
-            var pagedList = supplierList.ToPagedList(pageNumber, pageSize);
+            var supplierList = _mapper.Map<List<AdminSupplierListVM>>(suppliersGetResult.Items);
+
+            var pagedList = new StaticPagedList<AdminSupplierListVM>(supplierList, pageNumber, pageSize, suppliersGetResult.TotalCount);
+
+            ViewBag.PageSize = pageSize;
+            ViewBag.SearchTerm = searchTerm;
+
+
+            var vatRates = Enum.GetValues(typeof(VatRate))
+                .Cast<VatRate>()
+                .Select(v => new { Id = (int)v, Name = v.GetDisplayName() })
+                .ToList();
 
             ViewBag.PageSize = pageSize;
 

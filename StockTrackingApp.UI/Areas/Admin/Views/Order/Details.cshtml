@@ -1,4 +1,5 @@
-﻿@using StockTrackingApp.UI.Areas.Admin.Models.OrderVMs
+﻿@using StockTrackingApp.Entities.Enums
+@using StockTrackingApp.UI.Areas.Admin.Models.OrderVMs
 @model StockTrackingApp.UI.Areas.Admin.Models.OrderVMs.AdminOrderDetailsVM
 
 @{
@@ -13,7 +14,7 @@
                 <div class="card-header">
                     <h4 class="card-title">Sipariş Detayı</h4>
                     <div class="col-sm-12 d-flex justify-content-end">
-                        <a data-bs-toggle="modal" data-bs-target="#updateOrderModal" asp-route-id="@Model.Id" data-item-id="@Model.Id"  class="btn btn-primary" data-kt-users-table-filter="delete_row">Düzenle</a>
+                        <a data-bs-toggle="modal" data-bs-target="#orderUpdateModal" asp-route-id="@Model.Id" data-item-id="@Model.Id" class="btn btn-primary" data-kt-users-table-filter="delete_row">Düzenle</a>
                         <a href="javascript:void(0)" class="btn btn-danger" onclick="confirmDelete('@Url.Action("Delete", "Order", new { area = "Admin", id = Model.Id })')">Delete</a>
                         <a asp-action="Index" class="btn btn-secondary">Back to List</a>
                     </div>
@@ -70,8 +71,16 @@
         </div>
     </div>
 </section>
+<script>
+    var customerDropdownUrl = '@Url.Action("GetCustomers", "Order", new { area = "Admin" })';
+    var stockDropdownUrl = '@Url.Action("GetStocks", "Order", new { area = "Admin" })';
+    var vatRatesHtml = `@Html.Raw(string.Join("", Enum.GetValues(typeof(VatRate)).Cast<VatRate>().Select(v => $"<option value=\"{(int)v}\">{v.GetDisplayName()}</option>")))`;
+</script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/AdminLayout/addedjs/Datetimeflatpickr/datetimeFlatpickr.js"></script>
+<script src="~/AdminLayout/addedjs/Order/order.js"></script>
+<script src="~/AdminLayout/addedjs/Order/orderUpdate.js"></script>
 
 <script>
     $(document).ready(function () {

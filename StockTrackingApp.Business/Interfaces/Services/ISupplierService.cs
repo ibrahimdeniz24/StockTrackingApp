@@ -16,5 +16,7 @@ namespace StockTrackingApp.Business.Interfaces.Services
         Task<IDataResult<SupplierDto>> UpdateAsync(SupplierUpdateDto supplierUpdateDto);
 
         Task<List<SelectListItem>> GetAllSupplierAsSelectListAsync();
+
+        Task<PagedResult<SupplierListDto>> GetPagedOrdersAsync(int pageNumber, int pageSize, string searchTerm);
     }
 }

@@ -12,5 +12,7 @@ namespace StockTrackingApp.Business.Interfaces.Services
         Task<IDataResult<PurchaseOrderDto>> UpdateAsync(PurchaseOrderUpdateDto purchaseOrderUpdateDto);
         Task<IResult> DeleteAsync(Guid id);
         Task<IDataResult<PurchaseOrderDetailsDto>> GetDetailsByIdAsync(Guid id);
+
+        Task<PagedResult<PurchaseOrderListDto>> GetPagedPurchaseOrdersAsync(int pageNumber, int pageSize, string searchTerm);
     }
 }

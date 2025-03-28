@@ -1,4 +1,5 @@
-﻿using StockTrackingApp.Dtos.Customers;
+﻿
+using StockTrackingApp.Dtos.Customers;
 
 namespace StockTrackingApp.Business.Interfaces.Services
 {
@@ -11,5 +12,7 @@ namespace StockTrackingApp.Business.Interfaces.Services
         Task<IDataResult<CustomerDto>> UpdateAsync(CustomerUpdateDto customerUpdateDto);
         Task<IResult> DeleteAsync(Guid id);
         Task<IDataResult<CustomerDetailsDto>> GetDetailsByIdAsync(Guid id);
+
+        Task<PagedResult<CustomerListDto>> GetPagedOrdersAsync(int pageNumber, int pageSize, string searchTerm);
     }
 }

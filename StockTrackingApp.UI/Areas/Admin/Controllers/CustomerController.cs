@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using StockTrackingApp.Dtos.Categories;
 using StockTrackingApp.Dtos.Customers;
+using StockTrackingApp.Entities.Enums;
 using StockTrackingApp.UI.Areas.Admin.Models.CategoryVMs;
 using StockTrackingApp.UI.Areas.Admin.Models.CustomerVMs;
 using System.Text;
+using X.PagedList;
 using X.PagedList.Extensions;
 
 namespace StockTrackingApp.UI.Areas.Admin.Controllers
@@ -20,34 +22,31 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int? page, int pageSize = 10)
+        public async Task<IActionResult> Index(int? page, int pageSize = 10,string searchTerm=null)
         {
             int pageNumber = page ?? 1;
-            var customerGetResult = await _customerService.GetAllAsync();
-            var customerList = _mapper.Map<List<AdminCustomerListVM>>(customerGetResult.Data).OrderBy(o => o.CompanyName).ToList();
+            var customerPagedResult = await _customerService.GetPagedOrdersAsync(pageNumber,pageSize,searchTerm);
 
 
-            var pagedList = customerList.ToPagedList(pageNumber, pageSize);
 
+            var customerList = _mapper.Map<List<AdminCustomerListVM>>(customerPagedResult.Items);
+
+            var pagedList = new StaticPagedList<AdminCustomerListVM>(customerList, pageNumber, pageSize, customerPagedResult.TotalCount);
+
+            // Sayfa boyutunu ViewBag'e gönderme
             ViewBag.PageSize = pageSize;
+            ViewBag.SearchTerm = searchTerm;
+
+            // Enum değerlerini View'e gönderme (VAT oranları)
+            var vatRates = Enum.GetValues(typeof(VatRate))
+                .Cast<VatRate>()
+                .Select(v => new { Id = (int)v, Name = v.GetDisplayName() })
+                .ToList();
+
+            ViewBag.VatRates = vatRates;
 
             return View(pagedList);
         }
-
-
-        public async Task<List<AdminCustomerListVM>> Search(string category)
-        {
-            var customersGetResult = await _customerService.GetAllAsync();
-            var customerList = _mapper.Map<List<AdminCustomerListVM>>(customersGetResult.Data);
-
-            var searchList = customerList
-                .Where(s => s.CompanyName.IndexOf(category, StringComparison.OrdinalIgnoreCase) >= 0)
-                .OrderBy(o => o.CompanyName)
-                .ToList();
-
-            return searchList;
-        }
-
 
         [HttpPost]
         public async Task<IActionResult> Create(AdminCustomerCreateVM model)

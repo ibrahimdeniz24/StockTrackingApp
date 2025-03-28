@@ -1,7 +1,8 @@
 ﻿@using StockTrackingApp.Entities.Enums
+@using X.PagedList
 @using StockTrackingApp.UI.Extantions
 @using StockTrackingApp.UI.Areas.Admin.Models.OrderVMs
-@model IEnumerable<StockTrackingApp.UI.Areas.Admin.Models.OrderVMs.AdminOrderListVM>
+@model IPagedList<StockTrackingApp.UI.Areas.Admin.Models.OrderVMs.AdminOrderListVM>
 
 @{
     ViewData["Title"] = "Index";
@@ -14,16 +15,23 @@
     <div class="row" id="table-hover-row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <!-- Order Create Butonu -->
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderCreateModal">
                         Yeni Sipariş Oluştur
                     </button>
-                    <!-- Partial View Modal İçeriğini Yüklemek İçin Boş Modal Div -->
+
+                    <!-- Modal Container -->
                     <div id="modalContainer">
                         @await Html.PartialAsync("_OrderCreateModal", new AdminOrderCreateVM())
                         @await Html.PartialAsync("_OrderUpdateModal", new AdminOrderUpdateVM())
                     </div>
+
+                    <!-- Arama Formu -->
+                    <form method="get" class="d-flex">
+                        <input type="text" class="form-control w-auto me-2" name="searchTerm" value="@ViewBag.SearchTerm" placeholder="Müşteri Adı ile Ara" />
+                        <button type="submit" class="btn btn-secondary">Ara</button>
+                    </form>
                 </div>
                 <div class="card-content">
                     <div class="card-body">
@@ -37,22 +45,22 @@
                                             #
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.OrderDate)
+                                            OrderDate
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.DeliveryDate)
+                                            DeliveryDate
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.CustomerName)
+                                            CustomerName
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.OrderStatus)
+                                            OrderStatus
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.Description)
+                                            Description
                                         </th>
                                         <th>
-                                            @Html.DisplayNameFor(model => model.TotalAmount)
+                                            TotalAmount
                                         </th>
                                         <th>Action</th>
                                     </tr>
@@ -92,7 +100,7 @@
                                                         Seçenekler
                                                     </button>
                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        <a data-bs-toggle="modal" data-bs-target="#updateOrderModal" asp-route-id="@item.Id" data-item-id="@item.Id" class="dropdown-item" data-kt-users-table-filter="delete_row">Düzenle</a>
+                                                        <a data-bs-toggle="modal" data-bs-target="#orderUpdateModal" asp-route-id="@item.Id" data-order-id="@item.Id" class="dropdown-item edit-order" data-kt-users-table-filter="delete_row">Düzenle</a>
                                                         <a class="dropdown-item" href="@Url.Action("Details", "Order", new { id = item.Id })">Details</a>
 
                                                     </div>
@@ -103,7 +111,45 @@
                                     }
                                 </tbody>
                             </table>
+
                         </div>
+                        <!-- Sayfalama (Pagination) -->
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination pagination-primary justify-content-end">
+                                @if (Model.HasPreviousPage)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", new { page = Model.PageNumber - 1 })">Önceki</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Önceki</a>
+                                    </li>
+                                }
+
+                                @for (int i = 1; i <= Model.PageCount; i++)
+                                {
+                                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                                        <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                                    </li>
+                                }
+
+                                @if (Model.HasNextPage)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", new { page = Model.PageNumber + 1 })">Sonraki</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Sonraki</a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -111,213 +157,96 @@
     </div>
 
 </section>
-
+<script>
+    var customerDropdownUrl = '@Url.Action("GetCustomers", "Order", new { area = "Admin" })';
+    var stockDropdownUrl = '@Url.Action("GetStocks", "Order", new { area = "Admin" })';
+    var vatRatesHtml = `@Html.Raw(string.Join("", Enum.GetValues(typeof(VatRate)).Cast<VatRate>().Select(v => $"<option value=\"{(int)v}\">{v.GetDisplayName()}</option>")))`;
+</script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="~/AdminLayout/addedjs/Datetimeflatpickr/datetimeFlatpickr.js"></script>
+<script src="~/AdminLayout/addedjs/Order/order.js"></script>
+<script src="~/AdminLayout/addedjs/Order/orderCreate.js"></script>
+<script src="~/AdminLayout/addedjs/Order/orderUpdate.js"></script>
+
 
 <script>
-    $(document).ready(function () {
-        $('#updateOrderModal').on('show.bs.modal', function (event) {
-            let button = $(event.relatedTarget);
-            let itemId = button.data('item-id');
+             $(document).ready(function () {
+        $('#orderUpdateModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var orderId = button.data('order-id'); // Butondaki data-order-id değeri alınır
 
+            console.log("Seçilen Order ID:", orderId); // Test için kontrol et
 
-            let modal = $(this);
-            modal.find('input[name="Id"]').val(itemId);
+            if (!orderId || orderId === "00000000-0000-0000-0000-000000000000") {
+                alert("Sipariş ID'si geçersiz!");
+                return;
+            }
 
-        });
-    });
-</script>
-<script>
-        $(document).ready(function () {
-            $("#customerDropdown").select2({
-                placeholder: "Müşteri Ara...",
-                allowClear: true,
-                minimumInputLength: 1,
-                dropdownParent: $("#customerDropdown").parent(), // Bu satırı ekle modal oldugu için bu ekledik
-                ajax: {
-                    url: "@Url.Action("GetCustomers", "Order", new { area = "Admin" })",
-                    dataType: "json",
-                    delay: 250,
-                    data: function (params) {
-                        return { term: params.term };
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: $.map(data, function (item) {
-                                return { id: item.id, text: item.text };
-                            })
-                        };
+            var modal = $(this);
+
+            // 🟢 AJAX ile sipariş detaylarını al
+            $.ajax({
+                url: '/Admin/Order/Detailsjson', // Doğru URL olduğundan emin ol
+                type: 'GET',
+                data: { id: orderId },
+                success: function(response) {
+                    console.log(response); // Gelen veriyi kontrol et (Test amaçlı)
+
+                    if (response && response.success && response.order) {
+                        var order = response.order;
+
+                        // Modal içindeki inputları doldur
+                        modal.find('input[name="Id"]').val(order.Id);
+                        modal.find('input[name="OrderDate"]').val(order.OrderDate);
+                        modal.find('input[name="DeliveryDate"]').val(order.DeliveryDate);
+                        modal.find('textarea[name="Description"]').val(order.Description);
+                        modal.find('select[name="CustomerId"]').val(order.CustomerId);
+                        modal.find('select[name="OrderStatus"]').val(order.OrderStatus);
+
+                        // 🟢 Sipariş detaylarını dinamik eklemek (varsa)
+                        var detailsContainer = modal.find('#orderDetailsContainer');
+                        detailsContainer.empty(); // Önce eski veriyi temizle
+
+                        order.OrderDetails.forEach(function (detail) {
+                            detailsContainer.append(`
+                                <div>
+                                    <p>Ürün: ${detail.ProductName}</p>
+                                    <p>Miktar: ${detail.Quantity}</p>
+                                    <p>Fiyat: ${detail.Price}</p>
+                                </div>
+                            `);
+                        });
+
+                    } else {
+                        alert('Sipariş bilgisi bulunamadı!');
                     }
+                },
+                error: function() {
+                    alert('Veri yüklenirken hata oluştu.');
                 }
             });
         });
-
-
-
-
-    $(document).ready(function () {
-        initSelect2(0);
     });
 
-    function initSelect2(index) {
-        $(`#stockDropdown${index}`).select2({
-            placeholder: "Stok Ara...",
-            allowClear: true,
-            minimumInputLength: 1,
-            dropdownParent: $(`#stockDropdown${index}`).parent(),
-            ajax: {
-                url: "@Url.Action("GetStocks", "Order", new { area = "Admin" })",
-                dataType: "json",
-                delay: 250,
-                data: function (params) {
-                    return { term: params.term };
-                },
-                processResults: function (data) {
-                    return {
-                        results: $.map(data, function (item) {
-                            return { id: item.id, text: item.text };
-                        })
-                    };
-                }
+
+
+
+
+        // 🟢 Modal açılmadan önce inputları sıfırla
+    $('#orderCreateModal').on('show.bs.modal', function () {
+        $(this).find("input, select").each(function () {
+            if ($(this).is("select")) {
+                $(this).val(null).trigger("change"); // Select2 dropdownları sıfırla
+            } else {
+                $(this).val(""); // Input alanlarını sıfırla
             }
         });
-    }
-
-    function addOrderDetail() {
-        var index = $("#orderDetailsBody tr").length;
-        var rowHtml = `
-    <tr>
-        <td>
-            <select id="stockDropdown${index}" name="AdminOrderDetailCreateVMs[${index}].StockId" class="form-control stockDropdown" required></select>
-        </td>
-        <td>
-            <input name="AdminOrderDetailCreateVMs[${index}].Quantity" pattern="[0-9]+"  class="form-control quantity" min="1" oninput="calculateTotal(this)" required />
-        </td>
-        <td>
-            <input name="AdminOrderDetailCreateVMs[${index}].UnitPrice" pattern="[0-9]+([,][0-9]+)?" step="0.01" class="form-control unitPrice" min="0" oninput="calculateTotal(this)" required />
-        </td>
-        <td>
-            <input name="AdminOrderDetailCreateVMs[${index}].TotalPriceExcludingVAT"  step="0.01" class="form-control TotalPriceExcludingVAT" readonly />
-        </td>
-        <td>
-            <select name="AdminOrderDetailCreateVMs[${index}].VatRate" class="form-control vatRate" required onchange="calculateTotal(this)">
-                @foreach (var vatRate in Enum.GetValues(typeof(VatRate)).Cast<VatRate>())
-                {
-                    <option value="@((int)vatRate)">
-                        @vatRate.GetDisplayName()
-                     </option>
-                }
-            </select>
-        </td>
-        <td>
-            <input name="AdminOrderDetailCreateVMs[${index}].TotalPriceIncludingVAT"  step="0.01" class="form-control totalVat" readonly />
-        </td>
-        <td>
-            <input name="AdminOrderDetailCreateVMs[${index}].TotalPriceIncludingVAT"  step="0.01" class="form-control totalPriceVat" readonly />
-        </td>
-        <td>
-            <button type="button" class="btn btn-danger" onclick="removeOrderDetail(this)">Sil</button>
-        </td>
-    </tr>`;
-
-        $("#orderDetailsBody").append(rowHtml);
-        initSelect2(index); // Yeni eklenen dropdown için Select2 başlat
-        updateOrderDetailIndexes(); // Index'leri güncelle
-    }
-
-    function removeOrderDetail(button) {
-        $(button).closest("tr").remove();
-        updateOrderDetailIndexes(); // Silme işleminden sonra index'leri güncelle
-        updateTotalOrderAmount(); // Toplam tutarı güncelle
-    }
-
-    function calculateTotal(input) {
-        var row = $(input).closest("tr");
-
-        // Input değerlerini al ve virgülü noktaya çevir
-        var quantity = row.find(".quantity").val().trim().replace(",", ".");
-        var unitPrice = row.find(".unitPrice").val().trim().replace(",", ".");
-        var vatRate = row.find(".vatRate").val().trim().replace(",", ".");
-
-        console.log("Raw Inputs:", { quantity, unitPrice, vatRate }); // Hata ayıklama için
-
-        // Sayılara çevir (geçersizse 0 yap)
-        quantity = isNaN(parseFloat(quantity)) ? 0 : parseFloat(quantity);
-        unitPrice = isNaN(parseFloat(unitPrice)) ? 0 : parseFloat(unitPrice);
-        vatRate = isNaN(parseFloat(vatRate)) ? 0 : parseFloat(vatRate);
-
-        console.log("Parsed Inputs:", { quantity, unitPrice, vatRate });
-
-        // Negatif değerleri engelle
-        if (quantity < 0 || unitPrice < 0 || vatRate < 0) {
-            alert("Geçersiz değerler! Miktar, birim fiyat ve KDV oranı sıfırdan küçük olamaz.");
-            return;
-        }
-
-        // Toplam hesaplamalar
-        var total = quantity * unitPrice;
-        var vatAmount = total * vatRate / 100;
-        var totalWithVat = total + vatAmount;
-
-        console.log("Total Calculation:", { total, vatAmount, totalWithVat });
-
-        // Değerleri Türkçe formatta yaz (noktayı tekrar virgüle çevir)
-        row.find(".TotalPriceExcludingVAT").val(total.toFixed(2).replace(".", ","));
-        row.find(".totalVat").val(vatAmount.toFixed(2).replace(".", ","));
-        row.find(".totalPriceVat").val(totalWithVat.toFixed(2).replace(".", ","));
-
-        // Sipariş toplamını güncelle
-        updateTotalOrderAmount();
-    }
-
-
-
-
-    function updateTotalOrderAmount() {
-        var totalExcludingAmount = 0; // Toplam KDV Hariç Tutar
-        var totalVat = 0; // Toplam KDV Tutarı
-        var totalWithVat = 0; // Toplam KDV Dahil Tutar
-
-        $(".TotalPriceExcludingVAT").each(function () {
-            var amount = parseFloat($(this).val().replace(",", ".")) || 0;
-            totalExcludingAmount += amount;
-        });
-
-        $(".totalPriceVat").each(function () {
-            var amountWithVat = parseFloat($(this).val().replace(",", ".")) || 0;
-            totalWithVat += amountWithVat;
-        });
-
-        totalVat = totalWithVat - totalExcludingAmount; // KDV tutarını hesapla
-
-        // Değerleri ilgili input alanlarına yaz (Türkçe formatta virgüllü olarak)
-        $("#TotalExcludingVATAmount").val(totalExcludingAmount.toFixed(2).replace(".", ",")); // Toplam KDV hariç tutar
-        $("#TotalVATAmount").val(totalVat.toFixed(2).replace(".", ",")); // Toplam KDV tutarı
-        $("#TotalAmount").val(totalWithVat.toFixed(2).replace(".", ",")); // Toplam KDV dahil tutar
-    }
-
-
-
-    // Sipariş detay satırları silindiğinde index'leri günceller
-    function updateOrderDetailIndexes() {
-        $("#orderDetailsBody tr").each(function (index, row) {
-            $(row).find("select, input").each(function () {
-                var nameAttr = $(this).attr("name");
-                if (nameAttr) {
-                    var newName = nameAttr.replace(/\[\d+\]/, `[${index}]`);
-                    $(this).attr("name", newName);
-                }
-            });
-
-            // ID güncelleme
-            var stockDropdown = $(row).find(".stockDropdown");
-            stockDropdown.attr("id", `stockDropdown${index}`);
-            initSelect2(index); // Güncellenen ID için Select2 başlat
-        });
-    }
+    });
 
 </script>
+
+
+
 
 

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using StockTrackingApp.Dtos.Stocks;
+using StockTrackingApp.Entities.Enums;
 using StockTrackingApp.UI.Areas.Admin.Models.StockVMs;
 using System.Text;
+using X.PagedList;
 using X.PagedList.Extensions;
 
 namespace StockTrackingApp.UI.Areas.Admin.Controllers
@@ -24,16 +26,26 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int? page, int pageSize = 10)
+        public async Task<IActionResult> Index(int? page, int pageSize = 10, string searchTerm = null)
         {
             int pageNumber = page ?? 1;
-            var stocksGetResult = await _stockService.GetAllAsync();
-            var stockList = _mapper.Map<List<AdminStockListVM>>(stocksGetResult.Data).OrderBy(o => o.ProductName).ToList();
+            var stocksGetResult = await _stockService.GetPagedOrdersAsync(pageNumber, pageSize, searchTerm);
 
 
-            var pagedList = stockList.ToPagedList(pageNumber, pageSize);
+            var stockList = _mapper.Map<List<AdminStockListVM>>(stocksGetResult.Items);
+
+
+            var pagedList = new StaticPagedList<AdminStockListVM>(stockList,pageNumber,pageSize,stocksGetResult.TotalCount);
 
             ViewBag.PageSize = pageSize;
+            ViewBag.SearchTerm = searchTerm;
+
+            var vatRates = Enum.GetValues(typeof(VatRate))
+                .Cast<VatRate>()
+                .Select(v => new { Id = (int)v, Name = v.GetDisplayName() })
+                .ToList();
+
+            ViewBag.VatRates = vatRates;
 
             return View(pagedList);
         }

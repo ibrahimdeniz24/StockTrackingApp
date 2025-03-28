@@ -8,6 +8,9 @@
             builder.Property(p => p.ProductImage).IsRequired(false);
             builder.HasOne(p => p.Category).WithMany(c => c.Products).HasForeignKey(p => p.CategoryId);
            
+    
+
+
             base.Configure(builder);
         }
     }

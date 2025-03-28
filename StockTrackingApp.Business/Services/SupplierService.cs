@@ -19,7 +19,7 @@ namespace StockTrackingApp.Business.Services
 
         public async Task<IDataResult<SupplierDto>> AddAsync(SupplierCreateDto supplierCreateDto)
         {
-          
+
             var hasSupplier = await _supplierRepository.AnyAsync(x => x.TaxNo.ToLower().Trim() == supplierCreateDto.TaxNo.ToLower().Trim());
             if (hasSupplier)
             {
@@ -91,6 +91,29 @@ namespace StockTrackingApp.Business.Services
             }
 
             return new SuccessDataResult<SupplierDetailsDto>(_mapper.Map<SupplierDetailsDto>(supplier), Messages.ListedSuccess);
+        }
+
+        public async Task<PagedResult<SupplierListDto>> GetPagedOrdersAsync(int pageNumber, int pageSize, string searchTerm = null)
+        {
+            var query = await _supplierRepository.GetAllAsync();
+
+            var queryDto = _mapper.Map<List<SupplierListDto>>(query);
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                queryDto = queryDto
+                    .Where(o => o.CompanyName.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+            }
+
+            int totalCount = queryDto.Count();
+
+            var items = queryDto
+                .OrderBy(o => o.CompanyName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return new PagedResult<SupplierListDto>(items, totalCount);
         }
 
         public async Task<IDataResult<SupplierDto>> UpdateAsync(SupplierUpdateDto supplierUpdateDto)

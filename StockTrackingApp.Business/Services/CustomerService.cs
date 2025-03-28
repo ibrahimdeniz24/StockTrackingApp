@@ -81,6 +81,29 @@ namespace StockTrackingApp.Business.Services
             return new SuccessDataResult<CustomerDetailsDto>(_mapper.Map<CustomerDetailsDto>(customer), Messages.ListedSuccess);
         }
 
+        public async Task<PagedResult<CustomerListDto>> GetPagedOrdersAsync(int pageNumber, int pageSize, string searchTerm = null)
+        {
+            var query = await _customerRepository.GetAllAsync();
+
+            var queryDto = _mapper.Map<List<CustomerListDto>>(query);
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                queryDto = queryDto
+                    .Where(o => o.CompanyName.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+            }
+
+            int totalCount = queryDto.Count();
+
+            var items = queryDto
+                .OrderBy(o => o.CompanyName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return new PagedResult<CustomerListDto>(items, totalCount);
+        }
+
         public async Task<IDataResult<CustomerDto>> UpdateAsync(CustomerUpdateDto customerUpdateDto)
         {
             var category = await _customerRepository.GetByIdAsync(customerUpdateDto.Id);

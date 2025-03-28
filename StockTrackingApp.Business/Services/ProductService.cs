@@ -81,6 +81,29 @@ namespace StockTrackingApp.Business.Services
             return new SuccessDataResult<ProductDetailsDto>(_mapper.Map<ProductDetailsDto>(product), Messages.ListedSuccess);
         }
 
+        public async Task<PagedResult<ProductListDto>> GetPagedOrdersAsync(int pageNumber, int pageSize, string searchTerm = null)
+        {
+            var query = await _productRepository.GetAllAsync();
+
+            List<ProductListDto>? queryDto = _mapper.Map<List<ProductListDto>>(query);
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                queryDto = queryDto.Where(o => o.Name.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+            }
+
+            int totalCount = queryDto.Count();
+
+            var items = queryDto
+                .OrderBy(o => o.Name)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return new PagedResult<ProductListDto>(items, totalCount);
+
+        }
+
         public async Task<IDataResult<ProductDto>> UpdateAsync(ProductUpdateDto productUpdateDto)
         {
             var product = await _productRepository.GetByIdAsync(productUpdateDto.Id);

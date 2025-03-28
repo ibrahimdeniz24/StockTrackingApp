@@ -1,9 +1,9 @@
-﻿
-using StockTrackingApp.Dtos.PurchaseOrderDetails;
+﻿using StockTrackingApp.Dtos.PurchaseOrderDetails;
+using StockTrackingApp.Entities.Enums;
 
-namespace StockTrackingApp.Dtos.PurchaseOrders
+namespace StockTrackingApp.UI.Areas.Admin.Models.PurchaseOrderVMs
 {
-    public class PurchaseOrderListDto
+    public class AdminPurchaseOrderListVM
     {
         public Guid Id { get; set; }
         public DateTime OrderDate { get; set; }
@@ -13,8 +13,6 @@ namespace StockTrackingApp.Dtos.PurchaseOrders
         public OrderStatus OrderStatus { get; set; }
 
         public decimal TotalAmount { get; set; }
-        public decimal TotalExcludingVATAmount { get; set; }
-        public decimal TotalVATAmount { get; set; }
 
         public string Description { get; set; }
 
