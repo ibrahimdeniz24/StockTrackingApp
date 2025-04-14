@@ -9,7 +9,8 @@ namespace StockTrackingApp.Business.Profiles
         {
             CreateMap<OrderDetailCreateDto, OrderDetail>();
             CreateMap<OrderDetail,OrderDetailDetailsDto>();
-            CreateMap<OrderDetail,OrderDetailDto>();
+            CreateMap<OrderDetail,OrderDetailDto>()
+                 .ForMember(dest => dest.StockName, opt => opt.MapFrom(o => o.Stock.Product.Name)); 
             CreateMap<OrderDetail,OrderDetailListDto>();
             CreateMap<OrderDetail,OrderDetailUpdateDto>();
         }

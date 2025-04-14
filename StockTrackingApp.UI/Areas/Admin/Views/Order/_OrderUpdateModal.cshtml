@@ -49,7 +49,7 @@
                                 <select asp-for="OrderStatus" class="form-control" required>
                                     @foreach (var status in Enum.GetValues(typeof(OrderStatus)))
                                     {
-                                        <option value="@status">@status</option>
+                                        <option value="@((int)status)">@status</option>
                                     }
                                 </select>
                                 <span asp-validation-for="OrderStatus" class="text-danger"></span>

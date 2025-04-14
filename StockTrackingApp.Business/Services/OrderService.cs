@@ -1,10 +1,8 @@
 ﻿
-using Microsoft.EntityFrameworkCore;
 using StockTrackingApp.Business.Interfaces.Services;
-using StockTrackingApp.Core.Utilities.Helpers;
-using StockTrackingApp.Dtos.Customers;
-using StockTrackingApp.Dtos.OrderDetails;
+using StockTrackingApp.Core.Enums;
 using StockTrackingApp.Dtos.Orders;
+using StockTrackingApp.Entities.Enums;
 
 namespace StockTrackingApp.Business.Services
 {
@@ -32,26 +30,28 @@ namespace StockTrackingApp.Business.Services
                 order.OrderDetails = orderCreateDto.OrderDetailDtos.Select(dt => _mapper.Map<OrderDetail>(dt)).ToList();
             }
 
-            // Stok güncellemelerini ve kontrolünü başlat
+            // Stok kontrolünü başlat
             foreach (var orderDetail in order.OrderDetails)
             {
                 var stock = await _stockRepository.GetByIdAsync(orderDetail.StockId);
 
-                // Ürün bulunamazsa veya yeterli stok yoksa hata döndür
+                // Ürün bulunamazsa hata döndür
                 if (stock == null)
                 {
                     return new ErrorDataResult<OrderDto>("Ürün bulunamadı.");
                 }
 
+                // Stok yeterli mi kontrol et
                 if (stock.Quantity < orderDetail.Quantity)
                 {
                     return new ErrorDataResult<OrderDto>($"Ürün {stock.Product.Name} için yeterli stok bulunmuyor.");
                 }
+            }
 
-                // Yeterli stok varsa, stok miktarını güncelle
-                stock.Quantity -= orderDetail.Quantity;
-                await _stockRepository.UpdateAsync(stock);
-                await _stockRepository.SaveChangesAsync();
+            // Sipariş 'Approved' durumundaysa stok güncellemesini yap
+            if (order.OrderStatus == OrderStatus.Approved)
+            {
+                await UpdateStockForApprovedOrder(order);
             }
 
             await _orderRepository.AddAsync(order);
@@ -120,12 +120,56 @@ namespace StockTrackingApp.Business.Services
                 return new ErrorDataResult<OrderDto>(Messages.UpdateFail);
             }
 
+            // Eski sipariş bilgilerini sakla
+            var oldOrderDetails = order.OrderDetails.ToList();
+
+            // Güncellenen siparişi map'le
             var updatedOrder = _mapper.Map(orderUpdateDto, order);
+
+
+            // Eğer sipariş detayları güncellenmişse, yeni detayları ekleyelim
+            if (orderUpdateDto.OrderDetailDtos != null && orderUpdateDto.OrderDetailDtos.Any())
+            {
+                order.OrderDetails = orderUpdateDto.OrderDetailDtos
+                    .Select(dt => _mapper.Map<OrderDetail>(dt))
+                    .ToList();
+            }
+
+            // Stok kontrolünü başlat
+            foreach (var orderDetail in order.OrderDetails)
+            {
+                var stock = await _stockRepository.GetByIdAsync(orderDetail.StockId);
+
+                if (stock == null)
+                {
+                    return new ErrorDataResult<OrderDto>("Ürün bulunamadı.");
+                }
+
+                if (stock.Quantity < orderDetail.Quantity)
+                {
+                    return new ErrorDataResult<OrderDto>($"Ürün {stock.Product.Name} için yeterli stok bulunmuyor.");
+                }
+            }
+
+
+            // Sipariş 'Approved' durumundaysa stok güncellemesini yap
+            if (order.OrderStatus == OrderStatus.Approved)
+            {
+                // Eski stokları geri yükleyerek eski sipariş detaylarını sıfırla
+                await RestoreStockForPreviousOrder(oldOrderDetails);
+
+                // Yeni sipariş detayları için stok güncellemesi yap
+                await UpdateStockForApprovedOrder(order);
+            }
+
+
             await _orderRepository.UpdateAsync(updatedOrder);
             await _orderRepository.SaveChangesAsync();
 
             return new SuccessDataResult<OrderDto>(_mapper.Map<OrderDto>(updatedOrder), Messages.UpdateSuccess);
         }
+
+
 
 
 
@@ -162,7 +206,50 @@ namespace StockTrackingApp.Business.Services
 
             return new PagedResult<OrderListDto>(items, totalCount);
         }
+        private async Task UpdateStockForApprovedOrder(Order order)
+        {
+            foreach (var orderDetail in order.OrderDetails)
+            {
+                var stock = await _stockRepository.GetByIdAsync(orderDetail.StockId);
 
+                // Eğer stok null ise işlem yapma (ekstra kontrol)
+                if (stock == null) continue;
 
+                // Stok miktarını güncelle
+                stock.Quantity -= orderDetail.Quantity;
+                await _stockRepository.UpdateAsync(stock);
+            }
+
+            await _stockRepository.SaveChangesAsync(); // Tüm güncellemeleri tek seferde kaydet
+        }
+
+        private async Task RestoreStockForPreviousOrder(List<OrderDetail> oldOrderDetails)
+        {
+            foreach (var oldDetail in oldOrderDetails)
+            {
+                var stock = await _stockRepository.GetByIdAsync(oldDetail.StockId);
+                if (stock == null) continue;
+
+                // Önceki sipariş detaylarını stoklara geri ekle
+                stock.Quantity += oldDetail.Quantity;
+                await _stockRepository.UpdateAsync(stock);
+            }
+            await _stockRepository.SaveChangesAsync();
+        }
+
+        public async Task<IResult> ChangeStatusAsync(Guid orderId, OrderStatus newStatus)
+        {
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order == null)
+            {
+                return new ErrorResult(Messages.UpdateFail);
+            }
+
+            order.OrderStatus = newStatus;
+            await _orderRepository.UpdateAsync(order);
+            await _orderRepository.SaveChangesAsync();
+
+            return new SuccessResult(Messages.UpdateSuccess);
+        }
     }
 }

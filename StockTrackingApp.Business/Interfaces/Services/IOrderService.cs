@@ -1,6 +1,8 @@
 ﻿
+using StockTrackingApp.Core.Enums;
 using StockTrackingApp.Core.Utilities.Helpers;
 using StockTrackingApp.Dtos.Orders;
+using StockTrackingApp.Entities.Enums;
 
 namespace StockTrackingApp.Business.Interfaces.Services
 {
@@ -14,6 +16,8 @@ namespace StockTrackingApp.Business.Interfaces.Services
         Task<IResult> DeleteAsync(Guid id);
         Task<IDataResult<OrderDetailsDto>> GetDetailsByIdAsync(Guid id);
         Task<PagedResult<OrderListDto>> GetPagedOrdersAsync(int pageNumber, int pageSize, string searchTerm);
+
+        Task<IResult> ChangeStatusAsync(Guid orderId, OrderStatus newStatus);
 
 
     }

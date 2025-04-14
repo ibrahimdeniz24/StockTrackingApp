@@ -12,6 +12,10 @@ namespace StockTrackingApp.Dtos.OrderDetails
         public Guid OrderId { get; set; }
         public Guid StockId { get; set; }
 
+        public string StockName { get; set; }
+
+        public string MyProperty { get; set; }
+
         public VatRate VATRate { get; set; }
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
