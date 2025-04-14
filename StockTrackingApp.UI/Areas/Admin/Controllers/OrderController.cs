@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using StockTrackingApp.Core.Utilities.Results.Concrete;
 using StockTrackingApp.Dtos.Orders;
 using StockTrackingApp.Entities.Enums;
 using StockTrackingApp.UI.Areas.Admin.Models.OrderVMs;
@@ -151,17 +152,67 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
             return View(_mapper.Map<AdminOrderDetailsVM>(getOrder.Data));
         }
 
-
         [HttpGet]
         public async Task<IActionResult> Detailsjson(Guid id)
         {
-            var order = await _orderService.GetByIdAsync(id);
-            if (order == null)
+            var orderResult = await _orderService.GetByIdAsync(id);
+
+            if (orderResult.IsSuccess == false || orderResult.Data == null)
             {
                 return Json(new { success = false, message = "Order not found!" });
             }
 
-            return Json(new { success = true, data = order });
+            var order = orderResult.Data;
+
+            // VatRate enum'ının Display Name'lerini almak için
+            var vatRateList = Enum.GetValues(typeof(VatRate))
+                .Cast<VatRate>()
+                .Select(v => new
+                {
+                    Id = (int)v,
+                    Name = v.GetDisplayName()  // Display ismini alıyoruz
+                }).ToList();
+
+            return Json(new
+            {
+                success = true,
+                vatRates = vatRateList, // VatRate listesi ekleniyor
+                order = new
+                {
+                    Id = order.Id,
+                    OrderDate = order.OrderDate.ToString("yyyy-MM-dd"),
+                    DeliveryDate = order.DeliveryDate.ToString("yyyy-MM-dd"),
+                    Description = order.Description,
+                    CustomerId = order.CustomerId,
+                    OrderStatus = order.OrderStatus,
+                    CustomerName = order.CustomerName,
+                    OrderDetails = order.OrderDetails.Select(d => new
+                    {
+                        StockId = d.StockId,
+                        StockName = d.StockName,
+                        Quantity = d.Quantity,
+                        Price = d.UnitPrice,
+                        vatRate = (int)d.VATRate
+                    })
+                }
+            });
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeStatus(Guid id, OrderStatus newStatus)
+        {
+            var result = await _orderService.ChangeStatusAsync(id, newStatus);
+
+            if (!result.IsSuccess)
+            {
+                TempData["ErrorMessage"] = result.Message;
+                return RedirectToAction("Index");
+            }
+
+            TempData["SuccessMessage"] = result.Message;
+            return RedirectToAction("Index");
         }
 
         [HttpGet]

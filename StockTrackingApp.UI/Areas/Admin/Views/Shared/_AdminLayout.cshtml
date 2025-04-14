@@ -89,10 +89,22 @@
                                     <a asp-action="Index" asp-controller="Customer" asp-area="Admin">Müşteriler</a>
                                 </li>
                                 <li class="submenu-item ">
+                                    <a asp-action="Index" asp-controller="Order" asp-area="Admin">Siparişler</a>
+                                </li>
+                            </ul>
+
+                        </li>
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-cart-plus"></i>
+                                <span>Satın Alma İşlemleri</span>
+                            </a>
+                            <ul class="submenu">
+                                <li class="submenu-item ">
                                     <a asp-action="Index" asp-controller="Supplier" asp-area="Admin">Tedarikçiler</a>
                                 </li>
                                 <li class="submenu-item ">
-                                    <a asp-action="Index" asp-controller="Order" asp-area="Admin">Siparişler</a>
+                                    <a asp-action="Index" asp-controller="PurchaseOrder" asp-area="Admin">Siparişler</a>
                                 </li>
                             </ul>
 

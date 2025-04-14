@@ -15,5 +15,7 @@ namespace StockTrackingApp.Dtos.Orders
         public OrderStatus OrderStatus { get; set; }
 
         public Guid OrderDetailId { get; set; }
+
+        public List<OrderDetailUpdateDto> OrderDetailDtos { get; set; } = new();
     }
 }

@@ -1,0 +1,31 @@
+﻿@using StockTrackingApp.Entities.Enums
+<!-- Modal -->
+<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-action="ChangeStatus">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="statusModalLabel">Sipariş Durumunu Güncelle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="orderId" name="id" />
+
+                    <div class="mb-3">
+                        <label for="newStatus" class="form-label">Yeni Durum</label>
+                        <select class="form-select" name="newStatus" id="newStatus">
+                            @foreach (var status in Enum.GetValues(typeof(OrderStatus)))
+                            {
+                                <option value="@status">@status</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Güncelle</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
