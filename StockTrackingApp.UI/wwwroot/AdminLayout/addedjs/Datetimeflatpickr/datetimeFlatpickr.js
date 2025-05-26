@@ -1,23 +1,22 @@
 ﻿
 document.addEventListener("DOMContentLoaded", function () {
-    // Türkiye saati (GMT+3) ile bugünün tarih ve saatini alıyoruz
-    var today = new Date();
-    today.setHours(today.getHours() + 3); // Türkiye saati için saat farkını ekliyoruz
-    var todayISO = today.toISOString().slice(0, 16); // ISO formatına çeviriyoruz
+    // Türkiye saatini (GMT+3) al
+    const getTodayInTR = () => {
+        const date = new Date();
+        date.setHours(date.getHours() + 3);
+        return date.toISOString().slice(0, 16); // "yyyy-MM-ddTHH:mm"
+    };
 
-    flatpickr("#OrderDate", {
-        enableTime: true,
-        dateFormat: "Y-m-d H:i",
-        time_24hr: true,
-        locale: "tr",
-        defaultDate: todayISO // Bugünün tarihi ve saati Türkiye saatiyle varsayılan olarak ayarlanacak
-    });
+    const defaultDate = getTodayInTR();
 
-    flatpickr("#DeliveryDate", {
-        enableTime: true,
-        dateFormat: "Y-m-d H:i",
-        time_24hr: true,
-        locale: "tr",
-        defaultDate: todayISO // Teslimat tarihi de aynı şekilde ayarlanacak
+    // Tüm .datetime-picker class'larına flatpickr uygula
+    document.querySelectorAll(".datetime-picker").forEach(function (input) {
+        flatpickr(input, {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            time_24hr: true,
+            locale: "tr",
+            defaultDate: defaultDate
+        });
     });
 });

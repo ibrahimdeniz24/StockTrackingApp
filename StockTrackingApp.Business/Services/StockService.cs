@@ -1,6 +1,5 @@
 ﻿using StockTrackingApp.Business.Interfaces.Services;
 using StockTrackingApp.Dtos.Stocks;
-using StockTrackingApp.Entities.DbSets;
 
 namespace StockTrackingApp.Business.Services
 {

@@ -157,3 +157,13 @@
     </div>
 
 </section>
+
+<script>
+    var supplierDropdownUrl = '@Url.Action("GetSuppliers", "PurchaseOrder", new { area = "Admin" })';
+    var stockDropdownUrl = '@Url.Action("GetStocks", "PurchaseOrder", new { area = "Admin" })';
+    var vatRatesHtml = `@Html.Raw(string.Join("", Enum.GetValues(typeof(VatRate)).Cast<VatRate>().Select(v => $"<option value=\"{(int)v}\">{v.GetDisplayName()}</option>")))`;
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/AdminLayout/addedjs/PurchaseOrder/purchaseOrder.js"></script>
+<script src="~/AdminLayout/addedjs/PurchaseOrder/purchaseOrderCreate.js"></script>

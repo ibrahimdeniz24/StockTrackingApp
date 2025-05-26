@@ -188,6 +188,8 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
                     CustomerName = order.CustomerName,
                     OrderDetails = order.OrderDetails.Select(d => new
                     {
+                        OrderId= order.Id,
+                        Id = d.Id,
                         StockId = d.StockId,
                         StockName = d.StockName,
                         Quantity = d.Quantity,
@@ -232,7 +234,6 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
 
             return Json(filteredCustomers);
         }
-
 
         [HttpGet]
         public async Task<IActionResult> GetStocks(string term)

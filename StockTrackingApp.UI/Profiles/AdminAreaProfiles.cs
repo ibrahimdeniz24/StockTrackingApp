@@ -101,11 +101,13 @@ namespace StockTrackingApp.UI.Profiles
             CreateMap<OrderDetailsDto, AdminOrderDetailsVM>();
             CreateMap<AdminOrderCreateVM, OrderCreateDto>()
                  .ForMember(dest => dest.OrderDetailDtos, opt => opt.MapFrom(src => src.AdminOrderDetailCreateVMs));
-            CreateMap<AdminOrderUpdateVM, OrderUpdateDto>();
+            CreateMap<AdminOrderUpdateVM, OrderUpdateDto>()
+                .ForMember(dest => dest.OrderDetailDtos, opt => opt.MapFrom(src => src.AdminOrderDetailUpdateVMs));
 
 
             //OrderDetailController
             CreateMap<AdminOrderDetailCreateVM, OrderDetailCreateDto>();
+            CreateMap<AdminOrderDetailUpdateVM, OrderDetailUpdateDto>();
 
 
 

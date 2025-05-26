@@ -7,9 +7,9 @@ namespace StockTrackingApp.Business.Profiles
     {
         public PurchaseOrderProfile()
         {
-            CreateMap<PurchaseOrder, PurchaseOrderCreateDto>();
+            CreateMap<PurchaseOrderCreateDto, PurchaseOrder>();
             CreateMap<PurchaseOrder, PurchaseOrderDto>();
-            CreateMap<PurchaseOrder, PurchaseOrderUpdateDto>();
+            CreateMap<PurchaseOrderUpdateDto, PurchaseOrder>();
             CreateMap<PurchaseOrder, PurchaseOrderListDto>()
                 .ForMember(dest => dest.SupplierName, opt => opt.MapFrom(opt => opt.Supplier.CompanyName));
 

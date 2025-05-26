@@ -18,13 +18,13 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label asp-for="OrderDate" class="control-label"></label>
-                                    <input type="text" id="OrderDate" asp-for="OrderDate" class="form-control" required />
+                                    <input type="text" id="OrderDate" asp-for="OrderDate" class="form-control datetime-picker" required />
                                     <span asp-validation-for="OrderDate" class="text-danger"></span>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label asp-for="DeliveryDate" class="control-label">Teslimat Tarihi ve Saati</label>
-                                    <input type="text" id="DeliveryDate" asp-for="DeliveryDate" class="form-control" required />
+                                    <input type="text" id="DeliveryDate" asp-for="DeliveryDate" class="form-control datetime-picker" required />
                                     <span asp-validation-for="DeliveryDate" class="text-danger"></span>
                                 </div>
                             </div>
@@ -96,10 +96,10 @@
 
                                         </td>
                                         <td>
-                                            <input name="AdminOrderDetailCreateVMs[0].TotalPriceIncludingVAT"  step="0.01" class="form-control totalVat" readonly />
+                                            <input name="AdminOrderDetailCreateVMs[0].VATAmount" step="0.01" class="form-control totalVat" readonly />
                                         </td>
                                         <td>
-                                            <input name="AdminOrderDetailCreateVMs[0].VATAmount"   step="0.01" class="form-control totalPriceVat" readonly />
+                                            <input name="AdminOrderDetailCreateVMs[0].TotalPriceIncludingVAT" step="0.01" class="form-control totalPriceVat" readonly />
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-danger" onclick="removeOrderDetail(this)">Sil</button>
@@ -121,7 +121,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="TotalAmount">Toplam KDV Hariç Tutar:</label>
+                                <label for="TotalAmount">Toplam KDV Dahil Tutar:</label>
                                 <input id="TotalAmount" name="TotalAmount" class="form-control" readonly />
                             </div>
 

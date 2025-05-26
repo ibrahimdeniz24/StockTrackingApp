@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using StockTrackingApp.Entities.Enums;
 
-namespace StockTrackingApp.Dtos.OrderDetails
+namespace StockTrackingApp.UI.Areas.Admin.Models.OrderDetailVMs
 {
-    public class OrderDetailDto
+    public class AdminOrderDetailUpdateVM
     {
         public Guid Id { get; set; }
         public Guid OrderId { get; set; }
         public Guid StockId { get; set; }
-
-        public string StockName { get; set; }
-
-        public VatRate VATRate { get; set; }
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
+
+        public VatRate VATRate { get; set; }
+
         public decimal TotalPriceExcludingVAT { get; set; } // KDV'siz toplam
         public decimal VATAmount { get; set; } // KDV tutarı
         public decimal TotalPriceIncludingVAT { get; set; } // KDV dahil toplam

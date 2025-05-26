@@ -164,7 +164,6 @@
 </script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="~/AdminLayout/addedjs/Datetimeflatpickr/datetimeFlatpickr.js"></script>
 <script src="~/AdminLayout/addedjs/Order/order.js"></script>
 <script src="~/AdminLayout/addedjs/Order/orderCreate.js"></script>
 <script src="~/AdminLayout/addedjs/Order/orderUpdate.js"></script>
@@ -233,29 +232,29 @@
                                 let row = $(`
                                     <tr>
                                         <td>
-                                            <select name="AdminOrderDetailCreateVMs[${index}].StockId" class="form-control stockDropdown" required>
+                                            <select name="AdminOrderDetailUpdateVMs[${index}].StockId" class="form-control stockDropdown" required>
                                                 <option value="${detail.stockId}" selected>${detail.stockName || 'Stok Adı Yok'}</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input name="AdminOrderDetailCreateVMs[${index}].Quantity" value="${detail.quantity}" pattern="[0-9]+" class="form-control quantity" oninput="calculateTotal(this)" required />
+                                            <input name="AdminOrderDetailUpdateVMs[${index}].Quantity" value="${detail.quantity}" pattern="[0-9]+" class="form-control quantity" oninput="calculateTotal(this)" required />
                                         </td>
                                         <td>
-                                            <input name="AdminOrderDetailCreateVMs[${index}].UnitPrice" value="${detail.price}" pattern="[0-9]+([,][0-9]+)?" step="0.01" class="form-control unitPrice" min="1" oninput="calculateTotal(this)" required />
+                                            <input name="AdminOrderDetailUpdateVMs[${index}].UnitPrice" value="${detail.price}" pattern="[0-9]+([,][0-9]+)?" step="0.01" class="form-control unitPrice" min="1" oninput="calculateTotal(this)" required />
                                         </td>
                                         <td>
-                                            <input name="AdminOrderDetailCreateVMs[${index}].TotalPriceExcludingVAT" value="${totalExclVAT.toFixed(2)}" step="0.01" class="form-control TotalPriceExcludingVAT" readonly />
+                                            <input name="AdminOrderDetailUpdateVMs[${index}].TotalPriceExcludingVAT" value="${totalExclVAT.toFixed(2)}" step="0.01" class="form-control TotalPriceExcludingVAT" readonly />
                                         </td>
                                         <td>
-                                            <select name="AdminOrderDetailCreateVMs[${index}].VatRate" class="form-control vatRate" onchange="calculateTotal(this)" required>
+                                            <select name="AdminOrderDetailUpdateVMs[${index}].VatRate" class="form-control vatRate" onchange="calculateTotal(this)" required>
                                                 ${vatOptions}
                                             </select>
                                         </td>
                                         <td>
-                                            <input name="AdminOrderDetailCreateVMs[${index}].TotalPriceIncludingVAT" value="${totalInclVAT.toFixed(2)}" step="0.01" class="form-control totalVat" readonly />
+                                            <input name="AdminOrderDetailUpdateVMs[${index}].VATAmount" value="${vatAmount.toFixed(2)}" step="0.01" class="form-control totalVat" readonly />
                                         </td>
                                         <td>
-                                            <input name="AdminOrderDetailCreateVMs[${index}].VATAmount" value="${vatAmount.toFixed(2)}" step="0.01" class="form-control totalPriceVat" readonly />
+                                            <input name="AdminOrderDetailUpdateVMs[${index}].TotalPriceIncludingVAT" value="${totalInclVAT.toFixed(2)}" step="0.01" class="form-control totalPriceVat" readonly />
                                         </td>
                                         <td>
                                             <button type="button" class="btn btn-danger" onclick="removeOrderDetail(this)">Sil</button>
