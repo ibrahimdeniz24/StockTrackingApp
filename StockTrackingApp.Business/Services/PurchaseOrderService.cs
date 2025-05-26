@@ -1,6 +1,7 @@
 ﻿using StockTrackingApp.Business.Interfaces.Services;
 using StockTrackingApp.Dtos.Categories;
 using StockTrackingApp.Dtos.PurchaseOrders;
+using StockTrackingApp.Entities.DbSets;
 using System.Linq.Expressions;
 
 namespace StockTrackingApp.Business.Services
@@ -32,17 +33,41 @@ namespace StockTrackingApp.Business.Services
                 purchaseOrder.PurchaseOrderDetails = purchaseOrderCreateDto.PurchaseOrderDetails.Select(dt => _mapper.Map<PurchaseOrderDetail>(dt)).ToList();
             }
 
-
-
-            foreach (var purchaseOrderDetail in purchaseOrder.PurchaseOrderDetails)
+            foreach (var purchaseDetail in purchaseOrder.PurchaseOrderDetails)
             {
-                var product = await _productRepository.GetByIdAsync(purchaseOrderDetail.ProductId);
+                var product = await _productRepository.GetByIdAsync(purchaseDetail.ProductId);
 
-                var stock = _mapper.Map<Stock>(product);
-                await _stockRepository.AddAsync(stock);
-                await _stockRepository.SaveChangesAsync();
+                // 1. SKU + Supplier + Price ile stok arama
+                var existingStock = await _stockRepository.GetBySkuSupplierAndPriceAsync(
+                    product.SKU,
+                purchaseOrder.SupplierId,
+                    purchaseDetail.UnitPrice
+                );
+
+
+                if (existingStock != null)
+                {
+                    // Aynı SKU, tedarikçi ve fiyat varsa miktarı güncelle
+                    existingStock.Quantity += purchaseDetail.Quantity;
+                    await _stockRepository.UpdateAsync(existingStock);
+                }
+                else
+                {
+                    //Yeni Stok oluştur
+                    var stock = _mapper.Map<Stock>(product);
+                    stock.Quantity = purchaseDetail.Quantity;
+                    stock.SupplierId = purchaseOrder.SupplierId;
+                    stock.PurchasePrice = purchaseDetail.UnitPrice;
+                    await _stockRepository.AddAsync(stock);
+
+                }
+
+                await _stockRepository.SaveChangesAsync(); // Tüm güncellemeleri tek seferde kaydet
 
             }
+
+
+         
 
             await _purchaseOrderRepository.AddAsync(purchaseOrder);
             await _purchaseOrderRepository.SaveChangesAsync();
@@ -145,5 +170,6 @@ namespace StockTrackingApp.Business.Services
         {
             return $"PUR-{DateTime.UtcNow:yyyyMMdd}-{new Random().Next(100000, 999999)}";
         }
+
     }
 }

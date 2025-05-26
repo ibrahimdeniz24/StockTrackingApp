@@ -163,6 +163,43 @@ namespace StockTrackingApp.UI.Areas.Admin.Controllers
         }
 
 
+
+        [HttpGet]
+        public async Task<IActionResult> GetStocks(string term)
+        {
+            if (string.IsNullOrWhiteSpace(term))
+            {
+                return Json(new List<object>());
+            }
+
+            var stocks = await _stockService.GetAllAsync(); // Tüm Stokları getir
+            var filteredStocks = stocks.Data
+                .Where(c => c.
+                ProductName.Contains(term, StringComparison.OrdinalIgnoreCase)) // İçerenleri filtrele
+                .Select(c => new { id = c.Id, text = c.ProductName }) // JSON formatına çevir
+                .ToList();
+
+            return Json(filteredStocks);
+        }
+
+        [HttpGet]
+
+        public async Task<IActionResult> GetSuppliers(string term)
+        {
+            if (string.IsNullOrWhiteSpace(term))
+            {
+                return Json(new List<object>());
+            }
+            var suppliers = await _supplierService.GetAllAsync(); // Tüm Tedarikçileri getir
+            var filteredSuppliers = suppliers.Data
+                .Where(c => c.CompanyName.Contains(term, StringComparison.OrdinalIgnoreCase)) // İçerenleri filtrele
+                .Select(c => new { id = c.Id, text = c.CompanyName }) // JSON formatına çevir
+                .ToList();
+            return Json(filteredSuppliers);
+
+
+
+        }
     }
 }
 

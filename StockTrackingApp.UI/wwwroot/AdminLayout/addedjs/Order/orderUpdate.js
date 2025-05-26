@@ -56,27 +56,30 @@ function addOrderDetail1() {
     var rowHtml = `
     <tr>
         <td>
-            <select id="stockDropdown1${index}" name="AdminOrderDetailCreateVMs[${index}].StockId" class="form-control stockDropdown" required></select>
+            <input name="AdminOrderDetailUpdateVMs[${index}].Id" type="hidden" />
         </td>
         <td>
-            <input name="AdminOrderDetailCreateVMs[${index}].Quantity" pattern="[0-9]+"  class="form-control quantity" min="1" oninput="calculateTotal(this)" required />
+            <select id="stockDropdown1${index}" name="AdminOrderDetailUpdateVMs[${index}].StockId" class="form-control stockDropdown" required></select>
         </td>
         <td>
-            <input name="AdminOrderDetailCreateVMs[${index}].UnitPrice" pattern="[0-9]+([,][0-9]+)?" step="0.01" class="form-control unitPrice" min="0" oninput="calculateTotal(this)" required />
+            <input name="AdminOrderDetailUpdateVMs[${index}].Quantity" pattern="[0-9]+"  class="form-control quantity" min="1" oninput="calculateTotal(this)" required />
         </td>
         <td>
-            <input name="AdminOrderDetailCreateVMs[${index}].TotalPriceExcludingVAT"  step="0.01" class="form-control TotalPriceExcludingVAT" readonly />
+            <input name="AdminOrderDetailUpdateVMs[${index}].UnitPrice" pattern="[0-9]+([,][0-9]+)?" step="0.01" class="form-control unitPrice" min="0" oninput="calculateTotal(this)" required />
         </td>
         <td>
-            <select name="AdminOrderDetailCreateVMs[${index}].VatRate" class="form-control vatRate" required onchange="calculateTotal(this)">
+            <input name="AdminOrderDetailUpdateVMs[${index}].TotalPriceExcludingVAT"  step="0.01" class="form-control TotalPriceExcludingVAT" readonly />
+        </td>
+        <td>
+            <select name="AdminOrderDetailUpdateVMs[${index}].VatRate" class="form-control vatRate" required onchange="calculateTotal(this)">
                 ${vatRatesHtml} <!-- Razor tarafında oluşturulmalı -->
             </select>
         </td>
         <td>
-            <input name="AdminOrderDetailCreateVMs[${index}].TotalPriceIncludingVAT"  step="0.01" class="form-control totalVat" readonly />
+            <input name="AdminOrderDetailUpdateVMs[${index}].VATAmount"  step="0.01" class="form-control totalVat" readonly />
         </td>
         <td>
-            <input name="AdminOrderDetailCreateVMs[${index}].TotalPriceIncludingVAT"  step="0.01" class="form-control totalPriceVat" readonly />
+            <input name="AdminOrderDetailUpdateVMs[${index}].TotalPriceIncludingVAT"  step="0.01" class="form-control totalPriceVat" readonly />
         </td>
         <td>
             <button type="button" class="btn btn-danger" onclick="removeOrderDetail1(this)">Sil</button>

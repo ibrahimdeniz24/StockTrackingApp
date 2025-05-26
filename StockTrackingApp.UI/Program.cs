@@ -38,6 +38,14 @@ else
     app.UseHsts();
 }
 
+
+// ?? BU KISMI EKLEDÝK
+var cultureInfo = new CultureInfo("tr-TR");
+cultureInfo.NumberFormat.NumberDecimalSeparator = ".";
+
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 app.UseStatusCodePagesWithReExecute("/ErrorPage/ErrorIndex", "?code={0}");
 app.UseHttpsRedirection();

@@ -8,10 +8,10 @@ namespace StockTrackingApp.Business.Profiles
     {
         public PurchaseOrderDetailProfile()
         {
-            CreateMap<PurchaseOrderDetail,PurchaseOrderDetailCreateDto>();
+            CreateMap<PurchaseOrderDetailCreateDto, PurchaseOrderDetail>();
             CreateMap<PurchaseOrderDetail,PurchaseOrderDetailDto>();
             CreateMap<PurchaseOrderDetail,PurchaseOrderDetailListDto>();
-            CreateMap<PurchaseOrderDetail,PurchaseOrderDetailUpdateDto>();
+            CreateMap<PurchaseOrderDetailUpdateDto, PurchaseOrderDetail>();
         }
     }
 }

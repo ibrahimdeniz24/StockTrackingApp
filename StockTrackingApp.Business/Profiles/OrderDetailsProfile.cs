@@ -12,7 +12,7 @@ namespace StockTrackingApp.Business.Profiles
             CreateMap<OrderDetail,OrderDetailDto>()
                  .ForMember(dest => dest.StockName, opt => opt.MapFrom(o => o.Stock.Product.Name)); 
             CreateMap<OrderDetail,OrderDetailListDto>();
-            CreateMap<OrderDetail,OrderDetailUpdateDto>();
+            CreateMap<OrderDetailUpdateDto, OrderDetail>();
         }
     }
 }

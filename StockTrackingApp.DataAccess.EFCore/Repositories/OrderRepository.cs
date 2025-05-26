@@ -6,5 +6,6 @@ namespace StockTrackingApp.DataAccess.EFCore.Repositories
         public OrderRepository(StockAppDbContext context) : base(context)
         {
         }
+
     }
 }

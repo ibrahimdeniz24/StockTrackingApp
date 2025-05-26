@@ -16,5 +16,6 @@ namespace StockTrackingApp.Business.Interfaces.Services
         Task<IDataResult<StockDetailsDto>> GetDetailsByIdAsync(Guid id);
 
         Task<PagedResult<StockListDto>> GetPagedOrdersAsync(int pageNumber, int pageSize, string searchTerm);
+
     }
 }
